@@ -1,10 +1,10 @@
 import Move, { Procedure } from '../move'
 
-const { roll, choice, effect, multipleEffects } = Procedure
+const { roll, choice, multipleEffects } = Procedure
 
 const success = choice('Choose wether they take +1 or -2', {
-	'They take +1': effect('They take +1'),
-	'They take -2': effect('They take -2')
+	'They take +1',
+	'They take -2'
 })
 
 const aidOrInterfere = new Move({
@@ -16,7 +16,7 @@ const aidOrInterfere = new Move({
 
 	procedure: new Procedure('When you help or hinder someone you have a bond with', roll('roll+bond', {
 		success,
-		partialSuccess: multipleEffects(success, effect('you also expose yourself to danger, retribution, or cost.'))
+		partialSuccess: multipleEffects(success, 'you also expose yourself to danger, retribution, or cost.')
 	}))
 })
 

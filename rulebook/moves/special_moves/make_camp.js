@@ -1,7 +1,7 @@
 import Move, { Procedure } from '../move'
 import Equipment from '../../equipment'
 
-const { choice, condition, changeStat, effect, multipleEffects, useUpGear, Stats } = Procedure
+const { choice, condition, changeStat, multipleEffects, useUpGear, STATS } = Procedure
 
 const makeCamp = new Move({
 	title: 'Make Camp',
@@ -14,12 +14,12 @@ When you wake from at least a few uninterrupted hours of sleep heal damage equal
 	procedure: new Procedure('When you settle in to rest', multipleEffects(
 		useUpGear(Equipment.RATIONS, 1),
 		choice('Are you somewhere dangerous and want to decide on the watch order?', {
-			'Yes': effect('Decide on the watch order'),
+			'Yes': 'Decide on the watch order',
 			'No': noEffect()
 		}),
-		condition('xp-level>=7', effect('Level up')),
+		condition('xp-level>=7', 'Level up'),
 		choice('Did you get at least a few uninterrupted hours of sleep?', {
-			'Yes': changeStat(Stats.HP, '+0.5*maxHP'),
+			'Yes': changeStat(STATS.HP, '+0.5*maxHP'),
 			'No': noEffect()
 		})))
 })

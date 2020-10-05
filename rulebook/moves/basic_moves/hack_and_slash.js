@@ -11,7 +11,7 @@ const hackAndSlash = new Move({
 
 	procedure: new Procedure('When you attack an enemy in melee', roll('roll+Str', {
 		success: choice('you may choose to do +1d6 damage but expose yourself to the enemy’s attack.', {
-			'Take +1d6 damage': multipleEffects(modifier('+1d6', { on: 'damage', usages: 1 }), doDamage(), takeDamage()),
+			'Take +1d6 damage': multipleEffects(modifier('+1d6', { on: 'damage', usages: 1, forced: true }), doDamage(), takeDamage()),
 			'Don’t expose yourself to the enemy’s attack': doDamage()
 		}),
 		partialSuccess: multipleEffects(doDamage(), takeDamage())

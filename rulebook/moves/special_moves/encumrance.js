@@ -1,4 +1,6 @@
-import Move from '../move'
+import Move, { Procedure } from '../move'
+
+const { condition, modifier } = Procedure
 
 const encumrance = new Move({
 	title: 'Encumrance',
@@ -7,7 +9,10 @@ const encumrance = new Move({
 
 * Equal to or less than your load, you suffer no penalty
 * Less than or equal to your load+2, you take -1 ongoing until you lighten your burden
-* Greater than your load+2, you have a choice: drop at least 1 weight and roll at -1, or automatically fail`
+* Greater than your load+2, you have a choice: drop at least 1 weight and roll at -1, or automatically fail`,
+
+	procedure: new Procedure('When you make a move while carrying weight greater then your load',
+		condition('load + 2 > weight', modifier('autofail', { ongoing: 'until you lighten your burden' }), modifier('-1', { forced: true, ongoing: 'until you lighten your burden' })))
 })
 
 export default encumrance

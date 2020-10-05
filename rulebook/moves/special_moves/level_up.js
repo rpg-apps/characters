@@ -1,4 +1,6 @@
-import Move from '../move'
+import Move, { Procedure } from '../move'
+
+const { choice, changeStat, addAdvancedMove, activateClassLevelUpEffects, multipleEffects, STATS } = Procedure
 
 const levelUp = new Move({
 	title: 'Level Up',
@@ -8,7 +10,22 @@ const levelUp = new Move({
 * Increase your level by 1.
 * Choose a new advanced move from your class.
 * If you are the wizard, you also get to add a new spell to your spellbook.
-* Choose one of your stats and increase it by 1 (this may change your modifier). Changing your Constitution increases your maximum and current HP. Ability scores can’t go higher than 18.`
+* Choose one of your stats and increase it by 1 (this may change your modifier). Changing your Constitution increases your maximum and current HP. Ability scores can’t go higher than 18.`,
+
+	procedure: new Procedure('When you have downtime (hours or days) and XP equal to (or greater than) your current level+7', multipleEffects(
+			changeStat(STATS.XP, '-(level+7)'),
+			changeStat(STATS.LVL, 1),
+			addAdvancedMove(),
+			activateClassLevelUpEffects(),
+			choice('Choose one of your stats to increase:' {
+				'Strength': changeStat(STATS.STRENGTH, 1),
+				'Dexterity': changeStat(STATS.DEXTERITY, 1),
+				'Constitution': changeStat(STATS.CONSITUTION, 1),
+				'Intelligence': changeStat(STATS.INTELLIGENCE, 1),
+				'Wisdom': changeStat(STATS.WISDOM, 1),
+				'Charisma': changeStat(STATS.CHRASIMA, 1)
+			})
+		))
 })
 
 export default levelUp

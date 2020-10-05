@@ -1,15 +1,15 @@
 import Move, { Procedure } from '../move'
 
-const { roll, choice, hold, effect } = Procedure
+const { roll, choice, hold } = Procedure
 
 const holdUsageOptions = [
-	effect('Redirect an attack from the thing you defend to yourself.'),
-	effect('Halve the attack’s effect or damage.'),
+	'Redirect an attack from the thing you defend to yourself.',
+	'Halve the attack’s effect or damage.',
 	choice('Open up the attacker to an ally giving that ally +1 forward against the attacker.', {
 		'The ally is you': modifier('+1', { on: 'against the attacker', usages: 1 })
-		'The ally is not you': effect('that ally gets +1 forward against the attacker.')
+		'The ally is not you': 'that ally gets +1 forward against the attacker.'
 	}),
-	effect('Deal damage to the attacker equal to your level.')
+	'Deal damage to the attacker equal to your level.'
 ]
 
 const defend = new Move({
