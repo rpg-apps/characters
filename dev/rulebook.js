@@ -12,9 +12,10 @@ function getMoveContent (moveName, options) {
 	if (options.choice) { procedure.push('choice') }
 	if (options.modifier) { procedure.push('modifier') }
 	if (options.hold) { procedure.push('hold') }
+  if (options.multiclass) { procedure.push('multiclass') }
 	if (options.stat) { procedure.push('changeStat, STATS') }
 	if (options.constant) { procedure.push('CONSTANT') }
-	if (options.multiple) { procedure.push('multipleEffects') }
+  if (options.multiple) { procedure.push('multipleEffects') }
 
 	return `import Move, { Procedure } from '../move'
 
@@ -29,7 +30,7 @@ const ${camelCase(moveName)} = new Move({
 		success: '',
 		partialSuccess: '',
 		miss: ''
-	})` : ''})
+	})` : (options.multiclass ? 'multiclass()' : '')})
 })
 
 export default ${camelCase(moveName)}`
@@ -51,13 +52,14 @@ caporal
   .option('--playbook <playbook>', 'Save under specific playbook')
   .option('--type <type>', 'The part of the playbook its from: race-move, starting-move, advanced-2-5, advanced-6-10',
   	['race-move', 'starting-move', 'advanced-2-5', 'advanced-6-10'])
-  .option('--roll <roll>', 'Indicates the move contains a roll, and may indicate what roll it is, if it\'s a classig roll')
-  .option('--choice', 'Indicates the move contains a choice')
-  .option('--modifier', 'Indicates the move contains a modifier')
-  .option('--hold', 'Indicates the move contains a hold')
-  .option('--stat', 'Indicates the move contains a stat change (including HP, XP, Level, Armor and Damage)')
-  .option('--constant', 'Indicates the move is constant, with no written trigger')
-  .option('--multiple', 'Indicates the move can end on multiple effects happening at once')
+  .option('--roll <roll>', 'Indicates that the move contains a roll, and may indicate what roll it is, if it\'s a classig roll')
+  .option('--choice', 'Indicates that the move contains a choice')
+  .option('--modifier', 'Indicates that the move contains a modifier')
+  .option('--hold', 'Indicates that the move contains a hold')
+  .option('--stat', 'Indicates that the move contains a stat change (including HP, XP, Level, Armor and Damage)')
+  .option('--constant', 'Indicates that the move is constant, with no written trigger')
+  .option('--multiple', 'Indicates that the move can end on multiple effects happening at once')
+  .option('--multiclass', 'Indicates that the move is a multiclass move')
   .action((args, options) => {
   	console.log(`Building move ${capitalCase(args.name)}`)
   	console.log(process.cwd())

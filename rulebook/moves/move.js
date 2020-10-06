@@ -1,5 +1,7 @@
 import Procedure from './move_procedure'
 
+// TODO: replaces, multiclassMove
+
 class Move {
 	constructor ({ name, text, procedure }) {
 		this.name = name

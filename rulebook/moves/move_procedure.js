@@ -48,6 +48,10 @@ class Procedure {
 		return new Procedure.Effect.AddAdvancedMove()
 	}
 
+	static multiclass (classRestrictions, levelRestrictions) {
+		return new Procedure.Effect.Multiclass(classRestrictions, levelRestrictions)
+	}
+
 	static activateClassLevelUpEffects () {
 		return new Procedure.Effect.ActivateClassLevelUpEffects()
 	}
@@ -120,6 +124,12 @@ Procedure.Effect.CreateBond = class CreateBond extends Procedure.Effect { }
 Procedure.Effect.ResolveBond = class ResolveBond extends Procedure.Effect { }
 Procedure.Effect.AddAdvancedMove = class AddAdvancedMove extends Procedure.Effect { }
 Procedure.Effect.ActivateClassLevelUpEffects = class ActivateClassLevelUpEffects extends Procedure.Effect { }
+
+Procedure.Effect.Multiclass = class Multiclass extends Procedure.Effect {
+	constructor (classRestrictions, levelRestrictions) {
+		Obejct.assign(this, { classRestrictions, levelRestrictions })
+	}
+}
 
 Procedure.Effect.Modifier = class Modifier extends Procedure.Effect {
 	constructor (modifier, options) {
