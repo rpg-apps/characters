@@ -1,5 +1,6 @@
 class Procedure {
 	constructor (trigger, effect) {
+		effectize(effect)
 		Object.assign(this, { trigger, effect })
 	}
 
@@ -7,8 +8,8 @@ class Procedure {
 		return new Procedure.Roll(formula, { success, partialSuccess, miss })
 	}
 
-	static choice (text, options) {
-		return new Procedure.Choice(text, options)
+	static choice (text, options, count) {
+		return new Procedure.Choice(text, options, count)
 	}
 
 	static effect (text) {
@@ -87,9 +88,9 @@ Procedure.Roll = class Roll {
 }
 
 Procedure.Choice = class Choice extends Procedure.Effect {
-	constructor (text, options) {
+	constructor (text, options, count = 1) {
 		Object.keys(options).forEach(key => { options[key] = effectize(options[key]) })
-		Object.assign(this, { text, options })
+		Object.assign(this, { text, options, count })
 	}
 }
 
@@ -153,6 +154,7 @@ Procedure.STATS = {
 	LVL: 'level',
 	ARMOR: 'armor',
 	MAX_HP: 'maxHP',
+	DAMAGE: 'damage'
 	
 	STRENGTH: 'Strength',
 	DEXTERITY: 'Dexterity',

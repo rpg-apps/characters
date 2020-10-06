@@ -1,4 +1,4 @@
-class Class {
+class PLaybook {
 	constructor ({
 		optionalNames,
 		optionalLook,
@@ -12,7 +12,7 @@ class Class {
 		advancedMoves6_10,
 		startingGear,
 		bondOptions,
-		classBuildingChoices })
+		characterBuildingChoices })
 	{
 		Object.assign(this, {
 			optionalNames,
@@ -27,12 +27,12 @@ class Class {
 			advancedMoves6_10,
 			startingGear,
 			bondOptions,
-			classBuildingChoices
+			characterBuildingChoices
 		})
 	}
 }
 
-Class.BondOption = class BondOption {
+PLaybook.BondOption = class BondOption {
 	constructor (template) {
 		this.template = template
 	}
@@ -42,14 +42,14 @@ Class.BondOption = class BondOption {
 	}
 }
 
-Class.Alignment = class Alignment {
+PLaybook.Alignment = class Alignment {
 	constructor (alignment, goal) {
 		this.alignment = alignment
 		this.goal = goal
 	}
 }
 
-Class.BuildingChoice = class BuildingChoice {
+PLaybook.BuildingChoice = class BuildingChoice {
 	constructor(text, options) {
 		this.text = text
 		this.options = options
@@ -57,4 +57,4 @@ Class.BuildingChoice = class BuildingChoice {
 	}
 }
 
-export default Class
+export default PLaybook

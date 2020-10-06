@@ -5,7 +5,8 @@
     "ios": "react-native run-ios",
     "web": "expo start --web",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "rulebook": "node ./dev/rulebook"
   },
   "dependencies": {
     "expo": "~39.0.2",
@@ -26,7 +27,11 @@
   "devDependencies": {
     "@babel/core": "~7.9.0",
     "babel-jest": "~25.2.6",
+    "bluebird": "^3.7.2",
+    "caporal": "^1.4.0",
+    "change-case": "^4.1.1",
     "jest": "~25.2.6",
+    "mkdirp": "^1.0.4",
     "react-test-renderer": "~16.13.1"
   },
   "jest": {
