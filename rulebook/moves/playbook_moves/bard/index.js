@@ -30,7 +30,7 @@ import unforgettableFace from './advanced_moves_6_10/unforgettable_face'
 import viciousBlast from './advanced_moves_6_10/vicious_blast'
 
 export default {
-	raceMOves: {
+	raceMoves: {
 		elf,
 		human
 	}

@@ -1,6 +1,7 @@
 class PLaybook {
 	constructor ({
 		optionalNames,
+		optionalTitles,
 		optionalLook,
 		maxHP,
 		baseDamage,
@@ -16,6 +17,7 @@ class PLaybook {
 	{
 		Object.assign(this, {
 			optionalNames,
+			optionalTitles,
 			optionalLook,
 			maxHP,
 			baseDamage,
