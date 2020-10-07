@@ -1,4 +1,4 @@
-import Move, { Procedure } from '../move'
+import Move, { Procedure } from '../../../move'
 
 const bardicLore = new Move({
 	title: 'Bardic Lore',

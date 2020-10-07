@@ -2,7 +2,10 @@ const fs = require('fs')
 const path = require('path')
 const caporal = require('caporal')
 const mkdirp = require('mkdirp')
+const Promise = require('bluebird')
 const { camelCase, capitalCase, snakeCase } = require('change-case')
+
+const writeFileAsync = Promise.promisify(fs.writeFile)
 
 const CLASSIC_ROLLS = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Cha']
 
@@ -18,19 +21,22 @@ function getMoveContent (moveName, options) {
   if (options.multiple) { procedure.push('multipleEffects') }
 
 	return `import Move, { Procedure } from '../move'
-
+${options.replaces ? `import ${camelCase(options.replaces)} from '../advanced_moves_2_5/${snakeCase(options.replaces)}'
+` : ''}
 const { ${procedure.join(', ')} } = Procedure
 
 const ${camelCase(moveName)} = new Move({
 	title: '${capitalCase(moveName)}',
 	text: 
-\`\`,
+\`${options.trigger ? options.trigger : ''}\`,
 
-	procedure: new Procedure(${options.constant ? 'CONSTANT' : '\'\''}, ${CLASSIC_ROLLS.includes(options.roll) ? `roll('roll+${options.roll}', {
+	procedure: new Procedure(${options.constant ? 'CONSTANT' : `\'${options.trigger ? options.trigger : ''}\'`}, ${CLASSIC_ROLLS.includes(options.roll) ? `roll('roll+${options.roll}', {
 		success: '',
 		partialSuccess: '',
 		miss: ''
-	})` : (options.multiclass ? 'multiclass()' : '')})
+	})` : (options.multiclass ? 'multiclass()' : '')})${options.replaces ? `,
+
+    replaces: ${camelCase(options.replaces)}` : ''}
 })
 
 export default ${camelCase(moveName)}`
@@ -47,7 +53,7 @@ caporal
   .name('rulebook')
   .version('v1')
   .description('Manages the rulbook')
-  .command('make-move', 'Creates a move')
+  .command('move', 'Creates a move')
   .argument('<name>', 'Name of the move')
   .option('--playbook <playbook>', 'Save under specific playbook')
   .option('--type <type>', 'The part of the playbook its from: race-move, starting-move, advanced-2-5, advanced-6-10',
@@ -60,6 +66,8 @@ caporal
   .option('--constant', 'Indicates that the move is constant, with no written trigger')
   .option('--multiple', 'Indicates that the move can end on multiple effects happening at once')
   .option('--multiclass', 'Indicates that the move is a multiclass move')
+  .option('--replaces <replaces>', 'Indicates that the move replaces another move from the same playbook in the advanced 2-5 moves section')
+  .option('--trigger <trigger>', 'The trigger text, if there is any')
   .action((args, options) => {
   	console.log(`Building move ${capitalCase(args.name)}`)
   	console.log(process.cwd())
@@ -76,11 +84,7 @@ caporal
   	}
 
   	mkdirp(filePath)
-  	fs.writeFile(path.resolve(filePath, `${snakeCase(args.name)}.js`), getMoveContent(args.name, options), err => {
-  		if (err) {
-  			console.error(err)
-  		}
-  	})
+      .then(() => writeFileAsync(path.resolve(filePath, `${snakeCase(args.name)}.js`), getMoveContent(args.name, options)))
   })
 
 // Make global options
