@@ -1,11 +1,14 @@
+// race moves imports
 import elf from './race_moves/elf'
 import human from './race_moves/human'
 
+// starting moves imports
 import arcaneArt from './starting_moves/arcane_art'
 import charmingAndOpen from './starting_moves/charming_and_open'
 import bardicLore from './starting_moves/bardic_lore'
 import aPortInTheStorm from './starting_moves/a_port_in_the_storm'
 
+// advanced 2-5 moves imports
 import aLittleHelpFromMyFriends from './advanced_moves_2_5/a_little_help_from_my_friends'
 import bamboozle from './advanced_moves_2_5/bamboozle'
 import duelistsParry from './advanced_moves_2_5/duelists_parry'
@@ -17,7 +20,7 @@ import multiclassDabbler from './advanced_moves_2_5/multiclass_dabbler'
 import multiclassInitiate from './advanced_moves_2_5/multiclass_initiate'
 import viciousCacophony from './advanced_moves_2_5/vicious_cacophony'
 
-
+// advanced 6-10 moves imports
 import anEarForMagic from './advanced_moves_6_10/an_ear_for_magic'
 import con from './advanced_moves_6_10/con_move'
 import devious from './advanced_moves_6_10/devious'

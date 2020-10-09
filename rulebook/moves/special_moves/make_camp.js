@@ -15,12 +15,12 @@ When you wake from at least a few uninterrupted hours of sleep heal damage equal
 		useUpGear(Equipment.RATIONS, 1),
 		choice('Are you somewhere dangerous and want to decide on the watch order?', {
 			'Yes': 'Decide on the watch order',
-			'No': noEffect()
+			'No': NO_EFFECT
 		}),
 		condition('xp-level>=7', 'Level up'),
 		choice('Did you get at least a few uninterrupted hours of sleep?', {
 			'Yes': changeStat(STATS.HP, '+0.5*maxHP'),
-			'No': noEffect()
+			'No': NO_EFFECT
 		})))
 })
 

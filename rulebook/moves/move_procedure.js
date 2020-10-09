@@ -16,10 +16,6 @@ class Procedure {
 		return new Procedure.Effect.BasicEffect(text)
 	}
 
-	static noEffect () {
-		return new Procedure.Effect.NoEffect()
-	}
-
 	static doDamage (damageFormula) {
 		return new Procedure.Effect.DoDamage(damageFormula)
 	}
@@ -98,8 +94,6 @@ Procedure.Choice = class Choice extends Procedure.Effect {
 	}
 }
 
-Procedure.Effect.NoEffect = class NoEffect extends Procedure.Effect { }
-
 Procedure.Effect.DoDamage = class DoDamage extends Procedure.Effect {
 	constructor (damageFormula) { // damageFormula can be undefined, when the default damage should be used.
 		Object.assign(this, { damageFormula })
@@ -157,6 +151,8 @@ Procedure.Effect.Condition = class Condition extends Procedure.Effect {
 }
 
 Procedure.CONSTANT = 'When you have this move' // A trigger for when an effect is constant.
+
+Procedure.NO_EFFECT = effectize('Nothing happens') // An effect for when nothing occours.
 
 Procedure.STATS = {
 	HP: 'hp',

@@ -6,7 +6,9 @@
     "web": "expo start --web",
     "start": "react-native start",
     "test": "jest",
-    "rulebook": "node ./dev/rulebook"
+    "rulebook": "node ./dev/rulebook",
+    "move": "node ./dev/rulebook move",
+    "playbook": "node ./dev/rulebook playbook"
   },
   "dependencies": {
     "expo": "~39.0.2",
