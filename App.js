@@ -1,19 +1,16 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>DW Characters</Text>
-    </View>
-  );
-}
+import Characters from './components/pages/characters'
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  main: {
+    backgroundColor: '#3e3e3e'
+  }
+})
+
+export default function App() {
+  return <View style={styles.main}>
+    <Characters />
+  </View>
+}
