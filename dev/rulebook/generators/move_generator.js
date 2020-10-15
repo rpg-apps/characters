@@ -41,9 +41,9 @@ const ${camelCase(moveName)} = new Move({
 
 	procedure: new Procedure(${options.constant ? 'CONSTANT' : `\'${options.trigger ? options.trigger : ''}\'`}, ${options.effect ? options.effect :
 		(CLASSIC_ROLLS.includes(options.roll) ? `roll('roll+${options.roll}', {
-		success: '',
-		partialSuccess: '',
-		miss: ''
+		success: '${options.success || ''}',
+		partialSuccess: '${options.partialSuccess || ''}',
+		miss: '${options.miss || ''}'
 	})` : (options.multiclass ? 'multiclass()' : ''))})${(options.replaces || options.requires) ? `,
 
     ${options.replaces ? 'replaces' : 'requires'}: ${camelCase(options.replaces || options.requires)}` : ''}

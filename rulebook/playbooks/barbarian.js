@@ -28,6 +28,17 @@ const barbarian = new Playbook({
 	advancedMoves2_5,
 	advancedMoves6_10,
 	startingEquipment: [
+		new Playbook.Gear(Equipment.DUNGEON_RATIONS, 5),
+		new Playbook.Gear(Equipment.DAGGER, 1),
+		new Playbook.Gear(new Equipment('Some token of where you’ve traveled or where you’re from')),
+		new Playbook.BuildingChoice('Choose of magic', [
+			new Playbook.Gear(Equipment.AXE),
+			new Playbook.Gear(Equipment.TWO_HANDED_SWORD)
+		]),
+		new Playbook.BuildingChoice('Choose one', [
+			[new Playbook.Gear(Equipment.ADVENTURING_GEAR), new Playbook.Gear(Equipment.DUNGEON_RATIONS, 5)],
+			new Playbook.Gear(Equipment.CHAINMAIL)
+		])
 	],
 	bondOptions: [
 		new Playbook.BondOption('%s is puny and foolish, but amusing to me.'),

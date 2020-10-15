@@ -28,28 +28,28 @@ const bard = new Playbook({
 	advancedMoves2_5,
 	advancedMoves6_10,
 	startingEquipment: [
-		new Gear(Equipment.DUNGEON_RATIONS, 5),
+		new Playbook.Gear(Equipment.DUNGEON_RATIONS, 5),
 		new Playbook.BuildingChoice('Choose an instrument (all are 0 weight)', [
-			new Gear('Your father’s mandolin, repaired'),
-			new Gear('A fine lute, a gift from a noble'),
-			new Gear('The pipes with which you courted your first love'),
-			new Gear('A stolen horn'),
-			new Gear('A fiddle, never before played'),
-			new Gear('A songbook in a forgotten tongue')
+			new Playbook.Gear('Your father’s mandolin, repaired'),
+			new Playbook.Gear('A fine lute, a gift from a noble'),
+			new Playbook.Gear('The pipes with which you courted your first love'),
+			new Playbook.Gear('A stolen horn'),
+			new Playbook.Gear('A fiddle, never before played'),
+			new Playbook.Gear('A songbook in a forgotten tongue')
 		]),
 		new Playbook.BuildingChoice('Choose your clothing', [
-			new Gear(Equipment.LEATHER_ARMOER),
-			new Gear('Ostentatious clothes')
+			new Playbook.Gear(Equipment.LEATHER_ARMOER),
+			new Playbook.Gear('Ostentatious clothes')
 		]),
 		new Playbook.BuildingChoice('Choose your armament', [
-			new Gear(Equipment.DUELING_RAPIER),
-			[new Gear(Equipment.WORN_BOW), new Gear(Equipment.BUNDLE_OF_ARROWS), new Gear(Equipment.SHORT_SWORD)]
+			new Playbook.Gear(Equipment.DUELING_RAPIER),
+			[new Playbook.Gear(Equipment.WORN_BOW), new Playbook.Gear(Equipment.BUNDLE_OF_ARROWS), new Playbook.Gear(Equipment.SHORT_SWORD)]
 		]),
 		new Playbook.BuildingChoice('Choose one', [
-			new Gear(Equipment.ADVENTURING_GEAR),
-			new Gear(Equipment.BANDAGES),
-			new Gear(Equipment.HALFLING_PIPELEAF),
-			new Gear(Equipment.COIN, 3)
+			new Playbook.Gear(Equipment.ADVENTURING_GEAR),
+			new Playbook.Gear(Equipment.BANDAGES),
+			new Playbook.Gear(Equipment.HALFLING_PIPELEAF),
+			new Playbook.Gear(Equipment.COIN, 3)
 		])
 	],
 	bondOptions: [

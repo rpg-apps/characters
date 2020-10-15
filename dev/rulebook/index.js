@@ -30,6 +30,9 @@ caporal
     .option('--text <text>', 'The move text')
     .option('--effect <effect>', 'A direct effect')
     .option('--no-effect', 'Indicates that the rule has an option for nothing happening')
+    .option('--success <success>', 'The success option of a classic role')
+    .option('--partial-success <partialSuccess>', 'The partial success option of a classic role')
+    .option('--miss <miss>', 'The miss option of a classic role')
     .action((args, opts) => Constants.merge(opts).then(options => createMove(args.name, options)).catch(err => console.error(err)))
   
   .command('playbook', 'Creates a playbook')

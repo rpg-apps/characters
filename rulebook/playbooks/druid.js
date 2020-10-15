@@ -29,6 +29,22 @@ const druid = new Playbook({
 	advancedMoves2_5,
 	advancedMoves6_10,
 	startingEquipment: [
+		new Playbook.Gear(new Equipment('Some token of your land')),
+		new Playbook.BuildingChoice('Choose your defenses', [
+			new Playbook.Gear(Equipment.HIDE_ARMOER),
+			new Playbook.Gear(Equipment.WOODEN_SHIELD)
+		]),
+		new Playbook.Gear('Choose your armament', [
+			new Playbook.Gear(Equipment.SHILLELAGH),
+			new Playbook.Gear(Equipment.STAFF),
+			new Playbook.Gear(Equipment.SPEAR)
+		]),
+		new Playbook.Gear('Choose one', [
+			new Playbook.Gear(Equipment.ADVENTURING_GEAR),
+			new Playbook.Gear(Equipment.POULTICES_AND_HERBS, 2),
+			new Playbook.Gear(Equipment.HALFLING_PIPELEAF),
+			new Playbook.Gear(Equipment.ANTITOXIN, 3)
+		])
 	],
 	bondOptions: [
 		new Playbook.BondOption('%s smells more like prey than a hunter.'),

@@ -29,6 +29,21 @@ const cleric = new Playbook({
 	advancedMoves2_5,
 	advancedMoves6_10,
 	startingEquipment: [
+		new Playbook.Gear(Equipment.DUNGEON_RATIONS, 5),
+		new Playbook.Gear(new Equipment('Some symbol of the divine')),
+		new Playbook.BuildingChoice('Choose your defenses', [
+			new Playbook.Gear(Equipment.CHAINMAIL),
+			new Playbook.Gear(Equipment.SHIELD)
+		]),
+		new Playbook.BuildingChoice('Choose your armament', [
+			new Playbook.Gear(Equipment.WARHAMMER),
+			new Playbook.Gear(Equipment.MACE),
+			[new Playbook.Gear(Equipment.STAFF), new Playbook.Gear(Equipment.BANDAGES)]
+		]),
+		new Playbook.BuildingChoice('Choose one', [
+			[new Playbook.Gear(Equipment.ADVENTURING_GEAR), new Playbook.Gear(DUNGEON_RATIONS, 5)]
+			new Playbook.Gear(Equipment.HEALING_POTION)
+		])
 	],
 	bondOptions: [
 		new Playbook.BondOption('%s has insulted my deity; I do not trust them.'),
