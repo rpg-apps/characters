@@ -13,7 +13,7 @@ const undertakeAPeriliousJourney = new Move({
 
 You can’t assign more than one job to a character. If you don’t have enough party members, or choose not to assign a job, treat that job as if it had been assigned and the responsible player had rolled a 6.`,
 
-	procedure: new Procedure('When you’re on watch and something approaches the camp', choice('What is your role in this journey?', {
+	procedure: new Procedure('When you travel through hostile territory', choice('What is your role in this journey?', {
 		'Quartermaster': roll('roll+Wis', {
 			success: 'You reduce the number of rations required by one.',
 			partialSuccess: 'The normal number of rations are consumed.'

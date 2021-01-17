@@ -74,6 +74,7 @@ Procedure.ChangeStat = class ChangeStat extends Procedure.Effect {
 Procedure.CreateBond = class CreateBond extends Procedure.Effect { }
 Procedure.ResolveBond = class ResolveBond extends Procedure.Effect { }
 Procedure.AddAdvancedMove = class AddAdvancedMove extends Procedure.Effect { }
+Procedure.Die = class Die extends Procedure.Effect { }
 
 /* Special DW mechanics */
 
@@ -115,12 +116,19 @@ Procedure.Series = class Series extends Procedure.Effect {
 	}
 }
 
-
 // When you take an effect depending on the result of a logical condition: "If you have enough power, level up"
 Procedure.Condition = class Condition extends Procedure.Effect {
 	constructor (condition, onTrue, onFalse) {
 		super()
 		Obejct.assign(this, { condition, onTrue: effectize(onTrue), onFalse: effectize(onFalse) })
+	}
+}
+
+// When one move triggers another move
+Procedure.TriggerMove = class TriggerMove extends Procedure.Effect {
+	constructor (moveTitle) {
+		super()
+		Object.assign(this, { moveTitle })
 	}
 }
 

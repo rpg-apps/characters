@@ -1,5 +1,5 @@
 import Move from '../move'
-import Procedure, { choice, changeStat, simultaneous, NO_EFFECT, resolveBond, createBond, STATS } from '../move_procedure'
+import Procedure, { choice, changeStat, series, NO_EFFECT, resolveBond, createBond, STATS } from '../move_procedure'
 
 const endOfSession = new Move({
 	title: 'End Of Session',
@@ -12,12 +12,13 @@ Once bonds have been updated look at your alignment. If you fulfilled that align
 * Did we loot a memorable treasure?
 For each “yes” answer everyone marks XP.`,
 
-	procedure: new Procedure('When you reach the end of a session', simultaneous(
+	procedure: new Procedure('When you reach the end of a session', series(
 			choice('Choose one of your bonds that you feel is resolved (completely explored, no longer relevant, or otherwise). Ask the player of the character you have the bond with if they agree. If they do, mark XP and write a new bond with whomever you wish.', {
-				'Resolve the bond': simultaneous(resolveBond(), changeStat(STATS.XP, 1), createBond()),
-				'Do not resolve the bond': NO_EFFECT
+				'Resolve a bond': series(resolveBond(), changeStat(STATS.XP, 1), createBond()),
+				'Create a new bond': createBond(),
+				'Do not resolve a bond': NO_EFFECT
 			}),
-			choice('Have you fulfilled the alignemnt goal?', { 'Yes': changeStat(STATS.XP, 1), 'No': NO_EFFECT }),
+			choice('Did I fulfill my alignemnt goal?', { 'Yes': changeStat(STATS.XP, 1), 'No': NO_EFFECT }),
 			choice('Did we learn something new and important about the world?', { 'Yes': changeStat(STATS.XP, 1), 'No': NO_EFFECT }),
 			choice('Did we overcome a notable monster or enemy?', { 'Yes': changeStat(STATS.XP, 1), 'No': NO_EFFECT }),
 			choice('Did we loot a memorable treasure?', { 'Yes': changeStat(STATS.XP, 1), 'No': NO_EFFECT })
