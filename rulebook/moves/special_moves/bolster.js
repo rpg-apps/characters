@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { choice, hold, modifier } = Procedure
+import Move from '../move'
+import Procedure, { choice, hold, modifier } from '../move_procedure'
 
 const preparation = [modifier('+1', { usages: 1 })]
 

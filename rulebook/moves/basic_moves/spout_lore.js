@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { roll, multipleEffects } = Procedure
+import Move from '../move'
+import Procedure, { roll, series } from '../move_procedure'
 
 const spoutLore = new Move({
 	title: 'Spout Lore',
@@ -11,10 +10,10 @@ const spoutLore = new Move({
 The GM might ask you “How do you know this?” Tell them the truth, now.`,
 
 	procedure: new Procedure('When you consult your accumulated knowledge about something', roll('roll+Int', {
-		success: multipleEffects(
+		success: series(
 			'the GM will tell you something interesting and useful about the subject relevant to your situation.',
 			'The GM might ask you “How do you know this?” Tell them the truth, now.'),
-		partialSuccess: multipleEffects(
+		partialSuccess: series(
 			'the GM will only tell you something interesting — it’s on you to make it useful.',
 			'The GM might ask you “How do you know this?” Tell them the truth, now.')
 	}))

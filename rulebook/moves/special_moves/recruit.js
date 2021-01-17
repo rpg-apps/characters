@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { roll, choice, modifier, NO_EFFECT, multipleEffects } = Procedure
+import Move from '../move'
+import Procedure, { roll, choice, modifier, NO_EFFECT, simultaneous } from '../move_procedure'
 
 const recruit = new Move({
 	title: 'Recruit',
@@ -15,7 +14,7 @@ const recruit = new Move({
 * On a 7–9, you’ll have to settle for someone close to what you want or turn them away.
 * On a miss someone influential and ill-suited declares they’d like to come along (a foolhardy youth, a loose-cannon, or a veiled enemy, for example), bring them and take the consequences or turn them away. If you turn away applicants you take -1 forward to recruit.`,
 
-	procedure: new Procedure('When you put out word that you’re looking to hire help', multipleEffects(
+	procedure: new Procedure('When you put out word that you’re looking to hire help', simultaneous(
 			choice('Do you make it known that your pay is generous?', { 'Yes': modifier('+1', { forced: true, usages: 1 }), 'No': NO_EFFECT }),
 			choice('Do you make it known what you’re setting out to do?', { 'Yes': modifier('+1', { forced: true, usages: 1 }), 'No': NO_EFFECT }),
 			choice('Do you make it known that they’ll get a share of whatever you find?', { 'Yes': modifier('+1', { forced: true, usages: 1 }), 'No': NO_EFFECT }),
@@ -23,7 +22,7 @@ const recruit = new Move({
 			roll('roll', {
 				success: 'you’ve got your pick of a number of skilled applicants, your choice who you hire, no penalty for not taking them along.',
 				partialSuccess: 'you’ll have to settle for someone close to what you want or turn them away.',
-				miss: multipleEffects(
+				miss: simultaneous(
 					'On a miss someone influential and ill-suited declares they’d like to come along (a foolhardy youth, a loose-cannon, or a veiled enemy, for example), bring them and take the consequences or turn them away. If you turn away applicants you take -1 forward to recruit.',
 					choice('Bring them along or turn them away?', {
 						'Bring them along',

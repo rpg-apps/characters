@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { roll, choice, hold } = Procedure
+import Move from '../move'
+import Procedure, { roll, choice, hold, doDamage, STATS } from '../move_procedure'
 
 const holdUsageOptions = [
 	'Redirect an attack from the thing you defend to yourself.',
@@ -9,7 +8,7 @@ const holdUsageOptions = [
 		'The ally is you': modifier('+1', { on: 'against the attacker', usages: 1 })
 		'The ally is not you': 'that ally gets +1 forward against the attacker.'
 	}),
-	'Deal damage to the attacker equal to your level.'
+	'Deal damage to the attacker equal to your level.': doDamage(STATS.LVL)
 ]
 
 const defend = new Move({

@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { condition, modifier } = Procedure
+import Move from '../move'
+import Procedure, { condition, modifier } from '../move_procedure'
 
 const encumrance = new Move({
 	title: 'Encumrance',

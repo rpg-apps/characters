@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { choice, changeStats, multipleEffects, STATS } = Procedure
+import Move from '../move'
+import Procedure, { choice, changeStats, simultaneous, STATS } from '../move_procedure'
 
 const recover = new Move({
 	title: 'Recover',
@@ -9,7 +8,7 @@ const recover = new Move({
 
 	procedure: new Procedure('When you do nothing but rest in comfort and safety', choice('How long do you rest', {
 		'One day - recover all your HP': changeStats(STATS.HP, '+maxHP'),
-		'Three days, or two days with a healer - also remove a debility': multipleEffects(changeStats(STATS.HP, '+maxHP'), choice('Choose a debility to remove', {
+		'Three days, or two days with a healer - also remove a debility': simultaneous(changeStats(STATS.HP, '+maxHP'), choice('Choose a debility to remove', {
 			'Weak': changeStats(STATS.WEAK, -1),
 			'Shakey': changeStats(STATS.SHAKEY, -1),
 			'Sick': changeStats(STATS.SICK, -1),

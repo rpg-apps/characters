@@ -1,7 +1,6 @@
-import Move, { Procedure } from '../move'
+import Move from '../move'
 import Equipment from '../../equipment'
-
-const { roll, multipleEffects, doDamage, useUpGear } = Procedure
+import Procedure, { roll, simultaneous, doDamage, useGear } from '../move_procedure'
 
 const volley = new Move({
 	title: 'Volley',
@@ -15,11 +14,11 @@ const volley = new Move({
 
 	procedure: new Procedure('When you take aim and shoot at an enemy at range', roll('roll+Dex', {
 		success: doDamage(),
-		partialSuccess: multipleEffects(choice('Choose one', {
-			'You have to move to get the shot, placing you in danger as described by the GM.': 'You are in danger as described by the GM.',
-			'You have to take what you can get: -1d6 damage.': modifier('-1d6', { on: 'damage', usages: 1, forced: true }),
-			'You have to take several shots, reducing your ammo by one.': useUpGear(Equipment.BUNDLE_OF_ARROWS, 1)
-		}), doDamage())
+		partialSuccess: choice('Choose one', {
+			'You have to move to get the shot, placing you in danger as described by the GM.': simultaneous(doDamage(), 'You are in danger as described by the GM.'),
+			'You have to take what you can get: -1d6 damage.': doDamate('-1d6'),
+			'You have to take several shots, reducing your ammo by one.': simultaneous(doDamage(), useGear(Equipment.BUNDLE_OF_ARROWS, 1))
+		})
 	}))
 })
 

@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { roll, choice, multipleEffects } = Procedure
+import Move from '../move'
+import Procedure, { roll, choice, simultaneous } from '../move_procedure'
 
 const success = choice('Choose wether they take +1 or -2', {
 	'They take +1',
@@ -16,7 +15,7 @@ const aidOrInterfere = new Move({
 
 	procedure: new Procedure('When you help or hinder someone you have a bond with', roll('roll+bond', {
 		success,
-		partialSuccess: multipleEffects(success, 'you also expose yourself to danger, retribution, or cost.')
+		partialSuccess: simultaneous(success, 'you expose yourself to danger, retribution, or cost.')
 	}))
 })
 

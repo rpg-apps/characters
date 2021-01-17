@@ -1,6 +1,5 @@
-import Move, { Procedure } from '../move'
-
-const { roll, choice, modifier, multipleEffect } = Procedure
+import Move from '../move'
+import Procedure, { roll, choice, modifier, multipleEffect } from '../move_procedure'
 
 const undertakeAPeriliousJourney = new Move({
 	title: 'Undertake a Perilous Journey',
