@@ -95,7 +95,7 @@ exports.createPlaybook = function createPlaybook (playbookName, options) {
     console.log(`Building playbook ${capitalCase(playbookName)}`)
     let filePath = path.resolve(process.cwd(), 'rulebook', 'playbooks')
     let movesDir = path.resolve(process.cwd(), 'rulebook', 'moves', 'playbook_moves', snakeCase(playbookName))
-    mkdirp(filePath)
+    return mkdirp(filePath)
       .then(() => writeFileAsync(path.resolve(filePath, `${snakeCase(playbookName)}.js`), getPlaybookContent(playbookName, options)))
       .then(() => mkdirp(movesDir))
       .then(() => Promise.all([

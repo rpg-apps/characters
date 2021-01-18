@@ -100,6 +100,6 @@ exports.createMove = function createMove (moveName, options) {
 
       addMoveToPlaybookIndex(moveName, options.playbook, options.type)
     }
-    mkdirp(filePath)
+    return mkdirp(filePath)
       .then(() => writeFileAsync(path.resolve(filePath, `${snakeCase(moveName)}.js`), getMoveContent(moveName, options)))
 }

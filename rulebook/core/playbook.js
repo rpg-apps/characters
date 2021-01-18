@@ -37,3 +37,9 @@ export default class Playbook {
 		})
 	}
 }
+
+Playbook.BuildingChoice = class PlaybookBuildingChoice {
+	constructor(text, options, count = 1) {
+		Object.assign(this, { text, options, count })
+	}
+}
