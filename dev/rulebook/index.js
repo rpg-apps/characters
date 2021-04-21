@@ -60,6 +60,7 @@ caporal
 
   .command('equipment', 'Creates an Eqipment')
     .argument('<name>', 'Name of the eqipment')
+    .argument('<description>', 'Description of the eqipment')
     .option('-c, --cost <cost>', 'Adds cost')
     .option('-w, --weight <weight>', 'Adds weight')
     .option('-u, --uses <uses>', 'Adds use count')
@@ -79,7 +80,7 @@ caporal
     .option('--forcefull', 'Adds the Forcefull tag')
     .option('--ignores-armor', 'Adds the Ignores Armor tag')
     .option('--messy', 'Adds the Messy tag')
-    .option('--Percise', 'Adds the Percise tag')
+    .option('--percise', 'Adds the Percise tag')
     .option('--reload', 'Adds the Reload tag')
     .option('--stun', 'Adds the Stun tag')
     .option('--thrown', 'Adds the Thrown tag')
@@ -91,7 +92,7 @@ caporal
     .option('--armor <armor>', 'Adds the Armor tag')
     .option('--add-armor <armor>', 'Adds the +Armor tag')
     .option('--clumsy', 'Adds the Clumsy tag')
-    .action((args, opts) => createEquipment(args.name, opts).catch(err => console.error(err)))
+    .action((args, opts) => createEquipment(args.name, args.description, opts).catch(err => console.error(err)))
 
   .command('set', 'sets a constant for future commands')
     .argument('<key>', 'The constnat to set')

@@ -7,7 +7,7 @@ const { camelCase, capitalCase, snakeCase, constantCase } = require('change-case
 const writeFileAsync = Promise.promisify(fs.writeFile)
 const readFileAsync = Promise.promisify(fs.readFile)
 
-function getEquipmentContent (equipmentName, options) {
+function getEquipmentContent (equipmentName, equipmentDescription, options) {
 	const tags = Object.entries(options)
 		.map(([key, value]) => {
 			if (value === true) {
@@ -22,16 +22,17 @@ function getEquipmentContent (equipmentName, options) {
 
 const ${camelCase(equipmentName)} = new Equipment({
 	name: '${capitalCase(equipmentName)}',
+	description: "${equipmentDescription}",
 	tags: [${tags.map(tag => `TAGS.${tag}`).join(', ')}]
 })
 
 export default ${camelCase(equipmentName)}`
 }
 
-exports.createEquipment = function createEquipment (eqipmentName, options) {
+exports.createEquipment = function createEquipment (eqipmentName, equipmentDescription, options) {
     console.log(`Building equipment ${capitalCase(eqipmentName)}`)
 
     let filePath = path.resolve(process.cwd(), 'rulebook', 'equipment')
     return mkdirp(filePath)
-      .then(() => writeFileAsync(path.resolve(filePath, `${snakeCase(eqipmentName)}.js`), getEquipmentContent(eqipmentName, options)))
+      .then(() => writeFileAsync(path.resolve(filePath, `${snakeCase(eqipmentName)}.js`), getEquipmentContent(eqipmentName, equipmentDescription, options)))
 }

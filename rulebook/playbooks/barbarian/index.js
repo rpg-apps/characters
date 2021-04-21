@@ -1,9 +1,4 @@
 import Playbook, { BuildingChoice } from './playbook'
-import Equipment from '../../eqipment'
-
-import Gear from '../../mechanics/gear'
-import Bond from '../../mechanics/bonds'
-import Alignment from '../../mechanics/alignment'
 
 import raceMoves from './race_moves/**'
 import startingMoves from './starting_moves/**'
@@ -22,38 +17,39 @@ const barbarian = new Playbook({
 		decoration: ['Strange tattoos', 'Unusual jewelry', 'Unmarred by decoration'],
 		clothes: ['Scraps', 'Silks', 'Scavenger’s outfit', 'Weather inappropriate clothes']
 	},
+
 	maxHP: 'Constitution+8',
 	baseDamage: 'd10',
 	load: 'Str+8',
-	alignmentOptions: [
-		new Alignment('chaotic', 'You eschew a convention of the civilized world.'),
-		new Alignment('neutral', 'Teach someone the ways of your people.')
-	],
 	raceMoves,
 	startingMoves,
 	advancedMoves2_5,
 	advancedMoves6_10,
-	startingEquipment: [
-		new Gear(Equipment.DUNGEON_RATIONS, 5),
-		new Gear(Equipment.DAGGER),
-		new Gear(new Equipment('Some token of where you’ve traveled or where you’re from')),
-		new BuildingChoice('Choose of magic', [
-			new Gear(Equipment.AXE),
-			new Gear(Equipment.TWO_HANDED_SWORD)
+	mechanics: { // Each mechanic gives its module, and is used if its enabled.
+		alignment: Alignment => new BuildingChoice('Choose your alignment:', [
+			new Alignment('chaotic', 'You eschew a convention of the civilized world.'),
+			new Alignment('neutral', 'Teach someone the ways of your people.')
 		]),
-		new BuildingChoice('Choose one', [
-			[new Gear(Equipment.ADVENTURING_GEAR, 5), new Gear(Equipment.DUNGEON_RATIONS, 5)],
-			new Gear(Equipment.CHAINMAIL)
-		])
-	],
-	bondOptions: [
-		new Bond.Option('<char> is puny and foolish, but amusing to me.'),
-		new Bond.Option('<char>’s ways are strange and confusing.'),
-		new Bond.Option('<char> is always getting into trouble — I must protect them from themselves.'),
-		new Bond.Option('<char> shares my hunger for glory; the earth will tremble at our passing!')
-	],
-	characterBuildingChoices: [
-	]
+		equipment: Gear => [
+			new Gear(Gear.Equipment.DUNGEON_RATIONS),
+			new Gear(Gear.Equipment.DAGGER),
+			new Gear(new Gear.Equipment('Some token of where you’ve traveled or where you’re from')),
+			new BuildingChoice('Choose of magic', [
+				new Gear(Gear.Equipment.AXE),
+				new Gear(Gear.Equipment.TWO_HANDED_SWORD)
+			]),
+			new BuildingChoice('Choose one', [
+				[new Gear(Gear.Equipment.ADVENTURING_GEAR), new Gear(Gear.Equipment.DUNGEON_RATIONS)],
+				new Gear(Gear.Equipment.CHAINMAIL)
+			])
+		],
+		bonds: Bond => [
+			new Bond.Option('<char> is puny and foolish, but amusing to me.'),
+			new Bond.Option('<char>’s ways are strange and confusing.'),
+			new Bond.Option('<char> is always getting into trouble — I must protect them from themselves.'),
+			new Bond.Option('<char> shares my hunger for glory; the earth will tremble at our passing!')
+		]
+	}
 })
 
 export default barbarian

@@ -17,7 +17,7 @@ Procedure.BasicEffect = class BasicEffect extends Procedure.Effect {
 }
 
 function effectize (something) {
-	if (something === undefined || something instanceof Procedure.Effect) {
+	if (something instanceof Procedure.Effect || something === undefined) {
 		return something
 	} else if (something.constructor === String) {
 		return new Procedure.BasicEffect(something)
@@ -47,12 +47,12 @@ Procedure.Choice = class Choice extends Procedure.Effect {
 Procedure.DoDamage = class DoDamage extends Procedure.Effect {
 	constructor (damage) {
 		super()
-		Object.assign(this, { damage })
+		Object.assign(this, { damage: damage || Procedure.STATS.DAMAGE })
 	}
 }
 
 // When required to take damage.
-// No formula for taking damage, because the damate is decided at the time of the event
+// No formula for taking damage, because the damage is declared at the time of the event, and given by the GM.
 Procedure.TakeDamage = class TakeDamage extends Procedure.Effect { }
 
 // When required to use equipment, such as rations.
@@ -141,7 +141,7 @@ Procedure.TriggerMove = class TriggerMove extends Procedure.Effect {
  * 
  * You would write:
  * import { choice, hold, modifier } from 'move_procedure'
- * new Procedure('Some trigger', choice(){ choice: { hold: { }, modifier: { } } })
+ * new Procedure('Some trigger', choice({ choice: { hold: { }, modifier: { } } }))
  */
 
 Object.entries(Procedure).forEach(([name, clazz]) => {
