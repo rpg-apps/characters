@@ -1,3 +1,5 @@
+import { DAMAGE } from './stats'
+
 class Procedure {
 	constructor (trigger, effect) {
 		effect = effectize(effect)
@@ -17,11 +19,10 @@ Procedure.BasicEffect = class BasicEffect extends Procedure.Effect {
 }
 
 function effectize (something) {
-	if (something instanceof Procedure.Effect || something === undefined) {
-		return something
-	} else if (something.constructor === String) {
+	if (something.constructor === String) {
 		return new Procedure.BasicEffect(something)
 	}
+	return something
 }
 
 // When required to roll and do something according to the result: "roll+WIS", "roll+DEX"
@@ -47,7 +48,7 @@ Procedure.Choice = class Choice extends Procedure.Effect {
 Procedure.DoDamage = class DoDamage extends Procedure.Effect {
 	constructor (damage) {
 		super()
-		Object.assign(this, { damage: damage || Procedure.STATS.DAMAGE })
+		Object.assign(this, { damage: damage || DAMAGE })
 	}
 }
 
@@ -154,35 +155,5 @@ Object.entries(Procedure).forEach(([name, clazz]) => {
 
 Procedure.CONSTANT = 'When you have this move' // A trigger for when an effect is constant.
 Procedure.NO_EFFECT = effectize('Nothing happens') // An effect for when nothing occours.
-
-Procedure.STATS = {
-	HP: 'hp',
-	XP: 'xp',
-	LVL: 'level',
-	ARMOR: 'armor',
-	MAX_HP: 'maxHP',
-	DAMAGE: 'damage',
-	
-	STRENGTH: 'Strength',
-	DEXTERITY: 'Dexterity',
-	CONSITUTION: 'Constitution',
-	INTELLIGENCE: 'Intelligence',
-	WISDOM: 'Wisdom',
-	CHRASIMA: 'Charisma',
-
-	STR: 'STR',
-	DEX: 'DEX',
-	CON: 'CON',
-	INT: 'INT',
-	WIS: 'WIS',
-	CHA: 'CHA',
-
-	WEAK: 'Weak',
-	SHAKEY: 'Shakey',
-	SICK: 'Sick',
-	STUNNED: 'Stunned',
-	CONFUSED: 'Confused',
-	SCARRED: 'Scarred'
-}
 
 export default Procedure

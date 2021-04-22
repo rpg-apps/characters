@@ -19,4 +19,6 @@ Move.Multiclass = class MulticlassMove extends BasicMove {
 	}
 }
 
+Move.BasicMove = BasicMove
+
 export default Move
