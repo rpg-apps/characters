@@ -1,20 +1,18 @@
-import AsyncStorage from '@react-native-community/async-storage'
+const storage = localStorage
 
 export async function get (name) {
-	return AsyncStorage.getItem(name)
+	return storage.getItem(name)
 }
 
 export async function getAll () {
-	const keys = await AsyncStorage.getAllKeys()
-	return AsyncStorage.multiGet(keys)
+	const keys = await storage.getAllKeys()
+	return storage.multiGet(keys)
 }
 
 export async function add (character) {
-	return AsyncStorage.setItem(character.name, JSON.stringify(character))
+	return storage.setItem(character.name, JSON.stringify(character))
 }
 
 export async function remove (name) {
-	return AsyncStorage.removeItem(name)
+	return storage.removeItem(name)
 }
-
-
