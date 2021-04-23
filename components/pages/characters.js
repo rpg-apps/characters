@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   	backgroundColor: '#00ff00'
   },
   character: {
-  	backgroundColor: '#aaffff',
+  	backgroundColor: '#00e0ff',
   	width: '100%',
   	height: '3rem',
   	marginBottom: '1rem',
