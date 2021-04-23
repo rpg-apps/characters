@@ -1,0 +1,37 @@
+moves:
+  - name: Hack and Slash
+    text: >
+      When you attack an enemy in melee, roll+Str.
+      * On a 10+, you deal your damage to the enemy and avoid their attack. At your option, you may choose to do +1d6 damage but expose yourself to the enemy’s attack.
+      * On a 7–9, you deal your damage to the enemy and the enemy makes an attack against you.
+    procedure:
+      trigger: When you attack an enemy in melee
+      effect:
+        roll:
+          formula: roll+Str
+          success:
+            choice:
+              text: You may choose to do +1d6 damage but expose yourself to the enemy’s attack.
+              options:
+                - { text: Take +1d6 damage, effect: { parallel: { effects: [{ dealDamage: { modifier: +1d6 } }, takeDamage] } } }
+                - { text: Don’t expose yourself to the enemy’s attack, effect: dealDamage }
+          partialSuccess:
+            parallel:
+              effects: [dealDamage, takeDamage]
+
+  - name: Volley
+    text: >
+      When you take aim and shoot at an enemy at range, roll+Dex.
+      * On a 10+, you have a clear shot — deal your damage.
+      * On a 7–9, choose one (whichever you choose you deal your damage):
+        * You have to move to get the shot placing you in danger as described by the GM.
+        * You have to take what you can get: -1d6 damage.
+        * You have to take several shots, reducing your ammo by one.
+    procedure:
+      trigger: When you take aim and shoot at an enemy at range
+      effect:
+        roll:
+          formula: roll+Dex
+          success: dealDamage
+          partialSuccess:
+            effect:
