@@ -23,7 +23,7 @@ jobs:
     - name: install
       run: yarn install --frozen-lockfile
     - name: build
-      run: yarn ccccc
+      run: yarn predeploy
     - name: deploy
       run: |
         git config --global user.name $user_name
