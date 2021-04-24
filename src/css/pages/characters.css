@@ -1,0 +1,36 @@
+#characters {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+}
+
+#characters .character, #characters .add-character {
+	width: calc(100% - 4rem);
+    margin: 1rem 1rem 0 1rem;
+    padding: 1rem;
+    border: 2px solid lightgray;
+    border-radius: 1rem;
+    text-decoration: none;
+}
+
+#characters .character .adventure, #characters .character .race {
+    display: inline;
+    color: #666666;
+    font-size: small;
+    padding: 0rem 2rem 0rem 0rem;
+}
+
+#characters .character .name {
+    font-size: 1.2rem;
+    color: black;
+}
+
+#characters .add-character {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 3rem;
+    font-size: 1.5rem;
+	color: black;
+}
