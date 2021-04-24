@@ -27,16 +27,14 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install --frozen-lockfile
-    - name: showing available scripts
-      run: yarn run
     - name: build
-      run: yarn bulid
+      run: yarn run bulid
     - name: deploy
       run: |
         git config --global user.name $user_name
         git config --global user.email $user_email
         git remote set-url origin https://${github_token}@github.com/${repository}
-        yarn deploy
+        yarn run deploy
       env:
         user_name: 'github-actions[bot]'
         user_email: 'github-actions[bot]@users.noreply.github.com'
