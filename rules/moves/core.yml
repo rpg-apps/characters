@@ -6,7 +6,7 @@ moves:
       * On a 10+, you deal your damage to the enemy and avoid their attack. At your option, you may choose to do +1d6 damage but expose yourself to the enemy’s attack.
       * On a 7–9, you deal your damage to the enemy and the enemy makes an attack against you.
     trigger: When you attack an enemy in melee
-    procedure:
+    effect:
       roll roll+Str:
         success:
           choose do +1d6 damage but expose yourself to the enemy’s attack?:
@@ -22,13 +22,13 @@ moves:
         * You have to take what you can get: -1d6 damage.
         * You have to take several shots, reducing your ammo by one.
     trigger: When you take aim and shoot at an enemy at range
-    procedure:
+    effect:
       roll roll+Dex:
         success: deal damage
         partial success:
           - choose:
               You have to move to get the shot placing you in danger as described by the GM.: You have to move to get the shot placing you in danger as described by the GM.
-              You have to take what you can get, -1d6 damage.: modifiy damage -1d6 forward
+              You have to take what you can get, -1d6 damage.: modifiy damage -1d6 forced forward
               You have to take several shots, reducing your ammo by one.: use gear with tag ammo
           - deal damage
   Defy Danger:
@@ -44,14 +44,14 @@ moves:
       * On a 10+, you do what you set out to, the threat doesn’t come to bear.
       * On a 7–9, you stumble, hesitate, or flinch: the GM will offer you a worse outcome, hard bargain, or ugly choice.
     trigger: When you act despite an imminent threat or suffer a calamity
-    procedure:
+    effect:
       - choose How do you deal with it?:
-          By powering through (Str): modifiy roll +Str forward
-          By getting out of the way or acting fast (Dex): modifiy roll +Dex forward
-          By enduring (Con): modifiy roll +Con forward
-          With quick thinking (Str): modifiy roll +Int forward
-          Through mental fortitude (Wis): modifiy roll +Wis forward
-          Using charm and social grace (Cha): modifiy roll +Cha forward
+          By powering through (Str): modifiy roll +Str forced forward
+          By getting out of the way or acting fast (Dex): modifiy roll +Dex forced forward
+          By enduring (Con): modifiy roll +Con forced forward
+          With quick thinking (Str): modifiy roll +Int forced forward
+          Through mental fortitude (Wis): modifiy roll +Wis forced forward
+          Using charm and social grace (Cha): modifiy roll +Cha forced forward
       - roll roll:
           success: You do what you set out to, the threat doesn’t come to bear.
           partial success: "You stumble, hesitate, or flinch: the GM will offer you a worse outcome, hard bargain, or ugly choice."
@@ -66,7 +66,7 @@ moves:
       * Open up the attacker to an ally giving that ally +1 forward against the attacker.
       * Deal damage to the attacker equal to your level.
     trigger: When you stand in defense of a person, item, or location under attack
-    procedure:
+    effect:
       - roll roll+Con:
           success: hold 3
           partial success: hold 1
@@ -85,9 +85,8 @@ moves:
       * On a 10+, the GM will tell you something interesting and useful about the subject relevant to your situation.
       * On a 7–9, the GM will only tell you something interesting—it’s on you to make it useful.
       The GM might ask you “How do you know this?” Tell them the truth, now.
-      * Deal damage to the attacker equal to your level.
     trigger: When you consult your accumulated knowledge about something
-    procedure:
+    effect:
       roll roll+Int:
         success: The GM will tell you something interesting and useful about the subject relevant to your situation, and might ask you “How do you know this?” Tell them the truth, now.
         partialSuccess: The GM will only tell you something interesting — it’s on you to make it useful, and might ask you “How do you know this?” Tell them the truth, now.
@@ -105,7 +104,7 @@ moves:
       * Who’s really in control here?
       * What here is not what it appears to be?
     trigger: When you closely study a situation or person
-    procedure:
+    effect:
       - roll roll+Wis:
           success: get 3
           partial succes: get 1
@@ -124,7 +123,7 @@ moves:
       * On a 10+, they do what you ask if you first promise what they ask of you.
       * On a 7–9, they will do what you ask, but need some concrete assurance of your promise, right now.
     trigger: When you have leverage on a GM Character and manipulate them
-    procedure:
+    effect:
       roll roll+Cha:
         success: They do what you ask if you first promise what they ask of you.
         partialSuccess: They will do what you ask, but need some concrete assurance of your promise, right now.
@@ -134,7 +133,7 @@ moves:
       * On a 10+ they take +1 or -2, your choice. 
       * On a 7–9 you also expose yourself to danger, retribution, or cost.
     trigger: When you help or hinder someone you have a bond with
-    procedure:
+    effect:
       roll roll+bond:
         success:
           choose wether they take +1 or -2:
@@ -150,7 +149,7 @@ moves:
       * On a 7–9, Death himself will offer you a bargain. Take it and stabilize or refuse and pass beyond the Black Gates into whatever fate awaits you.
       * On 6-, your fate is sealed. You’re marked as Death’s own and you’ll cross the threshold soon. The GM will tell you when.
     trigger: on hp=0
-    procedure:
+    effect:
       - You catch a glimpse of what lies beyond the Black Gates of Death’s Kingdom (the GM will describe it).
       - roll roll:
           success:
@@ -168,15 +167,11 @@ moves:
       * Equal to or less than your load, you suffer no penalty
       * Less than or equal to your load+2, you take -1 ongoing until you lighten your burden
       * Greater than your load+2, you have a choice: drop at least 1 weight and roll at -1, or automatically fail
-    trigger: { auto: { formula: wieght>load } }
-    procedure:
-      effect:
-        condition:
-          formula: weight>load+2
-          onTrue:
-            modifier: { formula: autofail, options: { forced: true, until: { auto: { formula: weight<=load+2 } } } }
-          onFalse:
-            modifier: { formula: '-1', options: { forced: true, until: { auto: { formula: weight<=load+2 } } } }
+    trigger: on wieght>load
+    effect:
+      is weight>load+2:
+        yes: modify all autofail forced ongoing until weight<=load+2
+        no: modify all -1 forced ongoing until weight>load+2||wright<=load
   Make Camp:
     text: >
       When you settle in to rest consume a ration.
@@ -184,21 +179,16 @@ moves:
       If you have enough XP you may level up.
       When you wake from at least a few uninterrupted hours of sleep heal damage equal to half your max HP.
     trigger: When you settle in to rest
-    procedure:
-      effect:
-        series:
-          effects:
-            - { useGear: { requirements: { name: RATIONS } } }
-            - If you’re somewhere dangerous decide the watch order as well.
-            - condition:
-                formula: xp-level>=7
-                onTrue: { triggerMove: { move: Level Up } }
-            - choose Did you get at least a few uninterrupted hours of sleep?:
-                options:
-                  - text: 'yes'
-                    effect: { changeStat: { stat: hp, change: +0.5*maxHP } }
-                  - text: 'no'
-                    effect: NO_EFFECT
+    effect:
+      - use gear rations
+      - If you’re somewhere dangerous decide the watch order as well.
+      - is xp-level>=7:
+          yes:
+            trigger move: Level up
+          no: no effect
+      - choose Did you get at least a few uninterrupted hours of sleep?:
+          yes: change stat hp +(maxHP/2)
+          no: no effect
   Take Watch:
     text: >
       When you’re on watch and something approaches the camp roll+Wis.
@@ -206,14 +196,11 @@ moves:
       * On a 7–9, you react just a moment too late; your companions in camp are awake but haven’t had time to prepare. They have weapons and armor but little else.
       * On a miss, whatever lurks outside the campfire’s light has the drop on you.
     trigger: When you’re on watch and something approaches the camp
-    procedure:
-      effect:
+    effect:
         roll roll+Wis:
           success:
-            parallel:
-              effects:
-                - You’re able to wake the camp and prepare a response
-                - modifier: { formula: '+1', options: { usages: 1 } }
+            - You’re able to wake the camp and prepare a response
+            - modify all +1 forward
           partial success: You react just a moment too late; your companions in camp are awake but haven’t had time to prepare. They have weapons and armor but little else.
           miss: Whatever lurks outside the campfire’s light has the drop on you.
   Undertake a Perilous Journey:
@@ -227,25 +214,20 @@ moves:
 
       You can’t assign more than one job to a character. If you don’t have enough party members, or choose not to assign a job, treat that job as if it had been assigned and the responsible player had rolled a 6.
     trigger: When you travel through hostile territory
-    procedure:
-      effect:
+    effect:
         choose What is your role in this journey?:
-          options:
-            - text: Quartermaster
-              effect:
-                roll roll+Wis:
-                  success: You reduce the number of rations required by one.
-                  partial success: The normal number of rations are consumed.
-            - text: Trailblazer
-              effect:
-                roll roll+Wis:
-                  success: You reduce the amount of time it takes to reach your destination (the GM will say by how much).
-                  partial success: The journey takes about as long as expected.
-            - text: Scout
-              effect:
-                roll roll+Wis:
-                  success: You will spot any trouble quick enough to let you get the drop on it.
-                  partial success: No one gets the drop on you but you don’t get the drop on them either.
+          Quartermaster:
+            roll roll+Wis:
+              success: You reduce the number of rations required by one.
+              partial success: The normal number of rations are consumed.
+          Trailblazer:
+            roll roll+Wis:
+              success: You reduce the amount of time it takes to reach your destination (the GM will say by how much).
+              partial success: The journey takes about as long as expected.
+          Scout:
+            roll roll+Wis:
+              success: You will spot any trouble quick enough to let you get the drop on it.
+              partial success: No one gets the drop on you but you don’t get the drop on them either.
   End Of Session:
     text: >
       When you reach the end of a session, choose one of your bonds that you feel is resolved (completely explored, no longer relevant, or otherwise). Ask the player of the character you have the bond with if they agree. If they do, mark XP and write a new bond with whomever you wish.
@@ -256,21 +238,26 @@ moves:
       * Did we loot a memorable treasure?
       For each “yes” answer everyone marks XP.
     trigger: When you reach the end of a session
-    procedure:
-      effect:
-        choose Choose one of your bonds that you feel is resolved (completely explored, no longer relevant, or otherwise). Ask the player of the character you have the bond with if they agree. If they do, mark XP and write a new bond with whomever you wish.:
-          options:
-            - text: Resolve a bond
-              effect:
-                series:
-                  effects:
-                    - Resolve Bond
-                    - changeStat: { stat: xp, change: 1 }
-                    - Create Bond
-            - text: Create a new bond
-              effect: Create Bond
-            - text: Do not resolve a bond
-              effect: NO_EFFECT
+    effect:
+        - choose Choose one of your bonds that you feel is resolved (completely explored, no longer relevant, or otherwise). Ask the player of the character you have the bond with if they agree. If they do, mark XP and write a new bond with whomever you wish.:
+              Resolve a bond:
+                      - resolve bond
+                      - change stat xp +1
+                      - create bond
+              Create a new bond: create bond
+              Do not resolve a bond: no effect
+        - choose Did I fulfill my alignemnt goal?:
+            yes: change stat xp +1
+            no: no effect
+        - choose Did we learn something new and important about the world?:
+            yes: change stat xp +1
+            no: no effect
+        - choose Did we overcome a notable monster or enemy?:
+            yes: change stat xp +1
+            no: no effect
+        - choose Did we loot a memorable treasure?:
+            yes: change stat xp +1
+            no: no effect
   Level Up:
     text: >
       When you have downtime (hours or days) and XP equal to (or greater than) your current level+7, you can reflect on your experiences and hone your skills.
@@ -280,27 +267,17 @@ moves:
       * If you are the wizard, you also get to add a new spell to your spellbook.
       * Choose one of your stats and increase it by 1 (this may change your modifier). Changing your Constitution increases your maximum and current HP. Ability scores can’t go higher than 18.
     trigger: When you have downtime (hours or days) and XP equal to (or greater than) your current level+7
-    procedure:
-      effect:
-        seris:
-          effects:
-            - changeStat: { stat: xp, change: '-level-7' }
-            - changeStat: { stat: level, change: 1 }
-            - addAdvancedMove
-            - choose Choose one of your stats to increase:
-              options:
-                - text: Strength
-                  effect: { changeStat: { stat: Strength, change: 1 } }
-                - text: Dexterity
-                  effect: { changeStat: { stat: Dexterity, change: 1 } }
-                - text: Constitution
-                  effect: { changeStat: { stat: Constitution, change: 1 } }
-                - text: Intelligence
-                  effect: { changeStat: { stat: Intelligence, change: 1 } }
-                - text: Wisdom
-                  effect: { changeStat: { stat: Wisdom, change: 1 } }
-                - text: Charisma
-                  effect: { changeStat: { stat: Charisma, change: 1 } }
+    effect:
+      - change stat xp -level-7
+      - change stat level +1
+      - add advanced move
+      - choose Choose one of your stats to increase:
+          Strength: change stat Strength +1
+          Dexterity: change stat Dexterity +1
+          Constitution: change stat Constitution +1
+          Intelligence: change stat Intelligence +1
+          Wisdom: change stat Wisdom +1
+          Charisma: change stat Charisma +1
   Carouse:
     text: >
       When you return triumphant and throw a big party, spend 100 coins and roll +1 for every extra 100 coins spent.
@@ -313,45 +290,21 @@ moves:
       * You gain useful information.
       * You are not entangled, ensorcelled, or tricked.
     trigger: When you return triumphant and throw a big party
-    procedure:
-      effect:
-        series:
-          effects:
-          - choose How much do you spend?:
-              options:
-                - text: 100 coins (roll+0)
-                  effect: { useGear: { requirements: { name: coin }, count: 100 } }
-                - text: 200 coins (roll+1)
-                  effect: { parallel: { effects: [{ useGear: { requirements: { name: coin }, count: 200 } }, { modifier: { formula: '+1', options: { usages: 1, forced: true } } }] } }
-                - text: 300 coins (roll+2)
-                  effect: { parallel: { effects: [{ useGear: { requirements: { name: coin }, count: 300 } }, { modifier: { formula: '+2', options: { usages: 1, forced: true } } }] } }
-                - text: 400 coins (roll+3)
-                  effect: { parallel: { effects: [{ useGear: { requirements: { name: coin }, count: 400 } }, { modifier: { formula: '+3', options: { usages: 1, forced: true } } }] } }
-          - roll roll:
-              success:
-                choose Choose 3:
-                  options:
-                    - You befriend a useful NPC.
-                    - You hear rumors of an opportunity.
-                    - You gain useful information.
-                    - You are not entangled, ensorcelled, or tricked.
-              partial success:
-                choose Choose 1:
-                  options:
-                    - You befriend a useful NPC.
-                    - You hear rumors of an opportunity.
-                    - You gain useful information.
-                    - You are not entangled, ensorcelled, or tricked.
-              miss:
-                parallel:
-                  effects:
-                    - choose Choose 1:
-                        options:
-                          - You befriend a useful NPC.
-                          - You hear rumors of an opportunity.
-                          - You gain useful information.
-                          - You are not entangled, ensorcelled, or tricked.
-                    - Things get really out of hand (the GM will say how).
+    effect:
+      - choose How much do you spend?:
+          100 coins (roll+0): use gear 100 coin
+          200 coins (roll+1): [use gear 200 coin, modify all +1 forced forward]
+          300 coins (roll+2): [use gear 300 coin, modify all +2 forced forward]
+          400 coins (roll+3): [use gear 400 coin, modify all +3 forced forward]
+      - roll roll:
+          success: get 3
+          partial success: get 1
+          miss: [get 1, Things get really out of hand (the GM will say how).]
+          use:
+            - You befriend a useful NPC.
+            - You hear rumors of an opportunity.
+            - You gain useful information.
+            - You are not entangled, ensorcelled, or tricked.
   Supply:
     text: >
       When you go to buy something with gold on hand, if it’s something readily available in the settlement you’re in, you can buy it at market price.
@@ -359,42 +312,31 @@ moves:
       * On a 10+, you find what you’re looking for at a fair price.
       * On a 7–9, you’ll have to pay more or settle for something that’s not exactly what you wanted, but close. The GM will tell you what your options are.
     trigger: When you go to buy something with gold on hand
-    procedure:
-      effect:
+    effect:
         choose Is it something readily available in the settlement you’re in?:
-          options:
-            - text: 'yes'
-              effect: You can buy it in market price
-            - text: 'No'
-              effect:
-                roll roll+Cha:
-                  success: You find what you’re looking for at a fair price.
-                  partial success: You’ll have to pay more or settle for something that’s not exactly what you wanted, but close. The GM will tell you what your options are.
+          yes: You can buy it in market price
+          no:
+            roll roll+Cha:
+              success: You find what you’re looking for at a fair price.
+              partial success: You’ll have to pay more or settle for something that’s not exactly what you wanted, but close. The GM will tell you what your options are.
   Recover:
     text: >
       When you do nothing but rest in comfort and safety after a day of rest you recover all your HP.
       After three days of rest you remove one debility of your choice.
       If you’re under the care of a healer (magical or otherwise) you heal a debility for every two days of rest instead.
     trigger: When you do nothing but rest in comfort and safety
-    procedure:
-      effect:
-        choose How long do you rest?:
-          options:
-            - text: One day - recover all your HP
-              effect: { changeStats: { stat: hp, change: +maxHP } }
-            - text: Three days, or two days with a healer - also remove a debility
-              effect:
-                parallel:
-                  effects:
-                    - changeStats: { stat: hp, change: +maxHP }
-                    - choose Choose a debility to remove:
-                        options:
-                          - { text: Weak, effect: { { changeStats: { stat: Weak, change: =false } } } }
-                          - { text: Shakey, effect: { { changeStats: { stat: Shakey, change: =false } } } }
-                          - { text: Sick, effect: { { changeStats: { stat: Sick, change: =false } } } }
-                          - { text: Stunned, effect: { { changeStats: { stat: Stunned, change: =false } } } }
-                          - { text: Confused, effect: { { changeStats: { stat: Confused, change: =false } } } }
-                          - { text: Scarred, effect: { { changeStats: { stat: Scarred, change: =false } } } }
+    effect:
+      choose How long do you rest?:
+        One day - recover all your HP: change stat hp +maxHP
+        Three days, or two days with a healer - also remove a debility:
+          - change stat hp +maxHP
+          - choose Choose a debility to remove:
+              Weak: change stat Weak =false
+              Shakey: change stat Shakey =false
+              Sick: change stat Sick =false
+              Stunned: change stat Stunned =false
+              Confused: change stat Confused =false
+              Scarred: change stat Scarred =false
   Recruit:
     text: >
       When you put out word that you’re looking to hire help, roll:
@@ -407,30 +349,19 @@ moves:
       * On a 7–9, you’ll have to settle for someone close to what you want or turn them away.
       * On a miss someone influential and ill-suited declares they’d like to come along (a foolhardy youth, a loose-cannon, or a veiled enemy, for example), bring them and take the consequences or turn them away. If you turn away applicants you take -1 forward to recruit.
     trigger: When you put out word that you’re looking to hire help
-    procedure:
-      effect:
-        series:
-          effects:
-            - choose Do you make it known that your pay is generous?:
-                options: [{ text: 'Yes', effect: { modifier: { formula: '+1', options: { forced: true, usages: 1 } } } }, { text: 'No', effect: NO_EFFECT }]
-            - choose Do you make it known what you’re setting out to do?:
-                options: [{ text: 'Yes', effect: { modifier: { formula: '+1', options: { forced: true, usages: 1 } } } }, { text: 'No', effect: NO_EFFECT }]
-            - choose Do you make it known that they’ll get a share of whatever you find?:
-                options: [{ text: 'Yes', effect: { modifier: { formula: '+1', options: { forced: true, usages: 1 } } } }, { text: 'No', effect: NO_EFFECT }]
-            - choose Do you have a useful reputation around these parts?:
-                options: [{ text: 'Yes', effect: { modifier: { formula: '+1', options: { forced: true, usages: 1 } } } }, { text: 'No', effect: NO_EFFECT }]
-            - roll roll:
-                success: You’ve got your pick of a number of skilled applicants, your choice who you hire, no penalty for not taking them along.
-                partial success: You’ll have to settle for someone close to what you want or turn them away.
-                miss:
-                  parallel:
-                    effects:
-                      - Someone influential and ill-suited declares they’d like to come along (a foolhardy youth, a loose-cannon, or a veiled enemy, for example), bring them and take the consequences or turn them away. If you turn away applicants you take -1 forward to recruit.
-                      - choose Bring them along or turn them away?:
-                          options:
-                            - Bring them along
-                            - text: Turn them away
-                              effect: { modifier: { formula: '-1', options: { on: 'recruit', usages: 1, forced: true } } }
+    effect:
+      - choose Do you make it known that your pay is generous?: { Yes: modify all +1 forced forward, no: no effect }
+      - choose Do you make it known what you’re setting out to do?: { Yes: modify all +1 forced forward, no: no effect }
+      - choose Do you make it known that they’ll get a share of whatever you find?: { Yes: modify all +1 forced forward, no: no effect }
+      - choose Do you have a useful reputation around these parts?: { Yes: modify all +1 forced forward, no: no effect }
+      - roll roll:
+          success: You’ve got your pick of a number of skilled applicants, your choice who you hire, no penalty for not taking them along.
+          partial success: You’ll have to settle for someone close to what you want or turn them away.
+          miss:
+            - Someone influential and ill-suited declares they’d like to come along (a foolhardy youth, a loose-cannon, or a veiled enemy, for example), bring them and take the consequences or turn them away. If you turn away applicants you take -1 forward to recruit.
+            - choose Bring them along or turn them away?:
+                Bring them along: Bring them along
+                Turn them away: modify recruit -1 forced forward
   Outstanding Warrants:
     text: >
       When you return to a civilized place in which you’ve caused trouble before, roll+Cha.
@@ -440,15 +371,12 @@ moves:
         * Someone has put a price on your head.
         * Someone important to you has been put in a bad spot as a result of your actions.
     trigger: When you return to a civilized place in which you’ve caused trouble before
-    procedure:
-      effect:
-        roll roll+Cha:
-          success: Word has spread of your deeds and everyone recognizes you.
-          partial success:
-            series:
-              effects:
-                - Word has spread of your deeds and everyone recognizes you.
-                - "The GM chooses a complication: the local constabulary has a warrant out for your arrest, someone has put a price on your head or someone important to you has been put in a bad spot as a result of your actions."
+    effect:
+      roll roll+Cha:
+        success: Word has spread of your deeds and everyone recognizes you.
+        partial success:
+          - Word has spread of your deeds and everyone recognizes you.
+          - "The GM chooses a complication: the local constabulary has a warrant out for your arrest, someone has put a price on your head or someone important to you has been put in a bad spot as a result of your actions."
   Bolster:
     text: >
       When you spend your leisure time in study, meditation, or hard practice, you gain preparation.
@@ -456,11 +384,9 @@ moves:
       * If you prepare for a month or longer, take 3 instead.
       When your preparation pays off spend 1 preparation for +1 to any roll. You can only spend one preparation per roll.
     trigger: When you spend your leisure time in study, meditation, or hard practice
-    procedure:
-      effect:
-        choose If you prepare for:
-          options:
-            - text: Between a week and a month
-              effect: { hold: { usageOptions: [{ modifier: { formula: '+1', usages: 1 } }], amount: 1 } }
-            - text: More then a month
-              effect: { hold: { usageOptions: [{ modifier: { formula: '+1', usages: 1 } }], amount: 3 } }
+    effect:
+      choose If you prepare for:
+        Between a week and a month: hold 3
+        More then a month: hold 1
+      use:
+        - modify all +1 forward

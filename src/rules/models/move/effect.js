@@ -9,34 +9,36 @@ so far:
 procedure:
 either one effect or an array of effects
 
+triggers:
+ - text
+ - on <formula>
+
 effects:
- - roll <formula>: { success, partial success/partial success also, miss }
- - choose <text>: { <option texts...> }
- - deal damage <formula>
- - take damage
- - modify <on> <formula> (forward|ongoing) (forced)
+ / text
+ / roll <formula:number>: { success, partial success/partial success also, miss }
+ / choose <text>: { <option texts...> }
+ / deal damage <formula:number>
+ / take damage
+ - modify <on> <formula:number> (forced) (forward|ongoing) (until <formula:boolean>)
  - use gear (count) (with tag <tag>) (<equipment>)
  - hold <count>: { <option texts...> }
  - get <count>: { <option texts...> } // like hold but immediate
- - use: { <option texts...> } // usage for holds/gets
+ - use: { <option texts...> } // usage for holds/gets, can also be an array
  - no effect
+ - change stat <stat> <formula:number>
+ - die
+ - is <formula:boolean>
+ - trigger move: <move name>
+ - resolve bond
+ - add advanced move
 */
 
 
 import { DAMAGE } from '../stats'
 
-class Procedure {
-  constructor ({ trigger, effect }) {
-    effect = effectize(effect)
-    Object.assign(this, { trigger, effect })
-  }
-}
+Effect = class Effect { }
 
-/* EFFECTS - this section describes the different effects that can occour */
-
-Procedure.Effect = class Effect { }
-
-Procedure.BasicEffect = class BasicEffect extends Procedure.Effect {
+Effect.BasicEffect = class BasicEffect extends Effect {
   constructor ({ text }) {
     super()
     Object.assign(this, { text })
@@ -45,15 +47,15 @@ Procedure.BasicEffect = class BasicEffect extends Procedure.Effect {
 
 function effectize (something) {
   if (something.constructor === String) {
-    return new Procedure.BasicEffect({ text: something })
+    return new Effect.BasicEffect({ text: something })
   }
   return something
 }
 
 // When required to roll and do something according to the result: "roll+WIS", "roll+DEX"
 // When there is no "miss" option in the move, it will be undefined here. This means the GM picks what happens.
-Procedure.Roll = class Roll extends Procedure.Effect {
-  constructor ({ formula, success, partialSuccess, miss }) {
+Effect.Roll = class Roll extends Effect {
+  constructor (formula, { success, partialSuccess, miss }) {
     super()
     Object.assign(this, { formula, success: effectize(success), partialSuccess: effectize(partialSuccess) })
     if (miss) {
@@ -63,8 +65,8 @@ Procedure.Roll = class Roll extends Procedure.Effect {
 }
 
 // When required to choose between few options: "Name <something>", "Choose 3:"
-Procedure.Choice = class Choice extends Procedure.Effect {
-  constructor ({ text, options, count = 1 }) {
+Effect.Choice = class Choice extends Effect {
+  constructor (text, options, count = 1) {
     super()
     options = options.map(({ text, effect }) => ({ text, effect: effectize(effect) }))
     Object.assign(this, { text, options, count })
@@ -73,20 +75,20 @@ Procedure.Choice = class Choice extends Procedure.Effect {
 
 // When required to do damage to an enemy: "Deal damage", "Deal 2d4 of damage"
 // damage is a formula can be undefined, when the default damage should be used.
-Procedure.DealDamage = class DealDamage extends Procedure.Effect {
-  constructor ({ damage }) {
+Effect.DealDamage = class DealDamage extends Effect {
+  constructor (formula) {
     super()
-    Object.assign(this, { damage: damage || DAMAGE })
+    Object.assign(this, { formula: formula || DAMAGE })
   }
 }
 
 // When required to take damage.
-// No formula for taking damage, because the damage is declared at the time of the event, and given by the GM.
-Procedure.TakeDamage = class TakeDamage extends Procedure.Effect { }
+// No formula for taking damage, because the damage is declared by the GM at the time of the event.
+Effect.TakeDamage = class TakeDamage extends Effect { }
 
 // When required to use equipment, such as rations.
 // requirements are the tags/name of the equipment needs to be used.
-Procedure.UseGear = class UseGear extends Procedure.Effect {
+Effect.UseGear = class UseGear extends Effect {
   constructor ({ requirements, amount = 1 }) {
     super()
     Object.assign(this, { requirements, amount })
@@ -94,15 +96,15 @@ Procedure.UseGear = class UseGear extends Procedure.Effect {
 }
 
 // When updating a stat: "Add 1 to your level", "Reduce armor by 1", "Remove a debility"
-Procedure.ChangeStat = class ChangeStat extends Procedure.Effect {
+Effect.ChangeStat = class ChangeStat extends Effect {
   constructor ({ stat, change }) {
     super()
     Object.assign(this, { stat, change })
   }
 }
 
-Procedure.AddAdvancedMove = class AddAdvancedMove extends Procedure.Effect { }
-Procedure.Die = class Die extends Procedure.Effect { }
+Effect.AddAdvancedMove = class AddAdvancedMove extends Effect { }
+Effect.Die = class Die extends Effect { }
 
 /* Special DW mechanics */
 
@@ -110,15 +112,15 @@ Procedure.Die = class Die extends Procedure.Effect { }
 // Options:
 // Usages: how many times it counts. 1 for "forward", undefined for "ongoing"
 // Forced if the modifier is cannot be saved for later, but must be used immediately.
-Procedure.Modifier = class Modifier extends Procedure.Effect {
-  constructor ({ formula, options }) {
+Effect.Modifier = class Modifier extends Effect {
+  constructor (formula, options) {
     super()
     Object.assign(this, { formula }, options)
   }
 }
 
 // When given hold to use as you please: "Take 3 hold, use when..."
-Procedure.Hold = class Hold extends Procedure.Effect {
+Effect.Hold = class Hold extends Effect {
   constructor ({ count, usageOptions }) {
     super()
     Object.keys(usageOptions).forEach(key => { usageOptions[key] = effectize(usageOptions[key]) })
@@ -129,7 +131,7 @@ Procedure.Hold = class Hold extends Procedure.Effect {
 /* Logical concpets */
 
 // When two effects or more happens at the same time, independently: "Take 1 hold and choose one"
-Procedure.Parallel = class Parallel extends Procedure.Effect {
+Effect.Parallel = class Parallel extends Effect {
   constructor ({ effects }) {
     super()
     Object.assign(this, { effects: effects.map(effectize) })
@@ -137,7 +139,7 @@ Procedure.Parallel = class Parallel extends Procedure.Effect {
 }
 
 // When two effects or more happens one after the other, dependently: "Take 1 hold and choose one"
-Procedure.Series = class Series extends Procedure.Effect {
+Effect.Series = class Series extends Effect {
   constructor ({ effects }) {
     super()
     Object.assign(this, { effects: effects.map(effectize) })
@@ -145,7 +147,7 @@ Procedure.Series = class Series extends Procedure.Effect {
 }
 
 // When you take an effect depending on the result of a logical condition: "If you have enough power, level up"
-Procedure.Condition = class Condition extends Procedure.Effect {
+Effect.Condition = class Condition extends Effect {
   constructor ({ formula, onTrue, onFalse }) {
     super()
     Obejct.assign(this, { formula, onTrue: effectize(onTrue), onFalse: effectize(onFalse) })
@@ -153,7 +155,7 @@ Procedure.Condition = class Condition extends Procedure.Effect {
 }
 
 // When one move triggers another move
-Procedure.TriggerMove = class TriggerMove extends Procedure.Effect {
+Effect.TriggerMove = class TriggerMove extends Effect {
   constructor ({ moveTitle }) {
     super()
     Object.assign(this, { moveTitle })
@@ -162,7 +164,7 @@ Procedure.TriggerMove = class TriggerMove extends Procedure.Effect {
 
 /* Useful constants for some of the procedures */
 
-Procedure.CONSTANT = 'When you have this move' // A trigger for when an effect is constant.
-Procedure.NO_EFFECT = effectize('Nothing happens') // An effect for when nothing occours.
+Effect.CONSTANT = 'When you have this move' // A trigger for when an effect is constant.
+Effect.NO_EFFECT = effectize('Nothing happens') // An effect for when nothing occours.
 
-export default Procedure
+export default Effect
