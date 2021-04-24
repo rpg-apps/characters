@@ -19,7 +19,6 @@ export default class Characters extends React.Component {
   }
 
   render () {
-    console.log(this.state.characters)
     return <div id='characters'>
       {this.state.characters.map(character =>
         <Link className='character' to={`/character/${character.name}`} key={character.name}>

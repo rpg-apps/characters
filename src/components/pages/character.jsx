@@ -2,8 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { get } from '../../data/character_list'
-import Gear from './gear'
-import Moves from './moves'
 import Stats from '../stats'
 import CharacterInfo from '../character-info'
 import CharacterStatus from '../character-status'
@@ -12,11 +10,9 @@ export default class Character extends React.Component {
   constructor (props) {
     super()
     this.state = { name: props.match.params.name }
-    console.log(props)
   }
 
   async componentDidMount () {
-    console.log(this.state.name)
     const character = await get(this.state.name)
     this.setState({character})
   }

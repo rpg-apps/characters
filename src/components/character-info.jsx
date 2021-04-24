@@ -6,7 +6,7 @@ export default function CharacterInfo (props) {
     <div className='adventure'>{props.adventure}</div>
     <div className='name'>{props.name}</div>
     <div className='race'>{props.race}</div>
-    <div className='class'>{props.class}</div>
+    <div className='character-class'>{props.characterClass}</div>
     <div className='bio'>{props.bio}</div>
     <div className='look'>{props.look}</div>
     <div className='alignment'>{props.alignment}</div>
