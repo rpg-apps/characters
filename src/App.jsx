@@ -4,6 +4,8 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Characters from './components/pages/characters'
 import Character from './components/pages/character'
 import CharacterCreation from './components/pages/character-creation'
+import Gear from './components/pages/gear'
+import Moves from './components/pages/moves'
 
 function App() {
   return <Router>

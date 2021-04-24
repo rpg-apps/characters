@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { get } from '../../data/character_list'
 import Gear from './gear'
@@ -28,8 +29,8 @@ export default class Character extends React.Component {
       <CharacterInfo {...this.state.character.info()}/>
       <CharacterStatus {...this.state.character.status()}/>
       <Stats stats={this.state.character.stats()}/>
-      <Link className='gear' to={`/character/${character.name}/gear`}>Gear</Link>
-      <Link className='moves' to={`/character/${character.name}/moves`}>Moves</Link>
+      <Link className='gear' to={`/character/${this.state.character.name}/gear`}>Gear</Link>
+      <Link className='moves' to={`/character/${this.state.character.name}/moves`}>Moves</Link>
     </div>
   }
 }
