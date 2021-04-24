@@ -27,7 +27,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install
       run: yarn install --frozen-lockfile
-    - showing available scripts
+    - name: showing available scripts
       run: yarn run
     - name: build
       run: yarn bulid
