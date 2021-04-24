@@ -3,7 +3,7 @@ import React from 'react'
 import { getAll } from '../../data/character_list'
 
 export default class Characters extends React.Component {
-  constructor () {
+  constructor (props) {
     super()
     this.state = { characters: [
       {name: 'Ver'},

@@ -7,7 +7,7 @@ import Move from './move'
 import Mechanic from './mechanic'
 import Playbook from './playbook'
 
-const RULEBOOK_FIELDS = ['moves', 'playbooks', 'mechanics']
+const RULEBOOK_FIELDS = ['moves', 'playbooks', 'mechanics', 'equipment']
 
 /**
  * This function recieves an array of YAML strings representing objects in the rulebook.
@@ -68,9 +68,20 @@ Object.assign(factories, {
   playbook: value => new Playbook(value),
   mechanic: value => new Mechanic(value),
   move: value => new Move(value),
+  equipment: value => new Equipment(value),
   procedure: value => new Move.Procedure(value)
 })
 
 Object.entries(Move.Procedure).filter(([key]) => !['Effect', 'BasicEffect'].includes(key)).forEach(([key, factory]) => {
-  factories[camelCase(key)] = (value) => (value ? { independent: new Move.Procedure[key](value) } : new Move.Procedure[key]({ }))
+  factories[camelCase(key)] = value => {
+    if (Move.Procedure[key] instanceof Function) {
+      return value ? { independent: new Move.Procedure[key](value) } : new Move.Procedure[key]({ })
+    } else {
+      return Move.Procedure[key]
+    }
+  }
+})
+
+Object.entries(Equipment.TAGS).forEach(([key, tag]) => {
+  factories[camelCase(key)] = value => ((tag instanceof Function && value) ? tag(value) : tag)
 })

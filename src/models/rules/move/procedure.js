@@ -1,3 +1,28 @@
+/*
+so far:
+
+() - optional
+<> - var name
+{} - keys objects
+[] - array
+
+procedure:
+either one effect or an array of effects
+
+effects:
+ - roll <formula>: { success, partial success/partial success also, miss }
+ - choose <text>: { <option texts...> }
+ - deal damage <formula>
+ - take damage
+ - modify <on> <formula> (forward|ongoing) (forced)
+ - use gear (count) (with tag <tag>) (<equipment>)
+ - hold <count>: { <option texts...> }
+ - get <count>: { <option texts...> } // like hold but immediate
+ - use: { <option texts...> } // usage for holds/gets
+ - no effect
+*/
+
+
 import { DAMAGE } from '../stats'
 
 class Procedure {
@@ -49,9 +74,9 @@ Procedure.Choice = class Choice extends Procedure.Effect {
 // When required to do damage to an enemy: "Deal damage", "Deal 2d4 of damage"
 // damage is a formula can be undefined, when the default damage should be used.
 Procedure.DealDamage = class DealDamage extends Procedure.Effect {
-  constructor ({ damage, modifier }) {
+  constructor ({ damage }) {
     super()
-    Object.assign(this, { damage: damage || DAMAGE, modifier })
+    Object.assign(this, { damage: damage || DAMAGE })
   }
 }
 
@@ -60,10 +85,11 @@ Procedure.DealDamage = class DealDamage extends Procedure.Effect {
 Procedure.TakeDamage = class TakeDamage extends Procedure.Effect { }
 
 // When required to use equipment, such as rations.
+// requirements are the tags/name of the equipment needs to be used.
 Procedure.UseGear = class UseGear extends Procedure.Effect {
-  constructor ({ equipment, amount }) {
+  constructor ({ requirements, amount = 1 }) {
     super()
-    Object.assign(this, { equipment, amount })
+    Object.assign(this, { requirements, amount })
   }
 }
 
@@ -75,8 +101,6 @@ Procedure.ChangeStat = class ChangeStat extends Procedure.Effect {
   }
 }
 
-Procedure.CreateBond = class CreateBond extends Procedure.Effect { }
-Procedure.ResolveBond = class ResolveBond extends Procedure.Effect { }
 Procedure.AddAdvancedMove = class AddAdvancedMove extends Procedure.Effect { }
 Procedure.Die = class Die extends Procedure.Effect { }
 
@@ -87,9 +111,9 @@ Procedure.Die = class Die extends Procedure.Effect { }
 // Usages: how many times it counts. 1 for "forward", undefined for "ongoing"
 // Forced if the modifier is cannot be saved for later, but must be used immediately.
 Procedure.Modifier = class Modifier extends Procedure.Effect {
-  constructor ({ modifier, options }) {
+  constructor ({ formula, options }) {
     super()
-    Object.assign(this, { modifier }, options)
+    Object.assign(this, { formula }, options)
   }
 }
 
@@ -122,9 +146,9 @@ Procedure.Series = class Series extends Procedure.Effect {
 
 // When you take an effect depending on the result of a logical condition: "If you have enough power, level up"
 Procedure.Condition = class Condition extends Procedure.Effect {
-  constructor ({ condition, onTrue, onFalse }) {
+  constructor ({ formula, onTrue, onFalse }) {
     super()
-    Obejct.assign(this, { condition, onTrue: effectize(onTrue), onFalse: effectize(onFalse) })
+    Obejct.assign(this, { formula, onTrue: effectize(onTrue), onFalse: effectize(onFalse) })
   }
 }
 

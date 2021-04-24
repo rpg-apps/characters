@@ -16,7 +16,7 @@ const volley = new Move({
 		success: doDamage(),
 		partialSuccess: choice('Choose one', {
 			'You have to move to get the shot, placing you in danger as described by the GM.': simultaneous(doDamage(), 'You are in danger as described by the GM.'),
-			'You have to take what you can get: -1d6 damage.': doDamate('-1d6'),
+			'You have to take what you can get: -1d6 damage.': doDamage('-1d6'),
 			'You have to take several shots, reducing your ammo by one.': simultaneous(doDamage(), useGear(Equipment.BUNDLE_OF_ARROWS, 1))
 		})
 	}))
