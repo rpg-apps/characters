@@ -8,8 +8,10 @@ import CharacterCreation from './components/pages/character-creation'
 function App() {
   return <Router>
     <Switch>
-      <Route path='/new' component={CharacterCreation}/>
+      <Route path='/character/:name/gear' component={Gear}/>
+      <Route path='/character/:name/moves' component={Moves}/>
       <Route path='/character/:name' component={Character}/>
+      <Route path='/new' component={CharacterCreation}/>
       <Route path='/' component={Characters}/>
     </Switch>
   </Router>
