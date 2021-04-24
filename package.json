@@ -1,7 +1,7 @@
 {
   "name": "dw-characters",
   "version": "0.1.0",
-  "homepage": "https://idanstark42.github.io/dw-characters",
+  "homepage": "http://www.dungeonworldcharacters.xyz",
   "repository": "https://github.com/idanstark42/dw-characters",
   "private": true,
   "dependencies": {
