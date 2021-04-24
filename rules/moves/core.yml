@@ -149,31 +149,18 @@ moves:
       * On a 10+, you’ve cheated Death — you’re in a bad spot but you’re still alive.
       * On a 7–9, Death himself will offer you a bargain. Take it and stabilize or refuse and pass beyond the Black Gates into whatever fate awaits you.
       * On 6-, your fate is sealed. You’re marked as Death’s own and you’ll cross the threshold soon. The GM will tell you when.
-    trigger: { auto: { formula: hp=0 } }
+    trigger: on hp=0
     procedure:
-      effect:
-        series:
-          effects:
-            - You catch a glimpse of what lies beyond the Black Gates of Death’s Kingdom (the GM will describe it).
-            - roll roll:
-                success:
-                  parallel:
-                    effects:
-                      - changeStat:
-                          stat: hp
-                          change: 1
-                      - You’ve cheated Death — you’re in a bad spot but you’re still alive.
-                partial success:
-                  choose Death himself will offer you a bargain.:
-                    options:
-                      - text: Take Death’s bargain and stabilize
-                        effect: 
-                          changeStat:
-                            stat: hp
-                            change: 1
-                      - text: Don’t take Death’s bargain and pass beyond the Black Gates into whatever fate awaits you
-                        effect: die
-                miss: die
+      - You catch a glimpse of what lies beyond the Black Gates of Death’s Kingdom (the GM will describe it).
+      - roll roll:
+          success:
+            - change stat hp +1
+            - You’ve cheated Death — you’re in a bad spot but you’re still alive.
+          partial success:
+            choose Death himself will offer you a bargain.:
+              Take Death’s bargain and stabilize: change stat hp +1
+              Don’t take Death’s bargain and pass beyond the Black Gates into whatever fate awaits you: die
+          miss: die
   Encumrance:
     text: >
       When you make a move while carrying weight you may be encumbered. If your weight carried is:
