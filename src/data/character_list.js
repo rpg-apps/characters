@@ -1,18 +1,20 @@
+import Character from '../models/character'
+
 const storage = localStorage
 
-export async function get (name) {
-	return storage.getItem(name)
+export function get (name) {
+	return new Character(JSON.parse(storage.getItem(name)))
 }
 
-export async function getAll () {
-	const keys = await storage.getAllKeys()
-	return storage.multiGet(keys)
+export function getAll () {
+	const keys = storage.getAllKeys()
+	return keys.map(key => get(key))
 }
 
-export async function add (character) {
+export function add (character) {
 	return storage.setItem(character.name, JSON.stringify(character))
 }
 
-export async function remove (name) {
+export function remove (name) {
 	return storage.removeItem(name)
 }

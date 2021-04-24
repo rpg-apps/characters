@@ -1,7 +1,7 @@
 {
   "name": "dw-characters",
   "version": "0.1.0",
-  "homepage": "https://idanstark42.github.io/dw-characters",
+  "homepage": "http://docs.dungeonworldcharacters.xyz",
   "repository": "https://github.com/idanstark42/dw-characters",
   "private": true,
   "dependencies": {
@@ -17,14 +17,24 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "predeploy": "react-scripts build",
-    "deploy": "gh-pages -d build"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   }
 }
