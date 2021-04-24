@@ -8,4 +8,4 @@ export default function Stat (props) {
     <div className='debility'>{props.debility}</div>
   </div>
 }
-// TODO: calculate modifier by value using idan's stat module
+// TODO: calculate modifier by value using Idan's stat module (in the logic, not here)

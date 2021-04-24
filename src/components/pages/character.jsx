@@ -1,16 +1,18 @@
 import React from 'react'
 
 import { get } from '../../data/character_list'
-import Stats from './components/stats'
+import Stats from '../stats'
 
 export default class Character extends React.Component {
   constructor (props) {
     super()
-    this.state = { name: props.name }
+    this.state = { name: props.match.params.name }
+    console.log(props)
   }
 
   async componentDidMount () {
-    character = await get(this.state.name)
+    console.log(this.state.name)
+    const character = await get(this.state.name)
     this.setState({character})
   }
 
@@ -25,3 +27,4 @@ export default class Character extends React.Component {
 }
 
 // TODO: add loader
+// TODO: add all other stuff and make them configurable

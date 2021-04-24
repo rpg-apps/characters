@@ -22,7 +22,9 @@ export default class Characters extends React.Component {
     console.log(this.state.characters)
     return <div id='characters'>
       {this.state.characters.map(character =>
-        <Link className='character' to={`/character/${character.name}`}>{character.name}</Link>)}
+        <Link className='character' to={`/character/${character.name}`} key={character.name}>
+          {character.name}
+        </Link>)}
       <Link className='add-character' to='/new'>+</Link>
     </div>
   }
