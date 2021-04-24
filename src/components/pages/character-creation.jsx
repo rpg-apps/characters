@@ -10,7 +10,6 @@ export default class CharacterCreation extends React.Component {
   }
 
   render () {
-    console.log(this.state.characters)
     return <div id='new'>
     </div>
   }

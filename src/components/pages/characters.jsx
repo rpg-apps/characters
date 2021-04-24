@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { getAll } from '../../data/character_list'
+//import { getAll } from '../../data/character_list'
 
 export default class Characters extends React.Component {
   constructor () {
