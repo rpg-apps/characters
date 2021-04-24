@@ -11,4 +11,6 @@ Trigger.On = class On {
   }
 }
 
+Trigger.CONSTANT = 'When you have this move' // A trigger for when an effect is constant.
+
 export default Trigger

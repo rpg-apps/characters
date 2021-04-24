@@ -1,3 +1,10 @@
+// TODO what's left:
+// Write the rest of the core rules: playbooks and equipment
+// formula parsing
+// equipment parsing
+// modifier target parsing
+// mechanics menifistation in the playbook view? how to make it extendible?
+
 import YAML from 'yaml'
 import pluralize from 'pluralize'
 import { camelCase } from 'change-case'

@@ -5,9 +5,14 @@ export function parseWithKeywords(keywords, expression, params) {
   if (keyword) {
   	let restOfExpression = expression.replace(keyword + SEPERATOR, '')
   	if (restOfExpression.includes(SEPERATOR)) {
-  		restOfExpression = restOfExpression.split(SEPERATOR)
+  		let quoted = undefined
+      restOfExpression = restOfExpression.match(/\w+|"[^"]+"/g).map(word => (word.match(/"(.+)"/) || [])[1] || word) 
   	}
-  	return keywords[keyword](restOfExpression, params)
+    if (restOfExpression) {
+  	  return keywords[keyword](restOfExpression, params)
+    } else {
+      return keywords[keyword](params)
+    }
   } else if (params) {
   	return { [expression]: params }
   } else {

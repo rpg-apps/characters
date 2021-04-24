@@ -1,3 +1,62 @@
+mechanics:
+  description:
+    text: >
+      Choose your name and look
+    playbook fields:
+      name options: array
+      title options: array
+      look choices: array
+    character fields:
+      name: string
+      title: string
+      look: string
+  equipment:
+    text: >
+      The most important role of a character’s equipment is to help describe the moves they make. A character without a weapon of some sort isn’t going to trigger the hack and slash move when fighting a dragon since a bare-knuckle punch really doesn’t do much to inch-thick scales. It doesn’t count for the purposes of triggering the move. Likewise, sometimes equipment will avoid triggering a move. Climbing a sheer icy cliff is usually defying danger, but with a good set of climbing gear you might be able to avoid the imminent danger or calamity that triggers the move. Weapons are particularly likely to modify what moves you can trigger. A character with a dagger can easily stab the goblin gnawing on his leg, triggering hack and slash, but the character with a halberd is going to have a much harder time bringing it to bear on such a close foe. Items and gear of every sort have tags. Tags are terms to describe things. Some tags have a specific effect on the rules (things like damage reduction on armor or a magical bonus to a particular kind of move or stat). Other tags are purely about the fiction (like the close tag, which describes the length of a weapon and how near your enemies need to be for you to attack them). Tags help you describe your character’s actions when the items are being used and they give the GM information about how the items you’re using might go wrong or cause complications when you fail a roll.
+    playbook fields:
+      load: formula
+      starting gear: array
+    character fields:
+      weight: number
+  bonds:
+    text: >
+      Bonds are what make you a party of adventurers, not just a random assortment of people. They’re the feelings, thoughts, and shared history that tie you together. You will always have at least one bond, and you’ll often have more. Each bond is a simple statement that relates your character to another player character. Your class gives you a few to start with, you’ll replace your starting bonds and gain new ones through play.
+    playbook fields:
+      bond options: array
+    character fields:
+      bonds: array
+    move effects:
+      resolve bond: remove from bonds
+      create bond: add string to bonds
+  alignment:
+    text: >
+      Alignment is your character’s way of thinking and moral compass. For the character, this can be an ethical ideal, religious strictures, or maybe just a gut instinct. It reflects the things your character might aspire to be and can guide you when you’re not sure what to do next.Some characters might proudly proclaim their alignment while others might hide it away. A character might not say, “I’m an evil person,” but may instead say, “I put myself first.”That’s all well and good for a character, but the world knows otherwise. Buried deep down inside is the ideal self a person wants to become—it is this mystic core that certain spells and abilities tap into when detecting someone’s alignment. Every sentient creature in Dungeon World bears an alignment, be they an elf, a human, or some other, stranger thing. The alignments are Good, Lawful, Neutral, Chaotic, and Evil. Each one shows an aspiration to be a different type of person. Lawful creatures aspire to impose order on the world, either for their own benefit or for that of others. Chaotic creatures embrace change and idealize the messy reality of the world, prizing freedom above all else. Good creatures seek to put others before themselves. Evil creatures put themselves first at the expense of others. A Neutral creature looks out for itself so long as that doesn’t jeopardize someone else’s well-being. Neutral characters are content to live their lives and pursue their own goals and let others do the same. Most creatures are Neutral. They take no particular pleasure in harming others, but will do it if it is justified by their situation. Those that put an ideal—be it Law, Chaos, Good, or Evil—above themselves are harder to find. Even two creatures of the same alignment can come into conflict. Aspiring to help others does not grant infallibility, two Good creatures may fight and die over two different views of how to do right.
+    playbook fields:
+      alignment options: array
+    character fields:
+      alignment: object
+  damage:
+    text: >
+      When a character takes damage they subtract the damage dealt from their current HP. Armor mitigates damage; if a character has armor they subtract its value from the damage dealt. This might mean a blow is turned away completely—that’s fine, it’s what armor is for! Damage can never take a character below 0 HP. Damage is determined by the attacker. Player characters deal damage according to their class, the weapon used, and the move they’ve made. If a move just says “deal damage” the character rolls their class’s damage dice plus any bonuses or penalties from moves, weapons, or effects. If a move specifies an amount of damage, use that in place of the class’s damage roll. Monsters roll damage as listed in their description.
+    playbook fields:
+      damage: formula
+      max hp: number
+    character fields:
+      hp: number
+      armor: number
+    move effects:
+      take damage: substract external(damage)+external(piercing)-armor from hp
+      deal damage: calculate damage
+  race:
+    text: >
+      What create are you?
+    playbook fields:
+      race moves: array
+    character fields:
+      race: string
+      race move: move
+
+
 moves:
   # ---------------- Basic Moves ------------------
   Hack and Slash:
@@ -106,8 +165,8 @@ moves:
     trigger: When you closely study a situation or person
     effect:
       - roll roll+Wis:
-          success: get 3
-          partial succes: get 1
+          success: choose 3
+          partial succes: choose 1
       - use: 
           - What happened here recently?
           - What is about to happen?
@@ -297,9 +356,9 @@ moves:
           300 coins (roll+2): [use gear 300 coin, modify all +2 forced forward]
           400 coins (roll+3): [use gear 400 coin, modify all +3 forced forward]
       - roll roll:
-          success: get 3
-          partial success: get 1
-          miss: [get 1, Things get really out of hand (the GM will say how).]
+          success: choose 3
+          partial success: choose 1
+          miss: [choose 1, Things get really out of hand (the GM will say how).]
           use:
             - You befriend a useful NPC.
             - You hear rumors of an opportunity.
@@ -390,3 +449,96 @@ moves:
         More then a month: hold 1
       use:
         - modify all +1 forward
+
+playbooks:
+  barbarian:
+    name options: [Gorm, Si-Yi, Priscilla, Sen, Xia, Anneira, Haepha, Lur, Shar, Korrin, Nkosi, Fafnir, Qua, Sacer, Vercin’geto, Barbozar, Clovis, Frael, Thra raxes, Sillius, Sha Sheena, Khamisi]
+    title options: [the Glorious, the Hungry, the Irascible, the Undefeated, the Gluttonous, Foesmasher, Bonebreaker, the Mirthful, the Melancholic, All Mighty, the Giant, the Triumphant]
+    look choices:
+      choose eyes: [Tormented eyes, Haunted eyes, Wild eyes, Shrouded eyes]
+      choose build: [Mighty thews, Long shanks, Scrawny body, Supple body]
+      choose decoration: [Strange tattoos, Unusual jewelry, Unmarred by decoration]
+      choose clothes: [Scraps, Silks, Scavenger’s outfit, Weather inappropriate clothes]
+    damage: d10
+    max hp: Constitution+8
+    alignment options:
+      - alignemnt: chaotic
+        goal: Eschew a convention of the civilized world.
+      - alignemnt: neutral
+        goal: Teach someone the ways of your people.
+    bond options:
+      - <char> is puny and foolish, but amusing to me.
+      - <char>’s ways are strange and confusing.
+      - <char> is always getting into trouble — I must protect them from themselves.
+      - <char> shares my hunger for glory; the earth will tremble at our passing!
+    load: Str+8
+    starting gear:
+      - choose Choose one: [axe, two handed sword]
+      - choose Choose one: [[adventuring gear, dungeon rations], chainmail]
+      - dungeon rations
+      - dagger
+      - Some token of where you’ve traveled or where you’re from
+    starting moves:
+      Herculean Appetites:
+        text: >
+          Others may content themselves with just a taste of wine, or dominion over a servant or two, but you want more. Choose two appetites.
+          While pursuing one of your appetites if you would roll for a move, instead of rolling 2d6 you roll 1d6+1d8. If the d6 is the higher die of the pair, the GM will also introduce a complication or danger that comes about due to your heedless pursuits.
+
+          * Pure destruction
+          * Power over others
+          * Mortal pleasures
+          * Conquest
+          * Riches and property
+          * Fame and glory
+        trigger: While pursuing one of your appetites
+        effect:
+          modify all roll=d6+d8 ongoing:
+            afterroll:
+              is last_d6>last_d8:
+                yes: The GM will introduce a complication or danger that comes about due to your heedless pursuits.
+                no: no effect
+      The Upper Hand:
+        text: >
+          You take +1 ongoing to last breath rolls. When you take your last breath, on a 7–9 you make an offer to Death in return for your life. If Death accepts he will return you to life. If not, you die.
+        trigger: constant
+        effect: modify "last breath" +1 ongoing:
+          replace:
+            partial succes: You make and offer to Death
+      Musclebound:
+        text: >
+          While you wield a weapon it gains the forceful and messy tags.
+        trigger: constant
+        effect: modify equip(weapon) "+forceful +messy" ongoing
+      What Are You Waiting For:
+        text: >
+          When you cry out a challenge to your enemies, roll+Con.
+          * On a 10+ they treat you as the most obvious threat to be dealt with and ignore your companions, take +2 damage ongoing against them.
+          * On a 7–9 only a few (the weakest or most foolhardy among them) fall prey to your taunting.
+        trigger: When you cry out a challenge to your enemies
+        effect: 
+          roll roll+Con:
+            success:
+              - They treat you as the most obvious threat to be dealt with and ignore your companions.
+              - modify "damage against them" +2 ongoing
+          partialSuccess: Only a few (the weakest or most foolhardy among them) fall prey to your taunting.
+      choose:
+        Full Plate and Packing Steel:
+          text: You ignore the clumsy tag on armor you wear.
+          trigger: constant
+          effect: modify equip(armor) -clmusy
+        Unencumbered, Unharmed:
+          text: So long as you are below your Load and neither wear armor nor carry a shield, take +1 armor.
+          trigger: constant
+          effect:
+            is weight<load&no_armor: modify armor +1 ongoing
+    race moves:
+      Outsider:
+        text: You may be elf, dwarf, halfling, or human, but you and your people are not from around here. At the beginning of each session, the GM will ask you something about your homeland, why you left, or what you left behind. If you answer them, mark XP.
+        trigger: At the beginning of each session
+        effect:
+          choose Did you answer the GM's question:
+            yes: change stat xp +1
+            no: no effect
+    advanced moves:
+      levels 2-5:
+        # TODO continue here
