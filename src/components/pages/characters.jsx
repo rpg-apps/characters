@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { getAll } from '../../data/character_list'
 
@@ -20,8 +21,9 @@ export default class Characters extends React.Component {
   render () {
     console.log(this.state.characters)
     return <div id='characters'>
-      {this.state.characters.map(character => <div className='character'>{character.name}</div>)}
-      <button className='add-character'>+</button>
+      {this.state.characters.map(character =>
+        <Link className='character' to={`/character/${character.name}`}>{character.name}</Link>)}
+      <Link className='add-character' to='/new'>+</Link>
     </div>
   }
 }
