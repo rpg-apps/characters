@@ -56,7 +56,6 @@ mechanics:
       race: string
       race move: move
 
-
 moves:
   # ---------------- Basic Moves ------------------
   Hack and Slash:
@@ -478,6 +477,14 @@ playbooks:
       - dungeon rations
       - dagger
       - Some token of where you’ve traveled or where you’re from
+    appetites: []
+    appetite options:
+      - Pure destruction
+      - Power over others
+      - Mortal pleasures
+      - Conquest
+      - Riches and property
+      - Fame and glory
     starting moves:
       Herculean Appetites:
         text: >
@@ -497,6 +504,8 @@ playbooks:
               is last_d6>last_d8:
                 yes: The GM will introduce a complication or danger that comes about due to your heedless pursuits.
                 no: no effect
+        on move addition:
+          - add 2 from "appetite options" to "appetites" Choose two appetites
       The Upper Hand:
         text: >
           You take +1 ongoing to last breath rolls. When you take your last breath, on a 7–9 you make an offer to Death in return for your life. If Death accepts he will return you to life. If not, you die.
@@ -540,5 +549,7 @@ playbooks:
             yes: change stat xp +1
             no: no effect
     advanced moves:
-      levels 2-5:
-        # TODO continue here
+      levels 2 to 5:
+        Still Hungry:
+          text: Choose an additional appetite.
+          on move addition: add from ("appetite options"-"appetites") to "appetites"
