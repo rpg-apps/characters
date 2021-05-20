@@ -15,6 +15,6 @@ export class Playbook {
   }
 
   static parse (yamls) {
-    return parser.parse(yamls)
+    return new Playbook(parser.parse(yamls))
   }
 }

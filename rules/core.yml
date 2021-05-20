@@ -1,60 +1,431 @@
-mechanics:
+mechanisms:
   description:
-    text: >
-      Choose your name and look
     playbook fields:
-      name options: array
-      title options: array
-      look choices: array
+      name options: string array
+      optional title options: string array
+      look: string array array
     character fields:
-      name: string
-      title: string
-      look: string
-  equipment:
-    text: >
-      The most important role of a character’s equipment is to help describe the moves they make. A character without a weapon of some sort isn’t going to trigger the hack and slash move when fighting a dragon since a bare-knuckle punch really doesn’t do much to inch-thick scales. It doesn’t count for the purposes of triggering the move. Likewise, sometimes equipment will avoid triggering a move. Climbing a sheer icy cliff is usually defying danger, but with a good set of climbing gear you might be able to avoid the imminent danger or calamity that triggers the move. Weapons are particularly likely to modify what moves you can trigger. A character with a dagger can easily stab the goblin gnawing on his leg, triggering hack and slash, but the character with a halberd is going to have a much harder time bringing it to bear on such a close foe. Items and gear of every sort have tags. Tags are terms to describe things. Some tags have a specific effect on the rules (things like damage reduction on armor or a magical bonus to a particular kind of move or stat). Other tags are purely about the fiction (like the close tag, which describes the length of a weapon and how near your enemies need to be for you to attack them). Tags help you describe your character’s actions when the items are being used and they give the GM information about how the items you’re using might go wrong or cause complications when you fail a roll.
+      name: choose freely from "name options"
+      description: choose freely long text
+      optional title: choose freely from "title options"
+      look: choose freely from "look options"
+  expirience:
+    character fields:
+      level: 1
+      xp: 0
+  roll:
+    formulas:
+      modifier for <stat>: (stat<9?-1:(stat<13?0:(stat<16?1(stat<18?2:3))))
+      roll: 2d6
+      Str: Str-Weak
+      Dex: Dex-Shakey
+      Con: Con-Sick
+      Int: Int-Stunned
+      Wis: Wis-Confused
+      Cha: Cha-Scarred
+    global fields:
+      initial stats: [8, 9, 12, 13, 15 ,16]
+    choices:
+      stats: from "initial stats"
+    character fields:
+      Strength: choose stats
+      Dexterity: choose stats
+      Constitution: choose stats
+      Intelligence: choose stats
+      Wisdom: choose stats
+      Charisma: choose stats
+      Str: auto calc modifier for Strength
+      Dex: auto calc modifier for Dexterity
+      Con: auto calc modifier for Constitution
+      Int: auto calc modifier for Intelligence
+      Wis: auto calc modifier for Wisdom
+      Cha: auto calc modifier for Charisma
+      Weak: false
+      Shakey: false
+      Sick: false
+      Stunned: false
+      Confused: false
+      Scarred: false
+    effects:
+      roll <formula> {miss,hit,success,partialSuccess,failure}:
+        roll formula:
+          1<<6: [miss, failure]
+          7<<9: [hit, partialSuccess]
+          10<<15: [hit, success]
+      remove a debility:
+        choose Which debility do you want to remove:
+          Weak: set Weak = false
+          Shakey: set Shakey = false
+          Sick: set Sick = false
+          Stunned: set Stunned = false
+          Confused: set Confused = false
+          Scarred: set Scarred = false
+      take <formula> forward <trigger>: modify once <trigger> <formula>
+      take <formula> ongoing <trigger>: modify <trigger> <formula>
+  advanced moves:
     playbook fields:
-      load: formula
-      starting gear: array
-    character fields:
-      weight: number
-  bonds:
-    text: >
-      Bonds are what make you a party of adventurers, not just a random assortment of people. They’re the feelings, thoughts, and shared history that tie you together. You will always have at least one bond, and you’ll often have more. Each bond is a simple statement that relates your character to another player character. Your class gives you a few to start with, you’ll replace your starting bonds and gain new ones through play.
+      moves 2-5: move array
+      moves 6-10: move array
+    effects:
+      add advanced move:
+        is level<6:
+          yes: add choice from "moves 2-5" to moves
+          no: add choice from "moves 6-10" to moves
+  race:
+    types:
+      race:
+        name: string
+        move: move
     playbook fields:
-      bond options: array
+      race options: race array
+    choices:
+      race:
+        choose: from race options
+        on choice: add choice.move to moves
     character fields:
-      bonds: array
-    move effects:
-      resolve bond: remove from bonds
-      create bond: add string to bonds
-  alignment:
-    text: >
-      Alignment is your character’s way of thinking and moral compass. For the character, this can be an ethical ideal, religious strictures, or maybe just a gut instinct. It reflects the things your character might aspire to be and can guide you when you’re not sure what to do next.Some characters might proudly proclaim their alignment while others might hide it away. A character might not say, “I’m an evil person,” but may instead say, “I put myself first.”That’s all well and good for a character, but the world knows otherwise. Buried deep down inside is the ideal self a person wants to become—it is this mystic core that certain spells and abilities tap into when detecting someone’s alignment. Every sentient creature in Dungeon World bears an alignment, be they an elf, a human, or some other, stranger thing. The alignments are Good, Lawful, Neutral, Chaotic, and Evil. Each one shows an aspiration to be a different type of person. Lawful creatures aspire to impose order on the world, either for their own benefit or for that of others. Chaotic creatures embrace change and idealize the messy reality of the world, prizing freedom above all else. Good creatures seek to put others before themselves. Evil creatures put themselves first at the expense of others. A Neutral creature looks out for itself so long as that doesn’t jeopardize someone else’s well-being. Neutral characters are content to live their lives and pursue their own goals and let others do the same. Most creatures are Neutral. They take no particular pleasure in harming others, but will do it if it is justified by their situation. Those that put an ideal—be it Law, Chaos, Good, or Evil—above themselves are harder to find. Even two creatures of the same alignment can come into conflict. Aspiring to help others does not grant infallibility, two Good creatures may fight and die over two different views of how to do right.
-    playbook fields:
-      alignment options: array
-    character fields:
-      alignment: object
+      race: choose race.name
+      raceMove: choose race.move
   damage:
-    text: >
-      When a character takes damage they subtract the damage dealt from their current HP. Armor mitigates damage; if a character has armor they subtract its value from the damage dealt. This might mean a blow is turned away completely—that’s fine, it’s what armor is for! Damage can never take a character below 0 HP. Damage is determined by the attacker. Player characters deal damage according to their class, the weapon used, and the move they’ve made. If a move just says “deal damage” the character rolls their class’s damage dice plus any bonuses or penalties from moves, weapons, or effects. If a move specifies an amount of damage, use that in place of the class’s damage roll. Monsters roll damage as listed in their description.
     playbook fields:
       damage: formula
-      max hp: number
+      maxHp: formula
     character fields:
-      hp: number
-      armor: number
-    move effects:
-      take damage: substract external(damage)+external(piercing)-armor from hp
-      deal damage: calculate damage
-  race:
-    text: >
-      What create are you?
+      hp: maxHp
+      armor: 0
+    effects:
+      deal <formula>: show <formula>
+      take damage: subtract "(input(formula:damage))-input(bool:ignore armor)?0:max(0,armor-(input(number:piercing)))" from hp
+      heal <formula>: add formula to hp
+  bonds:
     playbook fields:
-      race moves: array
+      bond options: string array
     character fields:
-      race: string
-      race move: move
+      bonds: []
+    effects:
+      add bond: add free choice from "bond options" to bonds
+      resolve bond: remove from bonds
+  alignment:
+    types:
+      alignment:
+        name: string
+        goal: string
+    playbook fields:
+      alignment options: alignment array
+    choices:
+      alignment: from alignment options
+    character fields:
+      alignment: choose alignment.name
+      alignmentGoal: choose alignment.goal
+  equipment:
+    types:
+      tag:
+        tag: string
+        text: string
+        effect: effect
+      equipment:
+        name: string
+        text: string
+        tags: tag array
+        weight: number
+        cost: number
+      gear:
+        equipment: equipment
+    global fields:
+      tags: large
+      equipment: large
+    playbook fields:
+      load: formula
+      startingGear: gear array
+    character fields:
+      gear: startingGear
+      weight: auto calc sum(gear, gear.equipment.weight)
+    effects:
+      use gear [<amount>] (with tag <name>|<tag>):
+        is gear[gear.name=name|gear.tags[tag]].uses:
+          yes:
+            is gear[gear.name=name|gear.tags[tag]].uses>amount:
+              yes: 
+          no:
+        is gear[name?gear.name=name:gear.tags.includes(tag)].amount>amount:
+          yes: reduce amount from gear[name?gear.name=name:gear.tags.includes(tag)].amount
+          no:
+            is gear[gear.name=name].amount=amount:
+              yes: remove gear[gear.name=name] from gear
+              no: show Not enough name
+
+tags:
+  - tag: Applied
+    text: It’s only useful when carefully applied to a person or to something they eat or drink.
+  - tag: Touch
+    text: It’s used by touching it to the target’s skin.
+  - tag: Awkward
+    text: It’s unwieldy and tough to use.
+  - tag: Dangerous
+    text: It’s easy to get in trouble with it. If you interact with it without proper precautions the GM may freely invoke the consequences of your foolish actions.
+  - tag: Ration
+    text: It’s edible, more or less.
+  - tag: Requires <something>
+    text: It’s only useful to certain people. If you don’t meet the requirements it works poorly, if at all.
+  - tag: Slow
+    text: It takes minutes or more to use.
+  - tag: Two-handed
+    text: It takes two hands to use it effectively.
+  - tag: Worn
+    text: To use it, you have to be wearing it.
+  - tag: <formula> <trigger>
+    text: It modifies your effectiveness in a specified situation. It might be “+1 forward to spout lore” or “-1 ongoing to hack and slash.”
+    effect: modify <trigger> <formula>
+  - tag: <number> uses
+    text: It can only be used n times.
+    effect: subtract 1 from uses
+  - tag: use twice
+    text: Use two every time.
+    effect: subtract 1 from uses
+  - tag: <number> ammo
+    text: It counts as ammunition for appropriate ranged weapons. The number indicated does not represent individual arrows or sling stones, but represents what you have left on hand.
+    effect:
+      is ammo=0:
+        yes: remove this from equipment
+  - tag: Forceful
+    text: It can knock someone back a pace, maybe even off their feet.
+  - tag: <formula> damage
+    text: It is particularly harmful to your enemies. When you deal damage, you add n to it.
+    effect: modify damage <formula>
+  - tag: Ignores Armor
+    text: Don’t subtract armor from the damage taken.
+  - tag: Messy
+    text: It does damage in a particularly destructive way, ripping people and things apart.
+  - tag: <number> piercing
+    text: It goes right through armor. When you deal damage with n piercing, you subtract n from the enemy’s armor for that attack.
+    effect: show <number> piercing
+  - tag: Precise
+    text: It rewards careful strikes. You use DEX to hack and slash with this weapon, not STR.
+    effect: modify "Hack and Slash" roll+Str=roll+Dex
+  - tag: Reload
+    text: After you attack with it, it takes more than a moment to reset for another attack.
+  - tag: Stun
+    text: When you attack with it, it does stun damage instead of normal damage.
+  - tag: Thrown
+    text: Throw it at someone to hurt them. If you volley with this weapon, you can’t choose to mark off ammo on a 7–9; once you throw it, it’s gone until you can recover it.
+  - tag: Hand
+    text: It’s useful for attacking something within your reach, no further.
+  - tag: Close
+    text: It’s useful for attacking something at arm’s reach plus a foot or two.
+  - tag: Reach
+    text: It’s useful for attacking something that’s several feet away—maybe as far as ten.
+  - tag: Near
+    text: It’s useful for attacking if you can see the whites of their eyes.
+  - tag: Far
+    text: It’s useful for attacking something in shouting distance.
+  - tag: <number> armor
+    text: It goes right through armor. When you deal damage with n piercing, you subtract n from the enemy’s armor for that attack.It goes right through armor. When you deal damage with n piercing, you subtract n from the enemy’s armor for that attack.
+    effect: add heighest number to armor
+  - tag: +<number> armor
+    text: It goes right through armor. When you deal damage with n piercing, you subtract n from the enemy’s armor for that attack.
+    effect: add number to armor
+  - tag: Clumsy
+    text: It’s tough to move around with. -1 ongoing while using it. This penalty is cumulative.
+    effect: modify all -1
+  - tag: On use <effect>
+    effect: <effect>
+  
+equipment:
+  - name: Ragged Bow
+    tags: [Near]
+    cost: 15
+    weight: 2
+  - name: Fine Bow
+    tags: [Near, Far]
+    cost: 60
+    weight: 2
+  - name: Hunter's Bow
+    tags: [Near, Far]
+    cost: 100
+    weight: 1
+  - name: Crossbow
+    tags: [Near, +1 damage, reload]
+    cost: 35
+    weight: 3
+  - name: Bundle of Arrows
+    tags: [3 ammo]
+    cost: 1
+    weight: 1
+  - name: Elven Arrows
+    tags: [4 ammo]
+    cost: 1
+    weight: 1
+  - name: Club
+    tags: [Close]
+    cost: 1
+    weight: 2
+  - name: Shillelagh
+    tags: [Close]
+    cost: 1
+    weight: 2
+  - name: Staff
+    tags: [Close, Two-handed]
+    cost: 1
+    weight: 1
+  - name: Dagger
+    tags: [Hand]
+    cost: 2
+    weight: 1
+  - name: Shiv
+    tags: [Hand]
+    cost: 2
+    weight: 1
+  - name: Knife
+    tags: [Hand]
+    cost: 2
+    weight: 1
+  - name: Throwing Dagger
+    tags: [Thrown, Near]
+    cost: 1
+    weight: 1
+  - name: Short Sword
+    tags: [Close]
+    cost: 8
+    weight: 1
+  - name: Axe
+    tags: [Close]
+    cost: 8
+    weight: 1
+  - name: Warhammer
+    tags: [Close]
+    cost: 8
+    weight: 1
+  - name: Mace
+    tags: [Close]
+    cost: 8
+    weight: 1
+  - name: Spear
+    tags: [Reach, Thrown, Near]
+    cost: 5
+    weight: 1
+  - name: Long Sword
+    tags: [Close, +1 damage]
+    cost: 15
+    weight: 2
+  - name: Battle Axe
+    tags: [Close, +1 damage]
+    cost: 15
+    weight: 2
+  - name: Flail
+    tags: [Close, +1 damage]
+    cost: 15
+    weight: 2
+  - name: Halberd
+    tags: [Reach, +1 damage, Two-handed]
+    cost: 9
+    weight: 2
+  - name: Rapier
+    tags: [Close, Percise]
+    cost: 25
+    weight: 1
+  - name: Dueling Rapier
+    tags: [Close, 1 piercing, Percise]
+    cost: 50
+    weight: 2
+  - name: Leather Armor
+    tags: [1 armor, worn]
+    cost: 10
+    weight: 1
+  - name: Chainmail
+    tags: [1 armor, worn]
+    cost: 10
+    weight: 1
+  - name: Scale Mail
+    tags: [2 armor, worn, clumsy]
+    cost: 50
+    weight: 3
+  - name: Plate armor
+    tags: [3 armor, worn, clumsy]
+    cost: 350
+    weight: 4
+  - name: Shielf
+    tags: [+1 armor]
+    cost: 15
+    weight: 2
+  - name: Adventuring Gear
+    tags: [5 uses]
+    cost: 20
+    weight: 1
+    text: Adventuring gear is a collection of useful mundane items such as chalk, poles, spikes, ropes, etc. When you rummage through your adventuring gear for some useful mundane item, you find what you need and mark off a use.
+  - name: Bandages
+    tags: [3 uses, slow, On use choose are you healing yourself: { yes: heal 4, no: no effect }]
+    cost: 5
+    weight: 0
+    text: When you have a few minutes to bandage someone else’s wounds, heal them of 4 damage and expend a use.
+  - name: Poultices and Herbs
+    tags: [2 uses, slow, On use choose are you healing yourself: { yes: heal 7, no: no effect }]
+    cost: 10
+    weight: 1
+    text: When you carefully treat someone’s wounds with poultices and herbs, heal them of 7 damage and expend a use.
+  - name: Healing Potion
+    tags: [1 uses, On use choose are you healing yourself: { yes: choose are you removeing a debility or healing yourself: { removeing a debility: remove a debility, healing yourself: heal 10 }, no: no effect }]
+    cost: 50
+    weight: 0
+    text: When you drink an entire healing potion, heal yourself of 10 damage or remove one debility, your choice.
+  - name: Keg of Dwarven Stout
+    tags: [1 uses, On use take +1 forward on Carouse]
+    cost: 10
+    weight: 4
+    text: When you open a keg of dwarven stout and let everyone drink freely, take +1 to your Carouse roll. If you drink a whole keg yourself, you are very, very drunk.
+  - name: Bag of Books
+    tags: [5 uses, On use take +1 forward on Spout Lore]
+    cost: 10
+    weight: 2
+    text: When your bag of books contains just the right book for the subject you’re spouting lore on, consult the book, mark off a use, and take +1 to your roll.
+  - name: Antitoxin
+    tags: [1 uses]
+    cost: 10
+    weight: 0
+    text: When you drink antitoxin, you’re cured of one poison affecting you.
+  - name: Dungeon Rations
+    tags: [Ration, 5 use]
+    cost: 3
+    weight: 1
+    text: Not tasty, but not bad either.
+  - name: Personal Feast
+    tags: [Ration, 1 use]
+    cost: 10
+    weight: 1
+    text: Ostentatious to say the least.
+  - name: Dwarven Hardtack
+    tags: [Requires Dwarf, Ration, 7 uses]
+    cost: 3
+    weight: 1
+    text: Dwarves say it tastes like home. Everyone else says it tastes like home, if home is a hog farm, and on fire.
+  - name: Dwarven Hardtack
+    tags: [Ration, 7 uses]
+    cost: 10
+    weight: 1
+    text: Only the greatest of elf-friends are treated to this rare delicacy.
+  - name: Halfling Pipeleaf
+    tags: [6 uses, use twice, On use take +1 forward to Parley]
+    cost: 5
+    weight: 0
+    text: When you share halfling pipeleaf with someone, expend two uses and take +1 forward to parley with them.
+  - name: Oil of Tagit
+    tags: [Dangerous, Applied, 3 uses]
+    cost: 15
+    weight: 0
+    text: The target falls into a light sleep.
+  - name: Bloodweed
+    tags: [Dangerous, Touch, 3 uses]
+    cost: 12
+    weight: 0
+    text: Until cured, whenever the afflicted rolls damage, they roll an additional d4 and subtract that result from their normal damage.
+  - name: Goldenroot
+    tags: [Dangerous, Applied, 3 uses]
+    cost: 20
+    weight: 0
+    text: The target treats the next creature they see as a trusted ally, until proved otherwise.
+  - name: Serpent’s Tears
+    tags: [Dangerous, Applied, 3 uses]
+    cost: 10
+    weight: 0
+    text: Anyone dealing damage against the target rolls twice and takes the better result.
 
 moves:
   # ---------------- Basic Moves ------------------
@@ -65,10 +436,10 @@ moves:
       * On a 7–9, you deal your damage to the enemy and the enemy makes an attack against you.
     trigger: When you attack an enemy in melee
     effect:
-      roll roll+Str:
+      roll Str:
         success:
           choose do +1d6 damage but expose yourself to the enemy’s attack?:
-            yes: [deal damage damage+1d6, take damage]
+            yes: [deal damage+1d6, take damage]
             no: deal damage
         partial success: [deal damage, take damage]
   Volley:
@@ -81,14 +452,13 @@ moves:
         * You have to take several shots, reducing your ammo by one.
     trigger: When you take aim and shoot at an enemy at range
     effect:
-      roll roll+Dex:
-        success: deal damage
+      roll Dex:
+        hit: deal damage
         partial success:
-          - choose:
-              You have to move to get the shot placing you in danger as described by the GM.: You have to move to get the shot placing you in danger as described by the GM.
-              You have to take what you can get, -1d6 damage.: modifiy damage -1d6 forced forward
-              You have to take several shots, reducing your ammo by one.: use gear with tag ammo
-          - deal damage
+          choose:
+            You have to move to get the shot placing you in danger as described by the GM.: You have to move to get the shot placing you in danger as described by the GM.
+            You have to take what you can get, -1d6 damage.: take -1d6 forward to damage
+            You have to take several shots, reducing your ammo by one.: use gear with tag ammo
   Defy Danger:
     text: >
       When you act despite an imminent threat or suffer a calamity, say how you deal with it and roll. If you do it

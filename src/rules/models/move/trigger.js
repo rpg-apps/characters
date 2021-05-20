@@ -1,7 +1,7 @@
 class Trigger {
-	constructor(text) {
-	  this.text = text
-	}
+  constructor(text) {
+    this.text = text
+  }
 }
 
 Trigger.On = class On {

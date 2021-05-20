@@ -1,3 +1,15 @@
+/*
+ *
+ * Text
+ * show <formula>
+ *
+ * Change
+ * subtract <formula> from <field>
+ * add <formula> from <field>
+ * set <field> to be <formula>
+ * set <field> to be <formula>
+ */
+
 import { parseWithKeywords } from './parsing-utils'
 
 import Move from '../models/move'
