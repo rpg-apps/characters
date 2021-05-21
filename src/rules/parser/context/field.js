@@ -1,8 +1,11 @@
 export default class FieldParser {
-  constructor(typeParser, choiceParser) {
-    this.typeParser = typeParser
-    this.choiceParser = choiceParser
+  constructor(context) {
+    this.context = context
     this.fields = { global: [], playbook: [], character: [] }
+  }
+
+  existingFields () {
+    return [].concat(this.fields.global).concat(this.fields.playbook).concat(this.fields.character)
   }
 
   // When defining a global, playbook or character field.

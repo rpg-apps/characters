@@ -11,7 +11,7 @@ export default parsePlaybook (name, rawPlaybook, context) {
 
 const getParsers = ({ fieldsParser }) => {
   return fieldsParser.fields.playbook.reduce((parsers, fieldDefinition) => {
-  	const parser = (rawField, { typesParser }) => typesParser.parseUsage(fieldDefinition.type, rawField)
-  	return Object.assign(parsers, { [fieldDefinition.name]: parser })
+    const parser = (rawField, context) => context.typesParser.parseValue(fieldDefinition.type, rawField, context)
+    return Object.assign(parsers, { [fieldDefinition.name]: parser })
   }, { })
 }

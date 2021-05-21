@@ -5,8 +5,8 @@ stuff to include:
  - raw numbers
  - rolls (roll, d6, etc)
  - variables from context:
- 	- character/playbook fields
-	- previous rolls (last_roll, last_d6, etc.)
+   - character/playbook fields
+   - previous rolls (last_roll, last_d6, etc.)
  - math: +, -, /, *
  - euqations: =, >, <, <=, >=
  - set =
@@ -21,7 +21,7 @@ export default class FormulaParser {
 
   // When defining a formula in the 'formulas' fields.
   parseDefinition (rawFormula) {
-  	const formula = undefined
+    const formula = undefined
     this.formulas.push(formula)
   }
 

@@ -21,7 +21,7 @@ const parsers = {
 
 export function parse (yamls) {
   const rawRules = mergeRuleBundles(yamls.map(yaml => YAML.parse(yaml)))
-  const context = new Context(rawRules)
+  const context = new Context(rawRules, { parseMove })
   const parsedRules = Object.entries(rawRules)
     .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context) }), { })
 

@@ -5,12 +5,13 @@ import FormulaParser from './formula'
 import EffectParser from './effect'
 
 export default class Context {
-  constructor (rawRules) {
+  constructor (rawRules, externalParsers) {
     this.rawRules = rawRules
-    this.typeParser = new TypeParser()
-    this.choiceParser = new ChoiceParser(typeParser)
-    this.fieldsParser = new FieldsParser(typeParser, choiceParser, rawRules)
-    this.formulaParser = new FormulaParser(typeParser, fieldsParser)
-    this.effectParser = new EffectParser(typeParser, fieldsParser)
+    this.typeParser = new TypeParser(this)
+    this.choiceParser = new ChoiceParser(this)
+    this.fieldsParser = new FieldsParser(this)
+    this.formulaParser = new FormulaParser(this)
+    this.effectParser = new EffectParser(this)
+    Object.assign(this, externalParsers)
   }
 }

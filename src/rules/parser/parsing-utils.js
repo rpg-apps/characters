@@ -33,3 +33,19 @@ export function parseFields (obj, parsers, additionalParams) {
     return result
   })
 }
+
+export function getFlag (text, flag, suffix = false) {
+  if (suffix) {
+    const match = text.endsWith(` ${flag}`)
+    return [match, text.replace(new RegExp(` ${flag}$`), '')]
+  } else {
+    const match = text.startsWith(`${flag} `)
+    return [match, text.replace(new RegExp(`^${flag} `), '')]
+  }
+}
+
+export class ParsingError extends Error {
+  constructor (message) {
+    super(message)
+  }
+}
