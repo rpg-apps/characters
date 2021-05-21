@@ -1,130 +1,130 @@
 #characters {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
 
-    .character, .add-character {
-    	width: calc(100% - 4rem);
-        margin: 1rem 1rem 0 1rem;
-        padding: 1rem;
-        border-radius: 1rem;
-        text-decoration: none;
+  .character, .add-character {
+    width: calc(100% - 4rem);
+    margin: 1rem 1rem 0 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    text-decoration: none;
+  }
+
+  .character {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: right;
+
+    .name {
+      font-size: 1.2rem;
+      color: white;
     }
 
-    .character {
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position-x: right;
-
-        .name {
-            font-size: 1.2rem;
-            color: white;
-        }
-
-        .meta {
-            font-size: small;
-            padding: 0rem 2rem 0rem 0rem;
-        }
+    .meta {
+      font-size: small;
+      padding: 0rem 2rem 0rem 0rem;
     }
+  }
 }
 
 #characters .add-character {
-    width: 2rem;
-    height: 2rem;
-    background: #018b00;
-    border-radius: 3rem;
-    font-size: 1.5rem;
-	color: black;
+  width: 2rem;
+  height: 2rem;
+  background: #018b00;
+  border-radius: 3rem;
+  font-size: 1.5rem;
+  color: black;
 }
 
 #characters .character.arcane-duelist {
-    background-image: url('../../images/classes-icons/arcane-duelist.jpg');
-    background-color: #121b45;
-    .meta {
-        color: #8e99e9;
-    }
+  background-image: url('../../images/classes-icons/arcane-duelist.jpg');
+  background-color: #121b45;
+  .meta {
+    color: #8e99e9;
+  }
 }
 
 #characters .character.barbarian {
-    background-image: url('../../images/classes-icons/barbarian.jpg');
-    background-color: #5c2217;
-    .meta {
-        color: #d89791;
-    }
+  background-image: url('../../images/classes-icons/barbarian.jpg');
+  background-color: #5c2217;
+  .meta {
+    color: #d89791;
+  }
 }
 
 #characters .character.bard {
-    background-image: url('../../images/classes-icons/bard.jpg');
-    background-color: #10381e;
-    .meta {
-        color: #9cd8b2;
-    }
+  background-image: url('../../images/classes-icons/bard.jpg');
+  background-color: #10381e;
+  .meta {
+    color: #9cd8b2;
+  }
 }
 
 #characters .character.cleric {
-    background-image: url('../../images/classes-icons/cleric.jpg');
-    background-color: #724e00;
-    .meta {
-        color: #e6ce8e;
-    }
+  background-image: url('../../images/classes-icons/cleric.jpg');
+  background-color: #724e00;
+  .meta {
+    color: #e6ce8e;
+  }
 }
 
 #characters .character.druid {
-    background-image: url('../../images/classes-icons/druid.jpg');
-    background-color: #544d07;
-    .meta {
-        color: #8a833d;
-    }
+  background-image: url('../../images/classes-icons/druid.jpg');
+  background-color: #544d07;
+  .meta {
+    color: #8a833d;
+  }
 }
 
 #characters .character.fighter {
-    background-image: url('../../images/classes-icons/fighter.jpg');
-    background-color: #1b5346;
+  background-image: url('../../images/classes-icons/fighter.jpg');
+  background-color: #1b5346;
 
-    .meta {
-        color: #77cfb9;
-    }
+  .meta {
+    color: #77cfb9;
+  }
 }
 
 #characters .character.immolator {
-    background-image: url('../../images/classes-icons/immolator.jpg');
-    background-color: #76226f;
-    .meta {
-        color: #efb6ed;
-    }
+  background-image: url('../../images/classes-icons/immolator.jpg');
+  background-color: #76226f;
+  .meta {
+    color: #efb6ed;
+  }
 }
 
 #characters .character.paladin {
-    background-image: url('../../images/classes-icons/paladin.jpg');
-    background-color: #568bb5;
-    .meta {
-        color: #97c2e4;
-    }
+  background-image: url('../../images/classes-icons/paladin.jpg');
+  background-color: #568bb5;
+  .meta {
+    color: #97c2e4;
+  }
 }
 
 #characters .character.ranger {
-    background-image: url('../../images/classes-icons/ranger.jpg');
-    background-color: #361712;
-    .meta {
-        color: #c68074;
-    }
+  background-image: url('../../images/classes-icons/ranger.jpg');
+  background-color: #361712;
+  .meta {
+    color: #c68074;
+  }
 }
 
 #characters .character.thief {
-    background-image: url('../../images/classes-icons/thief.jpg');
-    background-color: #3f2167;
-    .meta {
-        color: #c3a5eb;
-    }
+  background-image: url('../../images/classes-icons/thief.jpg');
+  background-color: #3f2167;
+  .meta {
+    color: #c3a5eb;
+  }
 }
 
 #characters .character.wizard {
-    background-image: url('../../images/classes-icons/wizard.jpg');
-    background-color: #1c3609;
-    .meta {
-        color: #a1cc7c;
-    }
+  background-image: url('../../images/classes-icons/wizard.jpg');
+  background-color: #1c3609;
+  .meta {
+    color: #a1cc7c;
+  }
 }
 

@@ -6,7 +6,7 @@ class Trigger {
 
 Trigger.On = class On {
   constructor(formula) {
-    super(`on ${formula}`)
+    super(`on ${formula.text()}`)
     this.formula = formula
   }
 }

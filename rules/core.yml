@@ -121,21 +121,19 @@ mechanisms:
       tag:
         tag: string
         text: string
-        effect: effect
+        optional effect: effect
       equipment:
         name: string
         text: string
         tags: tag array
         weight: number
         cost: number
-      gear:
-        equipment: equipment
     global fields:
       tags: large
       equipment: large
     playbook fields:
       load: formula
-      startingGear: gear array
+      startingGear: equipment array
     character fields:
       gear: startingGear
       weight: auto calc sum(gear, gear.equipment.weight)

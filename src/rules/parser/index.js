@@ -11,6 +11,8 @@ import parseMove from './move'
 import parsePlaybook from './playbook'
 import parseMechanism from './mechanism'
 
+import Context from './context'
+
 const parsers = {
   mechanism: parseMechanism,
   move: parseMove,
@@ -19,9 +21,9 @@ const parsers = {
 
 export function parse (yamls) {
   const rawRules = mergeRuleBundles(yamls.map(yaml => YAML.parse(yaml)))
-
+  const context = new Context(rawRules)
   const parsedRules = Object.entries(rawRules)
-    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, rules) }), { })
+    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context) }), { })
 
   return parsedRules
 }
@@ -45,9 +47,9 @@ function mergeRuleBundles (ruleBundles) {
   }, { })
 }
 
-function parseEntries (field, entries, rules) {
+function parseEntries (field, entries, context) {
   const parser = parsers[pluralize.singular(field)]
   const parsedEntries = []
-  Object.entires(entries).forEach((entryName, rawEntry) => parseEntries.push(parser(entryName, rawEntry, parseEntries, rules)))
+  Object.entires(entries).forEach((entryName, rawEntry) => parsedEntries.push(parser(entryName, rawEntry, context)))
   return parsedEntries
 }

@@ -2,7 +2,7 @@ import { noCase } from 'change-case'
 
 const SEPERATOR = ' '
 
-export function parseWithKeywords (keywords, expression, params) {
+export function parseWithKeywords (keywords, expression, params, defaulParser) {
   const keyword = Object.keys(keywords).find(k => expression.startsWith(k + SEPERATOR))
   if (keyword) {
     let restOfExpression = expression.replace(keyword + SEPERATOR, '')
@@ -14,6 +14,8 @@ export function parseWithKeywords (keywords, expression, params) {
     } else {
       return keywords[keyword](params)
     }
+  } else if (defaulParser) {
+    return defaulParser(expression, params)
   } else if (params) {
     return { [expression]: params }
   } else {
