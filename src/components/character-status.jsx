@@ -2,8 +2,6 @@ import React from 'react'
 
 export default function CharacterStatus(props) {
   return <div className='character-status'>
-  	<div className='level'>{props.level}</div>
-    <div className='xp'>{props.xp}</div>
     <div className='armor'>{props.armor}</div>
     <div className='hp'>{props.hp}</div>
     <div className='damage'>{props.damage}</div>

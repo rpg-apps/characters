@@ -1,10 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import { get } from '../../data/character_list'
-import Stats from '../stats'
+import CharacterStats from '../character-stats'
 import CharacterInfo from '../character-info'
 import CharacterStatus from '../character-status'
+import CharacterTitle from '../character-title'
+import CharacterProgress from '../character-progress'
+import CharacterCollections from '../character-collections'
+
+import '../../css/pages/character.scss'
 
 export default class Character extends React.Component {
   constructor (props) {
@@ -22,11 +26,21 @@ export default class Character extends React.Component {
       return <div className='loader'/>
     }
     return <div id='character'>
-      <CharacterInfo {...this.state.character.info()}/>
-      <CharacterStatus {...this.state.character.status()}/>
-      <Stats stats={this.state.character.stats()}/>
-      <Link className='gear' to={`/character/${this.state.character.name}/gear`}>Gear</Link>
-      <Link className='moves' to={`/character/${this.state.character.name}/moves`}>Moves</Link>
+      <div className='head'>
+        <CharacterTitle {...this.state.character}/>
+        <CharacterProgress {...this.state.character}/>
+      </div>
+      <div className='body'>
+        <div className='content'>
+          <CharacterInfo {...this.state.character}/>
+          <CharacterStatus {...this.state.character}/>
+          <CharacterCollections {...this.state.character}/>
+        </div>
+        <div className='sidebar'>
+          <CharacterStats stats={this.state.character.stats()}/>
+          <div className='settings'></div>
+        </div>
+      </div>
     </div>
   }
 }
@@ -34,3 +48,6 @@ export default class Character extends React.Component {
 // TODO: add loader
 // TODO: add all other stuff and make them configurable
 // TODO: add functions info(), status(), stats()
+      // <CharacterInfo {...this.state.character.info()}/>
+      // <CharacterStatus {...this.state.character.status()}/>
+      // <Stats stats={this.state.character.stats()}/>

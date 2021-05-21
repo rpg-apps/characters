@@ -1,0 +1,74 @@
+$base-margin: 1rem;
+$inner-margin: 0.5 * $base-margin;
+
+#character {
+	display: flex;
+	flex-direction: column;
+	color: white;
+	height: 100vh;
+	width: 100vw;
+	padding: $base-margin;
+	box-sizing: border-box;
+
+	.head {
+		margin-bottom: $base-margin;
+
+		.character-title {
+
+			.name {
+				font-size: 1.6rem;
+				color: #02da00;
+			}
+
+			.adventure {
+				font-size: 0.8rem;
+				color: grey;
+			}
+		}
+	}
+
+	.body {
+		flex-grow: 1;
+
+		.content {
+			display: flex;
+			flex-direction: column;
+
+			> :not(:last-child) {
+				margin-bottom: $inner-margin;
+			}
+
+			.character-info {
+				font-size: 0.9rem;
+
+				> * {
+					display: flex;
+
+					&:not(:last-child) {
+						margin-bottom: 0.3 * $inner-margin;
+					}
+
+					.key {
+						width: 40%;
+					}
+
+					.value {
+						font-weight: normal;
+					}
+				}
+			}
+
+			.character-status {
+				flex-grow: 1;
+			}
+		}
+	}
+
+	.head, .body {
+		display: flex;
+
+		> :first-child {
+			flex-grow: 1;
+		}
+	}
+}
