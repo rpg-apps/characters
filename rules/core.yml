@@ -62,7 +62,7 @@ mechanisms:
           Scarred: set Scarred = false
       take <formula> forward <trigger>: modify once <trigger> <formula>
       take <formula> ongoing <trigger>: modify <trigger> <formula>
-  advanced moves:
+  move gaining:
     playbook fields:
       moves 2-5: move array
       moves 6-10: move array
@@ -820,7 +820,7 @@ moves:
         - modify all +1 forward
 
 playbooks:
-  barbarian:
+  Barbarian:
     name options: [Gorm, Si-Yi, Priscilla, Sen, Xia, Anneira, Haepha, Lur, Shar, Korrin, Nkosi, Fafnir, Qua, Sacer, Vercin’geto, Barbozar, Clovis, Frael, Thra raxes, Sillius, Sha Sheena, Khamisi]
     title options: [the Glorious, the Hungry, the Irascible, the Undefeated, the Gluttonous, Foesmasher, Bonebreaker, the Mirthful, the Melancholic, All Mighty, the Giant, the Triumphant]
     look choices:

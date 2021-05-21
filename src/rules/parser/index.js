@@ -1,9 +1,7 @@
 // TODO what's left:
-// Write the rest of the core rules: playbooks and equipment
 // formula parsing
-// equipment parsing
 // modifier target parsing
-// mechanics menifistation in the playbook view? how to make it extendible?
+// mechanisms menifistation in the playbook view? how to make it extendible? USE CSS
 
 import YAML from 'yaml'
 import pluralize from 'pluralize'
@@ -11,40 +9,45 @@ import { camelCase } from 'change-case'
 
 import parseMove from './move'
 import parsePlaybook from './playbook'
-import parseEuipment from './equipment'
-import parseMechanic from './mechanic'
+import parseMechanism from './mechanism'
 
 const parsers = {
+  mechanism: parseMechanism,
   move: parseMove,
-  playbook: parsePlaybook,
-  equipment: parseEuipment,
-  mechanic: parseMechanic
+  playbook: parsePlaybook
 }
 
 export function parse (yamls) {
   const rawRules = mergeRuleBundles(yamls.map(yaml => YAML.parse(yaml)))
 
   const parsedRules = Object.entries(rawRules)
-    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries) }), { })
+    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, rules) }), { })
 
   return parsedRules
 }
 
 function mergeRuleBundles (ruleBundles) {
   return ruleBundles.reduce((allRules, rulesBundle) => {
-    Object.entries(rulesBundle).forEach(([key, value]) => {
-      if (!allRules[key]) {
-        allRules[key] = []
+    Object.entries(rulesBundle).forEach(([field, value]) => {
+      if (!allRules[field]) {
+        allRules[field] = {}
       }
-      allRules[key] = allRules[key].concat(Array.isArray(value) ? value : Object.entries(value))
+
+      Object.entries(value).forEach(([key, entry]) => {
+        if (allRules[field][key] === undefined) {
+          allRules[field][key] = {}
+        }
+        
+        Object.assign(allRules[field][key], entry)
+      })
     })
     return allRules
   }, { })
 }
 
-function parseEntries (field, entries) {
+function parseEntries (field, entries, rules) {
   const parser = parsers[pluralize.singular(field)]
   const parsedEntries = []
-  entries.forEach(rawEntry => parseEntries.push(parser(rawEntry, parseEntries)))
+  Object.entires(entries).forEach((entryName, rawEntry) => parseEntries.push(parser(entryName, rawEntry, parseEntries, rules)))
   return parsedEntries
 }
