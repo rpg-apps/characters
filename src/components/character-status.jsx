@@ -5,7 +5,6 @@ export default function CharacterStatus(props) {
     <div className='armor'>{props.armor}</div>
     <div className='hp'>{props.hp}</div>
     <div className='damage'>{props.damage}</div>
-    <div className='bonds'>{props.bonds}</div>
   </div>
 }
 

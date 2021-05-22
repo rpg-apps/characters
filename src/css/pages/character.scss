@@ -5,15 +5,28 @@ $inner-margin: 0.5 * $base-margin;
 	display: flex;
 	flex-direction: column;
 	color: white;
-	height: 100vh;
 	width: 100vw;
+	height: 100vh;
 	padding: $base-margin;
 	box-sizing: border-box;
+
+	.stat {
+		background: white;
+		color: black;
+		margin-right: -1 * $base-margin;
+		padding: $inner-margin;
+		border-radius: $inner-margin 0 0 $inner-margin;
+
+		&:not(:last-child) {
+			margin-bottom: $inner-margin;
+		}
+	}
 
 	.head {
 		margin-bottom: $base-margin;
 
 		.character-title {
+			font-size: 0.8rem;
 
 			.name {
 				font-size: 1.6rem;
@@ -21,7 +34,6 @@ $inner-margin: 0.5 * $base-margin;
 			}
 
 			.adventure {
-				font-size: 0.8rem;
 				color: grey;
 			}
 		}
@@ -33,9 +45,10 @@ $inner-margin: 0.5 * $base-margin;
 		.content {
 			display: flex;
 			flex-direction: column;
+			margin-right: $base-margin;
 
 			> :not(:last-child) {
-				margin-bottom: $inner-margin;
+				margin-bottom: $base-margin;
 			}
 
 			.character-info {
@@ -59,7 +72,40 @@ $inner-margin: 0.5 * $base-margin;
 			}
 
 			.character-status {
-				flex-grow: 1;
+				display: flex;
+				align-items: flex-start;
+				justify-content: center;
+
+				> * {
+					background: white;
+					color: black;
+					width: 4.5rem;
+					height: 4.5rem;
+					padding: $inner-margin;
+					box-sizing: border-box;
+
+					&:not(:last-child) {
+						margin-right: $inner-margin;
+					}
+				}
+			}
+
+			.character-collections {
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+
+				* {
+					background: white;
+					color: black;
+					height: 4.5rem;
+					padding: $inner-margin;
+					box-sizing: border-box;
+
+					&:not(:last-child) {
+						margin-bottom: $inner-margin;
+					}
+				}
 			}
 		}
 	}
