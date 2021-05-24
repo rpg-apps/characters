@@ -41,7 +41,7 @@ export default class ChoiceParser {
 
     const [from, definition] = getFlag(definition, CHOOSE_FROM_PREFIX)
     if (from) {
-      const fieldMatch = this.context.fieldsParser.existingFields().find(field => field === definition)
+      const fieldMatch = this.context.fieldsParser.existingFields().find(field => field.name === definition)
       if (!fieldMatch) throw new ParsingError(`Field not found: ${definition}`)
       choice.type = { from: fieldMatch }
     } else {

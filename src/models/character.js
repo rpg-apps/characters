@@ -3,31 +3,6 @@ export default class Character {
     Object.assign(this, props)
   }
 
-  info () {
-    return {
-      active: this.active,
-      adventure: this.adventure,
-      name: this.name,
-      race: this.race,
-      characterClass: this.characterClass,
-      bio: this.bio,
-      look: this.look,
-      alignment: this.alignment,
-    }
-  }
-
-  status () {
-    return {
-      level: this.level,
-      xp: this.xp,
-      armor: this.armor,
-      damage: this.damage,
-      hp: this.hp,
-      maxHp: this.maxHp,
-      bonds: this.bonds
-    }
-  }
-
   stats () {
     return [
       { name: 'Strength', value: this.strength, debility: this.weak },

@@ -14,4 +14,14 @@ export default class Context {
     this.effectParser = new EffectParser(this)
     Object.assign(this, externalParsers)
   }
+
+  extract () {
+    return {
+      types: this.typeParser.types,
+      choices: this.choiceParser.choices,
+      fields: this.fieldsParser.fields,
+      formulas: this.formulaParser.formulas,
+      effects: this.formulaParser.effects,
+    }
+  }
 }

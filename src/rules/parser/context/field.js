@@ -12,9 +12,23 @@ export default class FieldParser {
   // The initialization process for each is different:
   // global fields get a value immediately, playbook fields get a value while parsing the playbook
   // and character fields get the values on character creation.
-  parseDefinition (rawField, type) {
-  	const field = undefined
-    this.fields[type].push(field)
+  parseDefinition (name, value, scope) {
+  	const field = { name, scope }
+    switch (scope) {
+      case 'global':
+        if (value === 'large') {
+          field.value = this.context.rawRules[name]
+        } else {
+          field.value = value
+        }
+        break
+      case 'playbook':
+        field.type = value
+        break
+      case 'character':
+        field.formula = formulaParser.parseUsage(value)
+    }
+    this.fields[scope].push(field)
     return field
   }
 }

@@ -15,7 +15,7 @@ mechanisms:
       xp: 0
   roll:
     formulas:
-      modifier for <stat>: (stat<9?-1:(stat<13?0:(stat<16?1(stat<18?2:3))))
+      modifier for <field:stat>: (stat<9?-1:(stat<13?0:(stat<16?1(stat<18?2:3))))
       roll: 2d6
       Str: Str-Weak
       Dex: Dex-Shakey
@@ -47,11 +47,11 @@ mechanisms:
       Confused: false
       Scarred: false
     effects:
-      roll <formula> {miss,hit,success,partialSuccess,failure}:
+      roll <formula> {outcomes}:
         roll formula:
-          1<<6: [miss, failure]
-          7<<9: [hit, partialSuccess]
-          10<<15: [hit, success]
+          1-6: [outcomes.miss, outcomes.failure]
+          7-9: [outcomes.hit, outcomes.partialSuccess]
+          10-15: [outcomes.hit, outcomes.success]
       remove a debility:
         choose Which debility do you want to remove:
           Weak: set Weak = false
@@ -62,6 +62,23 @@ mechanisms:
           Scarred: set Scarred = false
       take <formula> forward <trigger>: modify once <trigger> <formula>
       take <formula> ongoing <trigger>: modify <trigger> <formula>
+  holds:
+    types:
+      hold:
+        name: string
+        count: number
+        options: effect array
+    character fields:
+      holds: hold array
+    effect:
+      hold <count> <name> {options}:
+        repeat count times:
+          add {name,options} to holds
+      hold <count> <name>: hold count name {}
+      hold <count> {options}: hold count nameMove options
+      hold <count>: hold count nameMove {}
+      use <name> to {options}: set hold[item.name=name].options = options
+      use {options}: use moveName to {options}
   move gaining:
     playbook fields:
       moves 2-5: move array
@@ -183,7 +200,7 @@ tags:
     text: It counts as ammunition for appropriate ranged weapons. The number indicated does not represent individual arrows or sling stones, but represents what you have left on hand.
     effect:
       is ammo=0:
-        yes: remove this from equipment
+        yes: remove this from gear
   - tag: Forceful
     text: It can knock someone back a pace, maybe even off their feet.
   - tag: <formula> damage
@@ -434,7 +451,7 @@ moves:
       * On a 7–9, you deal your damage to the enemy and the enemy makes an attack against you.
     trigger: When you attack an enemy in melee
     effect:
-      roll Str:
+      roll roll+Str:
         success:
           choose do +1d6 damage but expose yourself to the enemy’s attack?:
             yes: [deal damage+1d6, take damage]
@@ -450,7 +467,7 @@ moves:
         * You have to take several shots, reducing your ammo by one.
     trigger: When you take aim and shoot at an enemy at range
     effect:
-      roll Dex:
+      roll roll+Dex:
         hit: deal damage
         partial success:
           choose:
@@ -499,7 +516,6 @@ moves:
       - use:
         Redirect an attack from the thing you defend to yourself.: Redirect an attack from the thing you defend to yourself.
         Halve the attack’s effect or damage.: Halve the attack’s effect or damage.
-        Halve the attack’s effect or damage.: Halve the attack’s effect or damage.
         Open up the attacker to an ally giving that ally +1 forward against the attacker.:
           choose Is the ally you?:
             yes: modifiy "against the enemy" +1 forward
@@ -534,7 +550,7 @@ moves:
       - roll roll+Wis:
           success: choose 3
           partial succes: choose 1
-      - use: 
+      - options: 
           - What happened here recently?
           - What is about to happen?
           - What should I be on the lookout for?
@@ -867,7 +883,7 @@ playbooks:
           * Fame and glory
         trigger: While pursuing one of your appetites
         effect:
-          modify all roll=d6+d8 ongoing:
+          modify roll d6+d8 ongoing:
             afterroll:
               is last_d6>last_d8:
                 yes: The GM will introduce a complication or danger that comes about due to your heedless pursuits.

@@ -16,21 +16,21 @@ export default class TypeParser {
   }
 
   // When using a type to parse a value
-  parseValue (raw, type) {
+  parseValue (raw, type, params = { }) {
     if (type.constructor === String) {
       const [array, childType] = getFlag(type, ARRAY_SUFFIX, true)
       if (array) {
         if (!Array.isArray(raw)) throw new ParsingError('Array field is not an array')
-        return raw.map(arrayItem => this.parseValue(arrayItem, type))
+        return raw.map(arrayItem => this.parseValue(arrayItem, type, params))
       } else {
         const typeHandler = this.types.find(t => t.name === type)
         if (!typeHandler) throw new ParsingError(`Unkonw type ${type}`)
-        return typeHandler.parseValue(raw, this.context)
+        return typeHandler.parseValue(raw, this.context, params)
       }
     } else {
       return Object.entries(type)
       .reduce((value, [fieldName, fieldType]) =>
-        Object.assign(value, { [fieldName]: this.parseValue(raw[fieldName], fieldType) })
+        Object.assign(value, { [fieldName]: this.parseValue(raw[fieldName], fieldType, params) })
       , { })
     }
   }
@@ -52,7 +52,7 @@ const PRESET_TYPES = {
       throw new ParsingError(error.message)
     }
   },
-  formula: (value, { formulaParser }) => formulaParser.parseUsage(value),
+  formula: (value, { formulaParser }, params) => formulaParser.parseUsage(value, params),
   move: (value, { parseMove }) => parseMove(value)
 }
 
