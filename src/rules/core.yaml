@@ -15,7 +15,7 @@ mechanisms:
       xp: 0
   roll:
     formulas:
-      modifier for <field:stat>: (stat<9?-1:(stat<13?0:(stat<16?1(stat<18?2:3))))
+      modifier for <field:stat>: stat<9?-1:stat<13?0:stat<16?1:stat<18?2:3
       roll: 2d6
       Str: Str-Weak
       Dex: Dex-Shakey
@@ -26,7 +26,7 @@ mechanisms:
     global fields:
       initial stats: [8, 9, 12, 13, 15 ,16]
     choices:
-      stats: unique from "initial stats"
+      stats: unique from initial stats
     character fields:
       Strength: choose stats
       Dexterity: choose stats
@@ -111,7 +111,7 @@ mechanisms:
       armor: 0
     effects:
       deal <formula>: show <formula>
-      take damage: subtract "(input(formula:damage))-input(bool:ignore armor)?0:max(0,armor-(input(number:piercing)))" from hp
+      take damage: subtract (input(formula:damage))-input(bool:ignore armor)?0:max(0,armor-(input(number:piercing))) from hp
       heal <formula>: add formula to hp
   bonds:
     playbook fields:
@@ -119,7 +119,7 @@ mechanisms:
     character fields:
       bonds: []
     effects:
-      add bond: add free choice from "bond options" to bonds
+      add bond: add free choice from bond options to bonds
       resolve bond: remove from bonds
   alignment:
     types:
@@ -215,7 +215,7 @@ tags:
     effect: show <number> piercing
   - tag: Precise
     text: It rewards careful strikes. You use DEX to hack and slash with this weapon, not STR.
-    effect: modify "Hack and Slash" roll+Str=roll+Dex
+    effect: modify Hack and Slash roll+Str=roll+Dex
   - tag: Reload
     text: After you attack with it, it takes more than a moment to reset for another attack.
   - tag: Stun
@@ -377,7 +377,7 @@ equipment:
     weight: 1
     text: When you carefully treat someone’s wounds with poultices and herbs, heal them of 7 damage and expend a use.
   - name: Healing Potion
-    tags: [1 uses, On use choose are you healing yourself: { yes: choose are you removeing a debility or healing yourself: { removeing a debility: remove a debility, healing yourself: heal 10 }, no: no effect }]
+    tags: [1 uses, On use choose are you healing yourself: { yes: { choose are you removeing a debility or healing yourself: { removeing a debility: remove a debility, healing yourself: heal 10 } }, no: no effect }]
     cost: 50
     weight: 0
     text: When you drink an entire healing potion, heal yourself of 10 damage or remove one debility, your choice.
@@ -518,7 +518,7 @@ moves:
         Halve the attack’s effect or damage.: Halve the attack’s effect or damage.
         Open up the attacker to an ally giving that ally +1 forward against the attacker.:
           choose Is the ally you?:
-            yes: modifiy "against the enemy" +1 forward
+            yes: modifiy against the enemy +1 forward
             no: no effect
         Deal damage to the attacker equal to your level.: deal damage level/2
   Spout Lore:
@@ -557,7 +557,7 @@ moves:
           - What here is useful or valuable to me?
           - Who’s really in control here?
           - What here is not what it appears to be?
-      - modifiy "when acting on the answers" +1 forward
+      - modifiy when acting on the answers +1 forward
   Parley:
     text: >
       When you have leverage on a GM Character and manipulate them, roll+Cha.
@@ -889,19 +889,20 @@ playbooks:
                 yes: The GM will introduce a complication or danger that comes about due to your heedless pursuits.
                 no: no effect
         on move addition:
-          - add 2 from "appetite options" to "appetites" Choose two appetites
+          - add 2 from appetite options to appetites Choose two appetites
       The Upper Hand:
         text: >
           You take +1 ongoing to last breath rolls. When you take your last breath, on a 7–9 you make an offer to Death in return for your life. If Death accepts he will return you to life. If not, you die.
         trigger: constant
-        effect: modify "last breath" +1 ongoing:
-          replace:
-            partial succes: You make and offer to Death
+        effect: 
+          - modify last breath +1 ongoing
+          - modify last breath replace:
+              partial succes: You make and offer to Death
       Musclebound:
         text: >
           While you wield a weapon it gains the forceful and messy tags.
         trigger: constant
-        effect: modify equip(weapon) "+forceful +messy" ongoing
+        effect: modify equip(weapon) +forceful +messy ongoing
       What Are You Waiting For:
         text: >
           When you cry out a challenge to your enemies, roll+Con.
@@ -912,7 +913,7 @@ playbooks:
           roll roll+Con:
             success:
               - They treat you as the most obvious threat to be dealt with and ignore your companions.
-              - modify "damage against them" +2 ongoing
+              - modify damage against them +2 ongoing
           partialSuccess: Only a few (the weakest or most foolhardy among them) fall prey to your taunting.
       choose:
         Full Plate and Packing Steel:
@@ -937,4 +938,4 @@ playbooks:
       levels 2 to 5:
         Still Hungry:
           text: Choose an additional appetite.
-          on move addition: add from ("appetite options"-"appetites") to "appetites"
+          on move addition: add from appetite options-appetites to appetites

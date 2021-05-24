@@ -27,14 +27,18 @@ export function parseFields (obj, parsers, additionalParams) {
   return Object.entries(parsers).reduce((result, [field, parser]) => {
     const rawField = noCase(field)
     if (obj[rawField]) {
-      result[field] = parser(object[rawField], additionalParams)
+      result[field] = parser(obj[rawField], additionalParams)
     }
 
     return result
-  })
+  }, { })
 }
 
 export function getFlag (raw, flag, suffix = false) {
+  if (raw.constructor !== String) {
+    return [false, raw]
+  }
+
   if (suffix) {
     const match = raw.endsWith(` ${flag}`)
     return [match, raw.replace(new RegExp(` ${flag}$`), '')]
@@ -44,29 +48,25 @@ export function getFlag (raw, flag, suffix = false) {
   }
 }
 
-export class ParsingError extends Error {
-  constructor (message) {
-    super(message)
-  }
-}
+export class ParsingError extends Error { }
 
-export class PatternsParser {
+export class PatternParser {
   getParams ({ pattern }, raw, params, parseParam) {
-    let options
+    let options, type
     if (this.hasOptions(raw)) {
-      [raw, options] = extractOptions({ pattern }, raw, parseParam, params)
+      [raw, options] = this.extractOptions({ pattern }, raw, parseParam, params)
     }
 
     const paramNames = this.paramNames({ pattern })
     const match = raw.match(this.regex({ pattern }))
     
-    if (!paramsNames || !match) {
+    if (!paramNames || !match) {
       throw new ParsingError('Text doesnt match { pattern }.')
     }
 
-    return paramsNames.reduce((obj, name, index) => {
+    return paramNames.reduce((obj, name, index) => {
       if (name.includes(':')) {
-        const [type, name] = name.split(':')
+        [type, name] = name.split(':')
         return { ...obj, [name]: parseParam(match[index+1], { type, params }) }
       } else {
         return { ...obj, [name]: parseParam(match[index+1], { params }) }
@@ -75,7 +75,7 @@ export class PatternsParser {
   }
 
   paramNames ({ pattern }) {
-    return pattern.match(/<.+?>/g)
+    return (pattern.match(/<.+?>/g) || [])
       .map(str => str.substring(1, str.length - 1))
   }
 
@@ -85,7 +85,7 @@ export class PatternsParser {
   }
 
   regex ({ pattern }) {
-    return new RegExp(`^${pattern.replace(/<.+?>/g, '(.+?)')}$`)
+    return new RegExp(`^${pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/<.+?>/g, '(.+?)')}$`)
   }
 
   hasOptions (raw) {
@@ -101,7 +101,7 @@ export class PatternsParser {
   }
 
   extractOptions ({ pattern }, raw, parseParam, params) {
-    const options = parseParam(Obejct.values(raw)[0], { type: 'options', params })
+    const options = parseParam(Object.values(raw)[0], { type: 'options', params })
     raw = Object.keys(raw)[0]
     return [raw, this.hasOptionsName({ pattern }) ? { [this.optionsName({ pattern })]: options } : options ]
   }

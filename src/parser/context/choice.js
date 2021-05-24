@@ -18,34 +18,36 @@ export default class ChoiceParser {
 
   // When defining a choice in the 'choices' field or from 'choose' keyword.
   parse (name, definition, playbook = 'all') {
+    if (definition.constructor !== String) {
+      const choice = this.parse(name, definition.choose, playbook)
+      if (definition['on choice']) {
+        choice.effect = this.context.effectParser.parseUsage(definition['on choice'])
+      }
+      return choice
+    }
+
     const existingChoice = this.choices.find(c => definition.startsWith(c.name))
     if (existingChoice) {
-      definition = definition.replace(`${existingChoice.name} `, '')
-      const [useField, definition] = getFlag(definition, FIELD_USAGE_PREFIX)
-      const field = useField ? definition : 'root'
+      const [useField, fieldDefinition] = getFlag(definition.replace(`${existingChoice.name} `, ''), FIELD_USAGE_PREFIX)
+      const field = useField ? fieldDefinition : 'root'
       return { proxy: existingChoice, field }
     }
 
     const choice = { name, playbook }
-    
-    if (definition['on choice']) {
-      choice.effect = effectParser.parseUsage(definition['on choice'])
-    }
 
-    definition = definition.choose || definition
-    const [free, definition] = getFlag(definition, FREE_CHOICE_PREFIX)
+    const [free, definitionAfterFreeCheck] = getFlag(definition, FREE_CHOICE_PREFIX)
     choice.free = free
 
-    const [unique, definition] = getFlag(definition, UNIQUE_CHOICE_PREFIX)
+    const [unique, definitionAfterUniqueCheck] = getFlag(definitionAfterFreeCheck, UNIQUE_CHOICE_PREFIX)
     choice.unique = unique
 
-    const [from, definition] = getFlag(definition, CHOOSE_FROM_PREFIX)
+    const [from, definitionAfterChooseFromCheck] = getFlag(definitionAfterUniqueCheck, CHOOSE_FROM_PREFIX)
     if (from) {
-      const fieldMatch = this.context.fieldsParser.existingFields().find(field => field.name === definition)
-      if (!fieldMatch) throw new ParsingError(`Field not found: ${definition}`)
+      const fieldMatch = this.context.fieldParser.allFields().find(field => field.name === definitionAfterChooseFromCheck)
+      if (!fieldMatch) throw new ParsingError(`Field not found: ${definitionAfterChooseFromCheck}`)
       choice.type = { from: fieldMatch }
     } else {
-      choice.type = definition
+      choice.type = definitionAfterChooseFromCheck
     }
     
     this.choices.push(choice)
@@ -53,7 +55,7 @@ export default class ChoiceParser {
   }
 }
 
-const FREE_CHOICE_PREFIX = 'freely '
-const UNIQUE_CHOICE_PREFIX = 'unique '
-const CHOOSE_FROM_PREFIX = 'from '
-const FIELD_USAGE_PREFIX = 'and use '
+const FREE_CHOICE_PREFIX = 'freely'
+const UNIQUE_CHOICE_PREFIX = 'unique'
+const CHOOSE_FROM_PREFIX = 'from'
+const FIELD_USAGE_PREFIX = 'and use'

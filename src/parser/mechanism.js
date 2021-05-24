@@ -1,8 +1,8 @@
-import Mechanism from '../models/mechanism'
+import Mechanism from '../models/rules/mechanism'
 
 import { parseFields } from './parsing-utils'
 
-export default parseMechanism (name, rawMechanism, context) {
+export default function parseMechanism (name, rawMechanism, context) {
   const fields = parseFields(rawMechanism, PARSERS, context)
   fields.name = name
   return new Mechanism(fields)

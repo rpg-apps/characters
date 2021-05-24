@@ -4,9 +4,9 @@ class Trigger {
   }
 }
 
-Trigger.On = class On {
+Trigger.On = class On extends Trigger {
   constructor(formula) {
-    super(`on ${formula.text()}`)
+    super('triggered') // TODO show formula here? add toString to formula?
     this.formula = formula
   }
 }

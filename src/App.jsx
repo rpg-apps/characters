@@ -1,6 +1,8 @@
 import './App.css'
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
+import RulesContext from './contexts/rules-context'
+
 import Characters from './components/pages/characters'
 import Character from './components/pages/character'
 import CharacterCreation from './components/pages/character-creation'

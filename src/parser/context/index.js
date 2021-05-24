@@ -1,5 +1,5 @@
 import TypeParser from './type'
-import FieldsParser from './field'
+import FieldParser from './field'
 import ChoiceParser from './choice'
 import FormulaParser from './formula'
 import EffectParser from './effect'
@@ -9,7 +9,7 @@ export default class Context {
     this.rawRules = rawRules
     this.typeParser = new TypeParser(this)
     this.choiceParser = new ChoiceParser(this)
-    this.fieldsParser = new FieldsParser(this)
+    this.fieldParser = new FieldParser(this)
     this.formulaParser = new FormulaParser(this)
     this.effectParser = new EffectParser(this)
     Object.assign(this, externalParsers)
@@ -19,7 +19,7 @@ export default class Context {
     return {
       types: this.typeParser.types,
       choices: this.choiceParser.choices,
-      fields: this.fieldsParser.fields,
+      fields: this.fieldParser.fields,
       formulas: this.formulaParser.formulas,
       effects: this.formulaParser.effects,
     }

@@ -1,4 +1,4 @@
-import { ParsingError, PatternParser } from '../parsing-utils'
+import { PatternParser } from '../parsing-utils'
 
 export default class FormulaParser {
   constructor(context) {
@@ -18,12 +18,16 @@ export default class FormulaParser {
 
   // When using a 'formula' in another context.
   parseUsage (rawFormula, { type = undefined, params = [] } = { }) {
+    if (rawFormula.constructor !== String) {
+      return { pattern: '', getValue: () => rawFormula }
+    }
+
     if (rawFormula.match(/^{(.+?,)+?(.+?)}$/)) {
       return rawFormula
-        .substring(1, str.length - 1).split(',')
+        .substring(1, rawFormula.length - 1).split(',')
         .reduce((obj, part) => {
           const [key, value] = part.includes(':') ? part.split(':') : [part, part]
-          return { ...obj, [key]: parseUsage(value, { type, params }) }
+          return { ...obj, [key]: this.parseUsage(value, { type, params }) }
         }, { })
     }
 
@@ -36,13 +40,13 @@ export default class FormulaParser {
       return { pattern: '', getValue: params => params[rawFormula] }
     }
 
-    const field = this.context.fieldParser.existingFields().find(field => field.name === rawFormula)
+    const field = this.context.fieldParser.allFields().find(field => field.name === rawFormula)
     if (field) {
       return { pattern: '', getValue: () => field.value }
     }
 
     if (type) {
-      return { pattern: '', getValue: () => this.context.typesParser.parseValue(rawFormula, type, params) }
+      return { pattern: '', getValue: () => this.context.typeParser.parseValue(rawFormula, type, params) }
     }
   }
 }
@@ -60,7 +64,7 @@ const PRESET_FORMULAS = [
   { pattern: '<number:A><<number:B>', getValue: params => params.A < params.B },
   { pattern: '<number:A><=<number:B>', getValue: params => params.A <= params.B },
   { pattern: '<number:A>>=<number:B>', getValue: params => params.A >= params.B },
-  { pattern: '<number:A>!=<number:B>', getValue: params => params.A != params.B },
+  { pattern: '<number:A>!=<number:B>', getValue: params => params.A !== params.B },
 
   { pattern: '<boolean:A>|<boolean:B>', getValue: params => params.A || params.B },
   { pattern: '<boolean:A>&<boolean:B>', getValue: params => params.A && params.B },

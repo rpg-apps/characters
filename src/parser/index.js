@@ -3,13 +3,13 @@
 // modifier target parsing
 // mechanisms menifistation in the playbook view? how to make it extendible? USE CSS
 
-import YAML from 'yaml'
 import pluralize from 'pluralize'
-import { camelCase } from 'change-case'
 
 import parseMove from './move'
 import parsePlaybook from './playbook'
 import parseMechanism from './mechanism'
+
+import Rulebook from '../models/rules'
 
 import Context from './context'
 
@@ -20,12 +20,20 @@ const parsers = {
 }
 
 export function parse (yamls) {
-  const rawRules = mergeRuleBundles(yamls.map(yaml => YAML.parse(yaml)))
+  console.log('started parsing')
+  console.log(yamls)
+  console.log('loading raw rules...')
+  const rawRules = mergeRuleBundles(yamls)
+  console.log('raw rules')
+  console.log(rawRules)
   const context = new Context(rawRules, { parseMove })
   const parsedRules = Object.entries(rawRules)
     .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context) }), { })
 
-  return parsedRules
+  const rulebook = new Rulebook(parsedRules)
+  console.log('Finished parsing')
+  console.log(rulebook)
+  return rulebook
 }
 
 function mergeRuleBundles (ruleBundles) {
@@ -50,6 +58,9 @@ function mergeRuleBundles (ruleBundles) {
 function parseEntries (field, entries, context) {
   const parser = parsers[pluralize.singular(field)]
   const parsedEntries = []
-  Object.entires(entries).forEach((entryName, rawEntry) => parsedEntries.push(parser(entryName, rawEntry, context)))
+  if (parser) {
+    Object.entries(entries).forEach(([entryName, rawEntry]) => parsedEntries.push(parser(entryName, rawEntry, context)))
+    console.log(field, parsedEntries)
+  }
   return parsedEntries
 }
