@@ -50,4 +50,86 @@
       color: #5c2217;
     }
   }
+
+  .bard {
+    background-image: url('../../images/classes-backgrounds/bard.jpg');
+    background-color: #10381e;
+    color: white;
+    .subtitle {
+      color: #10381e;
+    }
+  }
+
+
+  .cleric {
+    background-image: url('../../images/classes-backgrounds/cleric.jpg');
+    background-color: #724e00;
+    color: white;
+    .subtitle {
+      color: black;
+    }
+  }
+
+  .druid {
+    background-image: url('../../images/classes-backgrounds/druid.jpg');
+    background-color: #544d07;
+    color: white;
+    .subtitle {
+      color: #544d07;
+    }
+  }
+
+  .fighter {
+    background-image: url('../../images/classes-backgrounds/fighter.jpg');
+    background-color: #1b5346;
+    color: white;
+    .subtitle {
+      color: #1b5346;
+    }
+  }
+
+  .immolator {
+    background-image: url('../../images/classes-backgrounds/immolator.jpg');
+    background-color: #76226f;
+    color: white;
+    .subtitle {
+      color: #76226f;
+    }
+  }
+
+  .paladin {
+    background-image: url('../../images/classes-backgrounds/paladin.jpg');
+    background-color: #568bb5;
+    color: white;
+    .subtitle {
+      color: #568bb5;
+    }
+  }
+
+  .ranger {
+    background-image: url('../../images/classes-backgrounds/ranger.jpg');
+    background-color: #361712;
+    color: white;
+    .subtitle {
+      color: #361712;
+    }
+  }
+
+  .thief {
+    background-image: url('../../images/classes-backgrounds/thief.jpg');
+    background-color: #3f2167;
+    color: white;
+    .subtitle {
+      color: #3f2167;
+    }
+  }
+
+  .wizard {
+    background-image: url('../../images/classes-backgrounds/wizard.jpg');
+    background-color: #1c3609;
+    color: white;
+    .subtitle {
+      color: #1c3609;
+    }
+  }
 }

@@ -31,12 +31,7 @@ export default class FieldParser {
         field.type = value
         break
       case 'character':
-        const [choice, valueChoice] = getFlag(value, CHOICE_PREFIX)
-        if (choice) {
-          field.choice = this.context.choiceParser.parse(null, valueChoice, playbook)
-        } else {
-          field.formula = this.context.formulaParser.parseUsage(value)
-        }
+        Object.assign(field, this.fieldValueGetter(name, value, null, playbook))
         break
       default:
         throw new ParsingError('Illegal field scope')
@@ -52,13 +47,20 @@ export default class FieldParser {
     }
 
     playbook = fieldDefinition.scope === 'playbook' ? playbook : 'all'
-    const [choice, valueChoice] = getFlag(value, CHOICE_PREFIX)
-    if (choice) {
-      fieldDefinition.choice = this.context.choiceParser.parse(null, valueChoice, playbook)
+    return { ...fieldDefinition, ...this.fieldValueGetter(name, value, fieldDefinition.type, playbook), playbook }
+  }
+
+  fieldValueGetter (name, value, type, playbook) {
+    const [useChoice, valueChoice] = getFlag(value, CHOICE_PREFIX)
+    if (useChoice) {
+      const choice = this.context.choiceParser.parse(null, valueChoice, playbook)
+      if (!choice.name) {
+        choice.name = name
+      }
+      return { choice }
     } else {
-      fieldDefinition.formula = this.context.formulaParser.parseUsage(value, { type: fieldDefinition.type })
+      return { formula: this.context.formulaParser.parseUsage(value, { type }) }
     }
-    return { ...fieldDefinition, playbook }
   }
 }
 
