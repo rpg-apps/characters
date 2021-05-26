@@ -843,6 +843,12 @@ playbooks:
       Where others see nothing but chaos and desperation, you refine an inner poetry of steel and fire that they cannot hope to comprehend, much less match.\n
       If you are lucky, you may find a rival able to match your skill.\n
       But even these brief connections can end only in victory defeat: The path you walk is ultimately lonely, but it is yours.
+    name options: [Elohiir, Sharaseth, Hasrith, Shevaral, Cadeus, Eldar, Kithracet, Thelian, Yang, Garm, Caleb, Maximillian, Alexander, La Croix, Rodriguez, Scyld]
+    look options:
+    - [Fiery eyes, Cold Eyes, Weary Eyes]
+    - [Cropped Hair, Flowing Hair, Hooded Head]
+    - [Aristocratic Clothes, Threadbare Clothes, Training Clothes]
+    - [Muscular Body, Lithe Body, Scarred Body]
   barbarian:
     in a sentence: A warrior from outside society in some infinite search
     introduction: >
@@ -856,11 +862,11 @@ playbooks:
       You know what is best in life.
     name options: [Gorm, Si-Yi, Priscilla, Sen, Xia, Anneira, Haepha, Lur, Shar, Korrin, Nkosi, Fafnir, Qua, Sacer, Vercin’geto, Barbozar, Clovis, Frael, Thra raxes, Sillius, Sha Sheena, Khamisi]
     title options: [the Glorious, the Hungry, the Irascible, the Undefeated, the Gluttonous, Foesmasher, Bonebreaker, the Mirthful, the Melancholic, All Mighty, the Giant, the Triumphant]
-    look choices:
-      choose eyes: [Tormented eyes, Haunted eyes, Wild eyes, Shrouded eyes]
-      choose build: [Mighty thews, Long shanks, Scrawny body, Supple body]
-      choose decoration: [Strange tattoos, Unusual jewelry, Unmarred by decoration]
-      choose clothes: [Scraps, Silks, Scavenger’s outfit, Weather inappropriate clothes]
+    look options:
+    - [Tormented eyes, Haunted eyes, Wild eyes, Shrouded eyes]
+    - [Mighty thews, Long shanks, Scrawny body, Supple body]
+    - [Strange tattoos, Unusual jewelry, Unmarred by decoration]
+    - [Scraps, Silks, Scavenger’s outfit, Weather inappropriate clothes]
     damage: d10
     max hp: Constitution+8
     alignment options:
@@ -972,6 +978,12 @@ playbooks:
       Someone’s got to be there, fighting shoulder-to-shoulder with the goons and the thugs and the soon-to-be-heroes.
       Who better than you to write the tale of your own heroism?
       Nobody. Get going.
+    name options: [Astrafel, Daelwyn, Feliana, Damarra, Sistranalle, Pendrell, Melliandre, Dagoliir, Baldric, Leena, Dunwick, Willem, Edwyn, Florian, Seraphine, Quorra, Charlotte, Lily, Ramonde, Cassandra]
+    look options:
+    - [Knowing Eyes, Fiery Eyes, Joyous Eyes]
+    - [Fancy Hair, Wild Hair, Stylish Cap]
+    - [Finery, Traveling Clothes, Poor Clothes]
+    - [Fit Body, Well-fed Body, Thin Body]
   cleric:
     in a sentence: A holy priest connected to a dety and wields their magic.
     introduction: >
@@ -986,6 +998,12 @@ playbooks:
       You know that’s rubbish.
       God lives at the edge of a blade. \n
       Show the world who is lord.
+    name options: [Durga, Aelfar, Gerda, Rurgosh, Bjorn, Drummond, Helga, Siggrun, Freya, Wesley, Brinton, Jon, Sara, Hawthorn, Elise, Clarke, Lenore, Piotr, Dahlia, Carmine]
+    look options:
+    - [Kind Eyes, Sharp Eyes, Sad Eyes]
+    - [Tonsure, Strange Hair, Bald]
+    - [Flowing Robes, Habit, Common Garb]
+    - [Thin Body, Knobby Body, Flabby Body]
   druid:
     in a sentence: A person connected to nature that shapeshift into animals.
     introduction: >
@@ -1000,6 +1018,11 @@ playbooks:
       You walk the old ways, you wear the pelts of the earth itself.
       You’ll take your share of the treasure, but will you ever walk as one of them?
       Only time will tell.
+    name options: [Hycorax, Ethanwe, Sinathel, Demanor, Menoliir, Mithralan, Taeros, Aegor, Tanner, Dunstan, Rose, Ivy, Robard, Mab, Thistle, Puck, Anne, Serah, Elana, Obelis, Herran, Syla, Andanna, Siobhan, Aziz, Pelin, Sibel, Nils, Wei]
+    look options:
+    - [Wise Eyes, Wild Eyes, Haunting Eyes]
+    - [Furry Hood, Messy Hair, Braided Hair]
+    - [Ceremonial Garb, Practical Leathers, Weathered Hides]
   fighter:
     in a sentence: A worrior connected to a mighty weapon
     introduction: >
@@ -1012,10 +1035,22 @@ playbooks:
       You are a beast of iron. Your friends may carry blades of forged steel but, fighter, you are steel.
       While your traveling companions might moan about their wounds over a campfire in the wilderness, you bear your scars with pride.\n
       You are the wall—let every danger smash itself to nothing on you. In the end, you’ll be the last one standing.
+    name options: [Ozruk, Surtur, Brunhilda, Annika, Janos, Greta, Dim, Rundrig, Jarl, Xotoq, Elohiir, Sharaseth, Hasrith, Shevaral, Cadeus, Eldar, Kithracet, Thelian, Finnegan, Olive, Randolph, Bartleby, Aubrey, Baldwin, Becca, Hawke, Rudiger, Gregor, Brianne, Walton, Castor, Shanna, Ajax, Hob]
+    look options:
+    - [Hard Eyes, Dead Eyes, Eager Eyes]
+    - [Wild Hair, Shorn Hair, Battered Helm]
+    - [Calloused Skin, Tanned Skin, Scarred Skin]
+    - [Built Body, Lithe Body, Ravaged Body]
   immolator:
     in a sentence: A caster of fire
     introduction: >
       The fire burns within you.
+    name options: [Solomon, Timothy, Kalil, Omen, Yohn, Hiko, Agasha, Elizabeth, Harald, Fatia, Khalwa, Adur, Ignis, Yajna, Umlilo, Sulfurheart, Flamewalker, Emberlash, Cinderclaw, Charfiend, Bittertallow, Barrowblaze, Singescale, Candlewick, Coalfang]
+    look options:
+    - [Smoldering eyes, warm eyes, searing eyes]
+    - [Strange brands, ritual scars, perfect skin]
+    - [Imperious bearing, manic attitude, barely-hidden rage]
+    - [Crackling voice, whispering voice, roaring voice]
   paladin:
     in a sentence: A holy fighter trying on a holy quest
     introduction: >
@@ -1032,6 +1067,12 @@ playbooks:
       A purity of intent that your companions do not have.\n
       So guide these fools, paladin. Take up your holy cause and bring salvation to the wastrel world.\n
       Vae victis, right?
+    name options: [Thaddeus, Augustine, Lux, Cassius, Hadrian, Lucia, Octavia, Regulus, Valeria, Sanguinus, Titanius]
+    look options:
+    - [Kind Eyes, Fiery Eyes, Glowing Eyes]
+    - [Helmet, Styled Hair, Bald]
+    - [Worn Holy Symbol, Fancy Holy Symbol]
+    - [Fit Body, Bulky Body, Thin Body]
   ranger:
     in a sentence: A hunter and traveller connected to an animal companion
     introduction: >
@@ -1043,6 +1084,12 @@ playbooks:
       Your time in the wilderness may have been solitary until now, but the call of some greater thing—call it fate if you like—has cast your lot with these folk.
       Brave, they may be. Powerful and strong, too. You know the secrets of the spaces between, though.\n
       Without you, they’d be lost. Blaze a trail through the blood and dark, strider.
+    name options: [Throndir, Elrosine, Aranwe, Celion, Dambrath, Lanethe, Jonah, Halek, Brandon, Emory, Shrike, Nora, Diana]
+    look options:
+    - [Wild Eyes, Sharp Eyes, Animal Eyes]
+    - [Hooded Head, Wild Hair, Bald]
+    - [Cape, Camouflage, Traveling Clothes]
+    - [Lithe Body, Wild Body, Sharp Body]
   thief:
     in a sentence: A person of stealth, uses poisons and sneaking to get by.
     introduction: >
@@ -1055,6 +1102,12 @@ playbooks:
       who among them wouldn’t have been dissected by a flying guillotine or poisoned straight to death by some ancient needle trap?
       So, let them complain. When you’re done with all this delving you’ll toast their hero’s graves.\n
       From your castle. Full of gold. You rogue.
+    name options: [Felix, Rook, Mouse, Sketch, Trixie, Robin, Omar, Brynn, Bug, Sparrow, Shank, Jack, Marlow, Dodge, Rat, Pox, Humble, Farley]
+    look options:
+    - [Shifty Eyes, Criminal Eyes]
+    - [Hooded Head, Messy Hair, Cropped Hair]
+    - [Dark Clothes, Fancy Clothes, Common Clothes]
+    - [Lithe Body, Knobby Body, Flabby Body]
   wizard:
     in a sentence: A well educated spell caster
     introduction: >
@@ -1068,3 +1121,9 @@ playbooks:
       To call on the thunder of the sky and the churn of the roiling earth. To shrug off the rules the world holds so dear.\n
       Let them cast their sidelong glances. Let them call you “warlock” or “diabolist.” Who among them can hurl fireballs from their eyes?\n
       Yeah. We didn’t think so.
+    name options: [Galadiir, Fenfaril, Lilliastre, Phirosalle, Enkirash, Halwyr, Avon, Morgan, Rath, Ysolde, Ovid, Vitus, Aldara, Xeno, Uri]
+    look options:
+    - [Haunted Eyes, Sharp Eyes, Crazy Eyes]
+    - [Styled Hair, Wild Hair, Pointed Hat]
+    - [Worn Robes, Stylish Robes, Strange Robes]
+    - [Pudgy Body, Creepy Body, Thin Body]

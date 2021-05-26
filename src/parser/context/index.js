@@ -19,7 +19,7 @@ export default class Context {
     return {
       types: this.typeParser.types,
       choices: this.choiceParser.choices,
-      fields: this.fieldParser.fields,
+      fields: this.fieldParser.allFields(),
       formulas: this.formulaParser.formulas,
       effects: this.formulaParser.effects,
     }
