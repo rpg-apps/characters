@@ -1,6 +1,8 @@
 mechanisms:
   description:
     playbook fields:
+      in a sentence: string
+      introduction: string
       name options: string array
       optional title options: string array
       look options: string array array
@@ -834,7 +836,17 @@ moves:
         - modify all +1 forward
 
 playbooks:
-  Barbarian:
+  barbarian:
+    in a sentence: A warrior from outside society in some infinite search
+    introduction: >
+      Hither you came from parts unknown. Sword in hand—a reaver. A slayer.\n
+      Let the wizard casts his spells. What good is magic when steel cuts through flesh and bone just the same?\n
+      The Paladin swears fealty to the divine. She can keep her fairy tale god—you are your own master.\n
+      You hail from the far reaches of Dungeon World in search of—what? Glory? Treasure? Spilt blood?\n
+      In the end it matters not.\n
+      They call you barbarian. Uncivilized. Let them. You know better.\n
+      Their world of nobles and laws is fleeting.\n
+      You know what is best in life.
     name options: [Gorm, Si-Yi, Priscilla, Sen, Xia, Anneira, Haepha, Lur, Shar, Korrin, Nkosi, Fafnir, Qua, Sacer, Vercin’geto, Barbozar, Clovis, Frael, Thra raxes, Sillius, Sha Sheena, Khamisi]
     title options: [the Glorious, the Hungry, the Irascible, the Undefeated, the Gluttonous, Foesmasher, Bonebreaker, the Mirthful, the Melancholic, All Mighty, the Giant, the Triumphant]
     look choices:
@@ -939,3 +951,10 @@ playbooks:
         Still Hungry:
           text: Choose an additional appetite.
           on move addition: add from appetite options-appetites to appetites
+  arcane duelist:
+    in a sentence: A warrior that incorperates magic into his fighting style
+    introduction: >
+      Battle is not a means to an end: It is an art.\n
+      Where others see nothing but chaos and desperation, you refine an inner poetry of steel and fire that they cannot hope to comprehend, much less match.\n
+      If you are lucky, you may find a rival able to match your skill.\n
+      But even these brief connections can end only in victory defeat: The path you walk is ultimately lonely, but it is yours.

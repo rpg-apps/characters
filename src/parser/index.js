@@ -21,16 +21,14 @@ const parsers = {
 
 export function parse (yamls) {
   console.log('started parsing')
-  console.log(yamls)
   console.log('loading raw rules...')
   const rawRules = mergeRuleBundles(yamls)
-  console.log('raw rules')
-  console.log(rawRules)
+  console.log('raw rules', rawRules)
   const context = new Context(rawRules, { parseMove })
   const parsedRules = Object.entries(rawRules)
     .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context) }), { })
 
-  const rulebook = new Rulebook(parsedRules)
+  const rulebook = new Rulebook(Object.assign(parsedRules, { context: context.extract() }))
   console.log('Finished parsing')
   console.log(rulebook)
   return rulebook

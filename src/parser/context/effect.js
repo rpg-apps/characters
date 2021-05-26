@@ -6,14 +6,18 @@ export default class EffectParser {
   constructor(context) {
     this.context = context
     this.patternParser = new PatternParser()
+    this.lastEffects = { }
     this.parsers = [].concat(PRESET_PARSERS)
   }
 
   // When defining an effecct using the 'effects' field
   parseDefinition (pattern, definition) {
     const matchParams = this.patternParser.paramNames({ pattern })
-    definition = this.parseUsage(definition, matchParams)
-    const parser = { pattern, getEffect: params => definition.getEffect(params) }
+    const parser = { pattern, getEffect: params => {
+      params = this.patternParser.getNamedParams({ pattern }, definition, params, (raw, options) => this.parseParam(raw, options))
+      matchParams.forEach(paramName => { definition = definition.replace(paramName, ) })
+      return this.parseUsage(definition, params)
+    } }
     this.parsers.push(parser)
     return parser
   }
@@ -24,27 +28,39 @@ export default class EffectParser {
       return rawEffect.map(rawItem => this.parseUsage(rawItem, params))
     }
 
+    let effect
     const parser = this.parsers.find(({ pattern }) => this.patternParser.matching({ pattern }, rawEffect))
     if (!parser) {
-      return { pattern: '', getEffect: () => new Effect.Text(rawEffect) }
+      effect = new Effect.Text(rawEffect)
+    } else {
+      params = this.patternParser.getParams(parser, rawEffect, params, (raw, options) => this.parseParam(raw, options))
+      effect = parser.getEffect(params, this.context)
     }
 
-    params = this.patternParser.getParams(parser, rawEffect, params, (raw, { type, params }) => {
-      if (type === 'options') {
-        if (Array.isArray(raw)) {
-          return raw.map(rawItem => this.parseUsage(rawItem, params))
-        }        
-        Object.entries(raw).forEach(([key, value]) => { raw[key] = this.parseUsage(value, params) })
-        return raw
-      } else if (type === 'field') {
-        return this.context.fieldParser.allFields().find(field => field.name === raw)
-      } else if (type) {
-        return this.context.typeParser.parseValue(raw, type, params)
-      } else {
-        return raw
+    if (effect) {
+      this.lastEffects[effect.constructor.name] = effect
+    }
+    return effect
+  }
+
+  getLast (effectClass) {
+    return this.lastEffects[effectClass.name]
+  }
+
+  parseParam (raw, { type, params }) {
+    if (type === 'options') {
+      if (Array.isArray(raw)) {
+        return raw.map(rawItem => this.parseUsage(rawItem, params))
       }
-    })
-    return parser.getEffect(params, this.context)
+      Object.entries(raw).forEach(([key, value]) => { raw[key] = this.parseUsage(value, params) })
+      return raw
+    } else if (type === 'field') {
+      return this.context.fieldParser.allFields().find(field => field.name === raw)
+    } else if (type) {
+      return this.context.typeParser.parseValue(raw, type, params)
+    } else {
+      return raw
+    }
   }
 }
 

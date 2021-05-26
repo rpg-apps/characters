@@ -1,0 +1,53 @@
+#new {
+  .playbook {
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100vw;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: right;
+
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+
+    .subtitle {
+    	flex-grow: 1;
+    }
+
+    .content {
+      font-size: 0.9rem;
+      vertical-align: bottom;
+      text-align: justify;
+
+      > :not(:last-child) {
+        margin-bottom: 0.2rem;
+      }
+    }
+  }
+
+  .title {
+    font-size: 2rem;
+    text-align: center;
+    text-transform: capitalize;
+  }
+
+  .arcane.duelist {
+    background-image: url('../../images/classes-backgrounds/arcane-duelist.jpg');
+    background-color: #121b45;
+    color: white;
+    .subtitle {
+      color: #121b45;
+    }
+  }
+
+  .barbarian {
+    background-image: url('../../images/classes-backgrounds/barbarian.jpg');
+    background-color: #5c2217;
+    color: white;
+    .subtitle {
+      color: #5c2217;
+    }
+  }
+}

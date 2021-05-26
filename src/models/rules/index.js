@@ -1,5 +1,5 @@
 export default class Rulebook {
-  constructor ({ mechanisms, moves, playbooks }) {
-    Object.assign(this, { mechanisms, moves, playbooks })
+  constructor ({ mechanisms, moves, playbooks, context }) {
+    Object.assign(this, { mechanisms, moves, playbooks, context })
   }
 }

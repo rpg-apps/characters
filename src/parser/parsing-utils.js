@@ -74,8 +74,15 @@ export class PatternParser {
     }, { ...options })
   }
 
+  getNamedParams ({ pattern }, raw, params, parseParam) {
+    const paramNames = this.paramNames({ pattern })
+    return paramNames.reduce((namedParams, paramName) => {
+      return { ...namedParams, [paramName]: params[paramName] }
+    }, { })
+  }
+
   paramNames ({ pattern }) {
-    return (pattern.match(/<.+?>/g) || [])
+    return (pattern.match(/<[^<>]+?>/g) || [])
       .map(str => str.substring(1, str.length - 1))
   }
 
@@ -85,7 +92,7 @@ export class PatternParser {
   }
 
   regex ({ pattern }) {
-    return new RegExp(`^${pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/<.+?>/g, '(.+?)')}$`)
+    return new RegExp(`^${pattern.replace(/ {.+?}$/, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/<[^<>]+?>/g, '(.+?)')}$`)
   }
 
   hasOptions (raw) {
@@ -97,7 +104,8 @@ export class PatternParser {
   }
 
   optionsName ({ pattern }) {
-    return pattern.match(/{.+?}/)[0] 
+    const match = pattern.match(/{.+?}/)[0]
+    return match.substring(1, match.length - 1)
   }
 
   extractOptions ({ pattern }, raw, parseParam, params) {

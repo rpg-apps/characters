@@ -32,8 +32,11 @@ export default class FormulaParser {
     }
 
     const existingFormula = this.formulas.find(formula => this.patternParser.matching(formula, rawFormula))
-    if (existingFormula) {
-      return { formula: existingFormula, params: this.patternParser.getParams(existingFormula, rawFormula, params, (raw, options) => this.parseUsage(raw, options)) }
+    if (existingFormula && (!type || !existingFormula.type || existingFormula.type === type)) {
+      return { pattern: '', getValue: params => {
+        params = { ...params, ...this.patternParser.getParams(existingFormula, rawFormula, params, (raw, options) => this.parseUsage(raw, options)) }
+        return existingFormula.getValue(params)
+      } }
     }
     
     if (params.includes(rawFormula)) {
@@ -52,26 +55,27 @@ export default class FormulaParser {
 }
 
 const PRESET_FORMULAS = [
-  { pattern: '<boolean:condition>?<number:onTrue>:<number:onFalse>', getValue: params => (params.condition ? params.onTrue : params.onFalse) },
+  { pattern: '<boolean:condition>?<number:onTrue>:<number:onFalse>', type: 'number', getValue: params => (params.condition ? params.onTrue : params.onFalse) },
   
-  { pattern: '<number:A>+<number:B>', getValue: params => params.A + params.B },
-  { pattern: '<number:A>-<number:B>', getValue: params => params.A - params.B },
-  { pattern: '<number:A>*<number:B>', getValue: params => params.A * params.B },
-  { pattern: '<number:A>/<number:B>', getValue: params => params.A / params.B },
+  { pattern: '<number:A>+<number:B>', type: 'number', getValue: params => params.A + params.B },
+  { pattern: '<number:A>-<number:B>', type: 'number', getValue: params => params.A - params.B },
+  { pattern: '<number:A>*<number:B>', type: 'number', getValue: params => params.A * params.B },
+  { pattern: '<number:A>/<number:B>', type: 'number', getValue: params => params.A / params.B },
 
-  { pattern: '<number:A>=<number:B>', getValue: params => params.A === params.B },
-  { pattern: '<number:A>><number:B>', getValue: params => params.A > params.B },
-  { pattern: '<number:A><<number:B>', getValue: params => params.A < params.B },
-  { pattern: '<number:A><=<number:B>', getValue: params => params.A <= params.B },
-  { pattern: '<number:A>>=<number:B>', getValue: params => params.A >= params.B },
-  { pattern: '<number:A>!=<number:B>', getValue: params => params.A !== params.B },
+  { pattern: '<number:A>=<number:B>', type: 'boolean', getValue: params => params.A === params.B },
+  { pattern: '<number:A>><number:B>', type: 'boolean', getValue: params => params.A > params.B },
+  { pattern: '<number:A><<number:B>', type: 'boolean', getValue: params => params.A < params.B },
+  { pattern: '<number:A><=<number:B>', type: 'boolean', getValue: params => params.A <= params.B },
+  { pattern: '<number:A>>=<number:B>', type: 'boolean', getValue: params => params.A >= params.B },
+  { pattern: '<number:A>!=<number:B>', type: 'boolean', getValue: params => params.A !== params.B },
 
-  { pattern: '<boolean:A>|<boolean:B>', getValue: params => params.A || params.B },
-  { pattern: '<boolean:A>&<boolean:B>', getValue: params => params.A && params.B },
-  { pattern: '!<number:A>', getValue: params => !params.A },
+  { pattern: '<boolean:A>|<boolean:B>', type: 'boolean', getValue: params => params.A || params.B },
+  { pattern: '<boolean:A>&<boolean:B>', type: 'boolean', getValue: params => params.A && params.B },
+  { pattern: '!<boolean:A>', type: 'boolean', getValue: params => !params.A },
 
   {
     pattern :'<numebr:amount>d<number:dice>',
+    type: 'number',
     getValue: params => new Array(params.amount).fill(1).map(() => Math.ceil(Math.random() * params.dice)).reduce((sum, val) => sum + val, 0)
   }
 ]

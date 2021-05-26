@@ -14,7 +14,7 @@ export default class FieldParser {
   // The initialization process for each is different:
   // global fields get a value immediately, playbook fields get a value while parsing the playbook
   // and character fields get the values on character creation.
-  parseDefinition (name, value, scope) {
+  parseDefinition (name, value, scope, playbook='all') {
   	const field = { name, scope }
     switch (scope) {
       case 'global':
@@ -33,7 +33,7 @@ export default class FieldParser {
       case 'character':
         const [choice, valueChoice] = getFlag(value, CHOICE_PREFIX)
         if (choice) {
-          field.choice = this.context.choiceParser.parse(null, valueChoice)
+          field.choice = this.context.choiceParser.parse(null, valueChoice, playbook)
         } else {
           field.formula = this.context.formulaParser.parseUsage(value)
         }
@@ -45,18 +45,20 @@ export default class FieldParser {
     return field
   }
 
-  parseFieldValue (name, value) {
+  parseFieldValue (name, value, playbook = 'all') {
     const fieldDefinition = this.allFields().find(field => field.name === name)
     if (!fieldDefinition) {
       throw new ParsingError(`Unknown field: ${name}`)
     }
 
+    playbook = fieldDefinition.scope === 'playbook' ? playbook : 'all'
     const [choice, valueChoice] = getFlag(value, CHOICE_PREFIX)
     if (choice) {
-      fieldDefinition.choice = this.context.choiceParser.parse(null, valueChoice)
+      fieldDefinition.choice = this.context.choiceParser.parse(null, valueChoice, playbook)
     } else {
-      fieldDefinition.formula = this.context.formulaParser.parseUsage(value)
+      fieldDefinition.formula = this.context.formulaParser.parseUsage(value, { type: fieldDefinition.type })
     }
+    return { ...fieldDefinition, playbook }
   }
 }
 

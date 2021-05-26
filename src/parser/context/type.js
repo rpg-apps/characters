@@ -47,7 +47,7 @@ const PRESET_TYPES = {
   string: value => String(value),
   number: value => {
     try {
-      return Number(value)
+      return parseInt(value)
     } catch (error) {
       throw new ParsingError(error.message)
     }
@@ -57,4 +57,3 @@ const PRESET_TYPES = {
 }
 
 const ARRAY_SUFFIX = 'array'
-const CHOICE_PREFIX = 'choose'
