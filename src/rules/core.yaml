@@ -858,6 +858,11 @@ playbooks:
         goal: Duel a worthy opponent.
       - alignemnt: evil
         goal: Pick a fight with somebody weaker than you.
+    bond options:
+      - <char> broke up a fight I was involved in. I was probably going to lose, but they don’t need to know that part.
+      - <char> and I are regular training partners.
+      - I may have killed a relative of <char> at some point in the past.
+      - <char> seems like they would fold at the first sign of trouble. I don’t trust them.
   barbarian:
     in a sentence: A warrior from outside society in some infinite search
     introduction: >
@@ -1002,6 +1007,13 @@ playbooks:
         goal: Avoid a conflict or defuse a tense situation.
       - alignemnt: chaotic
         goal: Spur others to significant and unplanned decisive action.
+    bond options:
+      - This is not my first adventure with <char>.
+      - I sang stories of <char> long before I ever met them in person.
+      - <char> is often the butt of my jokes.
+      - I am writing a ballad about the adventures of <char>.
+      - <char> trusted me with a secret.
+      - <char> does not trust me, and for good reason.
   cleric:
     in a sentence: A holy priest connected to a dety and wields their magic.
     introduction: >
@@ -1031,6 +1043,11 @@ playbooks:
         goal: Endanger yourself following the precepts of your church or god.
       - alignemnt: evil
         goal: Harm another to prove the superiority of your church or god.
+    bond options:
+      - <char> has insulted my deity; I do not trust them.
+      - <char> is a good and faithful person; I trust them implicitly.
+      - <char> is in constant danger, I will keep them safe.
+      - I am working on converting <char> to my faith.
   druid:
     in a sentence: A person connected to nature that shapeshift into animals.
     introduction: >
@@ -1059,6 +1076,11 @@ playbooks:
         goal: Help something or someone grow.
       - alignemnt: neutral
         goal: Eliminate an unnatural menace.
+    bond options:
+      - <char> smells more like prey than a hunter.
+      - The spirits spoke to me of a great danger that follows <char>.
+      - I have showed <char> a secret rite of the Land.
+      - <char> has tasted my blood and I theirs. We are bound by it.
   fighter:
     in a sentence: A worrior connected to a mighty weapon
     introduction: >
@@ -1086,6 +1108,11 @@ playbooks:
         goal: Defeat a worthy opponent.
       - alignemnt: evil
         goal: Kill a defenseless or surrendered enemy.
+    bond options:
+      - <char> owes me their life, whether they admit it or not.
+      - I have sworn to protect <char>.
+      - I worry about the ability of <char> to survive in the dungeon.
+      - <char> is soft, but I will make them hard like me.
   immolator:
     in a sentence: A caster of fire
     introduction: >
@@ -1105,6 +1132,10 @@ playbooks:
         goal: Spread a dangerous new idea.
       - alignemnt: neutral
         goal: Exchange a sacrifice, freely given, for a service rendered.
+    bond options:
+      - <char> has felt the hellish touch of fire, now they know my strength.
+      - I will teach <char> the true meaning of sacrifice.
+      - I cast something into the fire for <char> and still owe them their due.
   paladin:
     in a sentence: A holy fighter trying on a holy quest
     introduction: >
@@ -1134,6 +1165,11 @@ playbooks:
         goal: Deny mercy to a criminal or unbeliever.
       - alignemnt: good
         goal: Endanger yourself to protect someone weaker than you.
+    bond options:
+      - <char>’s misguided behavior endangers their very soul!
+      - <char> has stood by me in battle and can be trusted completely.
+      - I respect the beliefs of <char> but hope they will someday see the true way.
+      - <char> is a brave soul, I have much to learn from them.
   ranger:
     in a sentence: A hunter and traveller connected to an animal companion
     introduction: >
@@ -1160,6 +1196,11 @@ playbooks:
         goal: Endanger yourself to combat an unnatural threat.
       - alignemnt: neutral
         goal: Help an animal or spirit of the wild.
+    bond options:
+      - I have guided <char> before and they owe me for it.
+      - <char> is a friend of nature, so I will be their friend as well.
+      - <char> has no respect for nature, so I have no respect for them.
+      - <char> does not understand life in the wild, so I will teach them.
   thief:
     in a sentence: A person of stealth, uses poisons and sneaking to get by.
     introduction: >
@@ -1187,6 +1228,11 @@ playbooks:
         goal: Avoid detection or infiltrate a location.
       - alignemnt: evil
         goal: Shift danger or blame from yourself to someone else.
+    bond options:
+      - I stole something from <char>.
+      - <char> has my back when things go wrong.
+      - <char> knows incriminating details about me.
+      - <char> and I have a con running.
   wizard:
     in a sentence: A well educated spell caster
     introduction: >
@@ -1215,3 +1261,7 @@ playbooks:
         goal: Discover something about a magical mystery.
       - alignemnt: evil
         goal: Use magic to cause terror and fear.
+    bond options:
+      - <char> will play an important role in the events to come. I have foreseen it!
+      - <char> is keeping an important secret from me.
+      - <char> is woefully misinformed about the world; I will teach them all that I can.
