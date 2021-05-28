@@ -1,5 +1,6 @@
 $base-margin: 1rem;
 $inner-margin: 0.5 * $base-margin;
+$small-margin: 0.3 * $base-margin;
 
 #character {
 	display: flex;
@@ -11,11 +12,42 @@ $inner-margin: 0.5 * $base-margin;
 	box-sizing: border-box;
 
 	.stat {
+		display: flex;
 		background: white;
 		color: black;
 		margin-right: -1 * $base-margin;
-		padding: $inner-margin;
+		padding: $small-margin;
 		border-radius: $inner-margin 0 0 $inner-margin;
+		flex-direction: column;
+
+		.debility {
+			font-size: 0.5rem;
+			text-transform: uppercase;
+		}
+
+		.numbers {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			.phantom {
+				visibility: hidden;
+			}
+
+			.modifier {
+				font-size: 1.4rem;
+			}
+
+			.value, .phantom {
+				font-size: 0.7rem;
+			}
+		}
+
+		.name {
+			font-size: 0.8rem;
+			text-transform: uppercase;
+			text-align: center;
+		}
 
 		&:not(:last-child) {
 			margin-bottom: $inner-margin;

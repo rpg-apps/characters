@@ -30,12 +30,12 @@ export default class Character {
 
   stats () {
     return [
-      { name: 'Strength', value: this.strength, debility: this.weak },
-      { name: 'Dexterity', value: this.dexterity, debility: this.shaky },
-      { name: 'Constitution', value: this.constitution, debility: this.sick },
-      { name: 'Intelligence', value: this.intelligence, debility: this.stunned },
-      { name: 'Wisdom', value: this.wisdom, debility: this.confused },
-      { name: 'Charisma', value: this.charisma, debility: this.scarred }
+      { name: 'Strength', value: this.strength, modifier: this.str, debility: { name: 'Weak', value: this.weak } },
+      { name: 'Dexterity', value: this.dexterity, modifier: this.dex, debility: { name: 'Shaky', value: this.shaky } },
+      { name: 'Constitution', value: this.constitution, modifier: this.con, debility: { name: 'Sick', value: this.sick } },
+      { name: 'Intelligence', value: this.intelligence, modifier: this.int, debility: { name: 'Stunned', value: this.stunned } },
+      { name: 'Wisdom', value: this.wisdom, modifier: this.wis, debility: {name: 'Confused', value: this.confused } },
+      { name: 'Charisma', value: this.charisma, modifier: this.cha, debility: { name: 'Scarred', value: this.scarred } }
     ]
   }
 }
