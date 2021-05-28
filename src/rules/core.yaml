@@ -849,6 +849,15 @@ playbooks:
     - [Cropped Hair, Flowing Hair, Hooded Head]
     - [Aristocratic Clothes, Threadbare Clothes, Training Clothes]
     - [Muscular Body, Lithe Body, Scarred Body]
+    damage: d8
+    max hp: Constitution+8
+    alignment options:
+      - alignemnt: good
+        goal: Slay a menace to the innocent.
+      - alignemnt: lawful
+        goal: Duel a worthy opponent.
+      - alignemnt: evil
+        goal: Pick a fight with somebody weaker than you.
   barbarian:
     in a sentence: A warrior from outside society in some infinite search
     introduction: >
@@ -984,6 +993,15 @@ playbooks:
     - [Fancy Hair, Wild Hair, Stylish Cap]
     - [Finery, Traveling Clothes, Poor Clothes]
     - [Fit Body, Well-fed Body, Thin Body]
+    damage: d60
+    max hp: Constitution+6
+    alignment options:
+      - alignemnt: good
+        goal: Perform your art to aid someone else.
+      - alignemnt: neutral
+        goal: Avoid a conflict or defuse a tense situation.
+      - alignemnt: chaotic
+        goal: Spur others to significant and unplanned decisive action.
   cleric:
     in a sentence: A holy priest connected to a dety and wields their magic.
     introduction: >
@@ -1004,6 +1022,15 @@ playbooks:
     - [Tonsure, Strange Hair, Bald]
     - [Flowing Robes, Habit, Common Garb]
     - [Thin Body, Knobby Body, Flabby Body]
+    damage: d6
+    max hp: Constitution+8
+    alignment options:
+      - alignemnt: good
+        goal: Endanger yourself to heal another.
+      - alignemnt: lawful
+        goal: Endanger yourself following the precepts of your church or god.
+      - alignemnt: evil
+        goal: Harm another to prove the superiority of your church or god.
   druid:
     in a sentence: A person connected to nature that shapeshift into animals.
     introduction: >
@@ -1023,6 +1050,15 @@ playbooks:
     - [Wise Eyes, Wild Eyes, Haunting Eyes]
     - [Furry Hood, Messy Hair, Braided Hair]
     - [Ceremonial Garb, Practical Leathers, Weathered Hides]
+    damage: d6
+    max hp: Constitution+6
+    alignment options:
+      - alignemnt: chaotic
+        goal: Destroy a symbol of civilization.
+      - alignemnt: good
+        goal: Help something or someone grow.
+      - alignemnt: neutral
+        goal: Eliminate an unnatural menace.
   fighter:
     in a sentence: A worrior connected to a mighty weapon
     introduction: >
@@ -1041,6 +1077,15 @@ playbooks:
     - [Wild Hair, Shorn Hair, Battered Helm]
     - [Calloused Skin, Tanned Skin, Scarred Skin]
     - [Built Body, Lithe Body, Ravaged Body]
+    damage: d10
+    max hp: Constitution+10
+    alignment options:
+      - alignemnt: good
+        goal: Defend those weaker than you.
+      - alignemnt: neutral
+        goal: Defeat a worthy opponent.
+      - alignemnt: evil
+        goal: Kill a defenseless or surrendered enemy.
   immolator:
     in a sentence: A caster of fire
     introduction: >
@@ -1051,6 +1096,15 @@ playbooks:
     - [Strange brands, ritual scars, perfect skin]
     - [Imperious bearing, manic attitude, barely-hidden rage]
     - [Crackling voice, whispering voice, roaring voice]
+    damage: d8
+    max hp: Constitution+4
+    alignment options:
+      - alignemnt: evil
+        goal: Sacrifice an unwilling victim to the flames.
+      - alignemnt: chaotic
+        goal: Spread a dangerous new idea.
+      - alignemnt: neutral
+        goal: Exchange a sacrifice, freely given, for a service rendered.
   paladin:
     in a sentence: A holy fighter trying on a holy quest
     introduction: >
@@ -1073,6 +1127,13 @@ playbooks:
     - [Helmet, Styled Hair, Bald]
     - [Worn Holy Symbol, Fancy Holy Symbol]
     - [Fit Body, Bulky Body, Thin Body]
+    damage: d10
+    max hp: Constitution+10
+    alignment options:
+      - alignemnt: lawful
+        goal: Deny mercy to a criminal or unbeliever.
+      - alignemnt: good
+        goal: Endanger yourself to protect someone weaker than you.
   ranger:
     in a sentence: A hunter and traveller connected to an animal companion
     introduction: >
@@ -1090,6 +1151,15 @@ playbooks:
     - [Hooded Head, Wild Hair, Bald]
     - [Cape, Camouflage, Traveling Clothes]
     - [Lithe Body, Wild Body, Sharp Body]
+    damage: d8
+    max hp: Constitution+8
+    alignment options:
+      - alignemnt: chaotic
+        goal: Free someone from literal or figurative bonds.
+      - alignemnt: good
+        goal: Endanger yourself to combat an unnatural threat.
+      - alignemnt: neutral
+        goal: Help an animal or spirit of the wild.
   thief:
     in a sentence: A person of stealth, uses poisons and sneaking to get by.
     introduction: >
@@ -1108,6 +1178,15 @@ playbooks:
     - [Hooded Head, Messy Hair, Cropped Hair]
     - [Dark Clothes, Fancy Clothes, Common Clothes]
     - [Lithe Body, Knobby Body, Flabby Body]
+    damage: d8
+    max hp: Constitution+6
+    alignment options:
+      - alignemnt: chaotic
+        goal: Leap into danger without a plan.
+      - alignemnt: neutral
+        goal: Avoid detection or infiltrate a location.
+      - alignemnt: evil
+        goal: Shift danger or blame from yourself to someone else.
   wizard:
     in a sentence: A well educated spell caster
     introduction: >
@@ -1127,3 +1206,12 @@ playbooks:
     - [Styled Hair, Wild Hair, Pointed Hat]
     - [Worn Robes, Stylish Robes, Strange Robes]
     - [Pudgy Body, Creepy Body, Thin Body]
+    damage: d4
+    max hp: Constitution+4
+    alignment options:
+      - alignemnt: good
+        goal: Use magic to directly aid another.
+      - alignemnt: neutral
+        goal: Discover something about a magical mystery.
+      - alignemnt: evil
+        goal: Use magic to cause terror and fear.
