@@ -10,6 +10,7 @@ export default function parsePlaybook (name, rawPlaybook, context) {
 }
 
 const getParsers = ({ fieldParser }, playbookName) => {
+	// TODO special handle to "character fields" and other fields not in the mechanimsms
   return fieldParser.fields.playbook.reduce((parsers, fieldDefinition) => {
     const parser = (rawField, { fieldParser }) => fieldParser.parseFieldValue(fieldDefinition.name, rawField, playbookName)
     return Object.assign(parsers, { [fieldDefinition.name]: parser })

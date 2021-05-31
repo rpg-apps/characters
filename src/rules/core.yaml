@@ -863,6 +863,17 @@ playbooks:
       - <char> and I are regular training partners.
       - I may have killed a relative of <char> at some point in the past.
       - <char> seems like they would fold at the first sign of trouble. I don’t trust them.
+    race options:
+      - name: Elf
+        move:
+          text: You descend from an ancient martial tradition. Gain +1 to spout lore on anything related to warfare.
+          trigger: constant
+          effect: take +1 ongoing to spout lore on anything related to warfare.
+      - name: Human
+        move:
+          text: Your fighting style is showy and impressive. Gain +1 forward to parley with anyone who has seen you fight.
+          trigger: constant
+          effect: take +1 ongoing to parley with anyone who has seen you fight.
   barbarian:
     in a sentence: A warrior from outside society in some infinite search
     introduction: >
@@ -900,7 +911,17 @@ playbooks:
       - dungeon rations
       - dagger
       - Some token of where you’ve traveled or where you’re from
-    appetites: []
+    race options:
+      - name: Outsider
+        move:
+          text: You may be elf, dwarf, halfling, or human, but you and your people are not from around here. At the beginning of each session, the GM will ask you something about your homeland, why you left, or what you left behind. If you answer them, mark XP.
+          trigger: At the beginning of each session
+          effect:
+            choose Did you answer the GM's question:
+              yes: change stat xp +1
+              no: no effect
+    character fields:
+      appetites: choose freely from appetite options
     appetite options:
       - Pure destruction
       - Power over others
@@ -964,15 +985,6 @@ playbooks:
           trigger: constant
           effect:
             is weight<load&no_armor: modify armor +1 ongoing
-    race options:
-      - name: Outsider
-        move:
-          text: You may be elf, dwarf, halfling, or human, but you and your people are not from around here. At the beginning of each session, the GM will ask you something about your homeland, why you left, or what you left behind. If you answer them, mark XP.
-          trigger: At the beginning of each session
-          effect:
-            choose Did you answer the GM's question:
-              yes: change stat xp +1
-              no: no effect
     advanced moves:
       levels 2 to 5:
         Still Hungry:
@@ -1014,6 +1026,17 @@ playbooks:
       - I am writing a ballad about the adventures of <char>.
       - <char> trusted me with a secret.
       - <char> does not trust me, and for good reason.
+    race options:
+      - name: Elf
+        move:
+          text: When you enter an important location (your call) you can ask the GM for one fact from the history of that location.
+          trigger: When you enter an important location (your call)
+          effect: ask the GM for one fact from the history of that location.
+      - name: Human
+        move:
+          text: When you first enter a civilized settlement someone who respects the custom of hospitality to minstrels will take you in as their guest.
+          trigger: When you first enter a civilized settlement
+          effect: someone who respects the custom of hospitality to minstrels will take you in as their guest.
   cleric:
     in a sentence: A holy priest connected to a dety and wields their magic.
     introduction: >
@@ -1048,6 +1071,16 @@ playbooks:
       - <char> is a good and faithful person; I trust them implicitly.
       - <char> is in constant danger, I will keep them safe.
       - I am working on converting <char> to my faith.
+    race options:
+      - name: dwarf
+        move:
+          text: You are one with stone. When you commune you are also granted a special version of Words of the Unspeaking as a rote which only works on stone.
+          trigger:  When you commune
+      - name: Human
+        move:
+          text: Your faith is diverse. Choose one wizard spell. You can cast and be granted that spell as if it was a cleric spell.
+          trigger: When you first enter a civilized settlement
+          effect: someone who respects the custom of hospitality to minstrels will take you in as their guest.
   druid:
     in a sentence: A person connected to nature that shapeshift into animals.
     introduction: >
@@ -1081,6 +1114,16 @@ playbooks:
       - The spirits spoke to me of a great danger that follows <char>.
       - I have showed <char> a secret rite of the Land.
       - <char> has tasted my blood and I theirs. We are bound by it.
+    race options:
+      - name: elf
+        move:
+          text: The sap of the elder trees flows within you. In addition to any other attunements, the Great Forest is always considered your land.
+      - name: human
+        move:
+          text: As your people learned to bind animals to field and farm, so too are you bound to them. You may always take the shape of any domesticated animal, in addition to your normal options.
+      - name: halfling
+        move:
+          text: You sing the healing songs of spring and brook. When you make camp, you and your allies heal +1d6.
   fighter:
     in a sentence: A worrior connected to a mighty weapon
     introduction: >
@@ -1113,6 +1156,19 @@ playbooks:
       - I have sworn to protect <char>.
       - I worry about the ability of <char> to survive in the dungeon.
       - <char> is soft, but I will make them hard like me.
+    race options:
+      - name: dwarf
+        move:
+          text: When you share a drink with someone, you may parley with them using CON instead of CHA.
+      - name: elf
+        move:
+          text: Choose one weapon—you can always treat weapons of that type as if they had the precise tag.
+      - name: halfling
+        move:
+          text: When you defy danger and use your small size to your advantage, take +1.
+      - name: human
+        move:
+          text: Once per battle you may reroll a single damage roll (yours or someone else’s).
   immolator:
     in a sentence: A caster of fire
     introduction: >
@@ -1136,6 +1192,13 @@ playbooks:
       - <char> has felt the hellish touch of fire, now they know my strength.
       - I will teach <char> the true meaning of sacrifice.
       - I cast something into the fire for <char> and still owe them their due.
+    race options:
+      - name: human
+        move:
+          text: When you Make Camp next to a large, open flame, regain all of your HP.
+      - name: salamander
+        move:
+          text: Non-magical heat and fire cannot harm you.
   paladin:
     in a sentence: A holy fighter trying on a holy quest
     introduction: >
@@ -1170,6 +1233,10 @@ playbooks:
       - <char> has stood by me in battle and can be trusted completely.
       - I respect the beliefs of <char> but hope they will someday see the true way.
       - <char> is a brave soul, I have much to learn from them.
+    race options:
+      - name: human
+        move:
+          text: When you pray for guidance, even for a moment, and ask, “What here is evil?” the GM will tell you, honestly.
   ranger:
     in a sentence: A hunter and traveller connected to an animal companion
     introduction: >
@@ -1201,6 +1268,13 @@ playbooks:
       - <char> is a friend of nature, so I will be their friend as well.
       - <char> has no respect for nature, so I have no respect for them.
       - <char> does not understand life in the wild, so I will teach them.
+    race options:
+      - name: elf
+        move:
+          text: When you undertake a perilous journey through wilderness whatever job you take you succeed as if you rolled a 10+.
+      - name: human
+        move:
+          text: When you make camp in a dungeon or city, you don’t need to consume a ration.
   thief:
     in a sentence: A person of stealth, uses poisons and sneaking to get by.
     introduction: >
@@ -1233,6 +1307,13 @@ playbooks:
       - <char> has my back when things go wrong.
       - <char> knows incriminating details about me.
       - <char> and I have a con running.
+    race options:
+      - name: halfling
+        move:
+          text: When you attack with a ranged weapon, deal +2 damage.
+      - name: human
+        move:
+          text: You are a professional. When you spout lore or discern realities about criminal activities, take +1.
   wizard:
     in a sentence: A well educated spell caster
     introduction: >
@@ -1265,3 +1346,10 @@ playbooks:
       - <char> will play an important role in the events to come. I have foreseen it!
       - <char> is keeping an important secret from me.
       - <char> is woefully misinformed about the world; I will teach them all that I can.
+    race options:
+      - name: elf
+        move:
+          text: Magic is as natural as breath to you. Detect Magic is a cantrip for you.
+      - name: human
+        move:
+          text: Choose one cleric spell. You can cast it as if it was a wizard spell.
