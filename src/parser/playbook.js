@@ -3,14 +3,11 @@ import Playebook from '../models/rules/playbook'
 import { parseFields } from './parsing-utils'
 
 export default function parsePlaybook (name, rawPlaybook, context) {
-  const parsers = getParsers(context, name)
-  const fields = parseFields(rawPlaybook, parsers, context)
-  fields.name = name
-  return new Playebook(fields)
+  return new Playebook({ ...parseFields(rawPlaybook, getParsers(context, name), context), name })
 }
 
 const getParsers = ({ fieldParser }, playbookName) => {
-	// TODO special handle to "character fields" and other fields not in the mechanimsms
+  // TODO add specific mechanism parsing
   return fieldParser.fields.playbook.reduce((parsers, fieldDefinition) => {
     const parser = (rawField, { fieldParser }) => fieldParser.parseFieldValue(fieldDefinition.name, rawField, playbookName)
     return Object.assign(parsers, { [fieldDefinition.name]: parser })

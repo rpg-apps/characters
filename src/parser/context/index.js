@@ -4,7 +4,9 @@ import ChoiceParser from './choice'
 import FormulaParser from './formula'
 import EffectParser from './effect'
 
-export default class Context {
+import Context from '../../models/rules/context'
+
+export default class ParsingContext {
   constructor (rawRules, externalParsers) {
     this.rawRules = rawRules
     this.typeParser = new TypeParser(this)
@@ -16,12 +18,12 @@ export default class Context {
   }
 
   extract () {
-    return {
+    return new Context({
       types: this.typeParser.types,
       choices: this.choiceParser.choices,
       fields: this.fieldParser.allFields(),
       formulas: this.formulaParser.formulas,
       effects: this.formulaParser.effects,
-    }
+    })
   }
 }

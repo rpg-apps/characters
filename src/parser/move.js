@@ -3,9 +3,7 @@ import Move from '../models/rules/move'
 import { parseFields, getFlag } from './parsing-utils'
 
 export default function parseMove (name, rawMove, context) {
-  const fields = parseFields(rawMove, PARSERS, context)
-  fields.name = name
-  return new Move(fields)
+  return new Move({ ...parseFields(rawMove, PARSERS, context), name })
 }
 
 const PARSERS = {

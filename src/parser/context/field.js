@@ -1,66 +1,56 @@
+import { capitalCase } from 'change-case'
+
 import { getFlag, ParsingError } from '../parsing-utils'
+
+import Field from '../../models/rules/context/field'
 
 export default class FieldParser {
   constructor(context) {
     this.context = context
-    this.fields = { global: [], playbook: [], character: [] }
+    this.fields = Object.values(Field.SCOPE).reduce((scope, allScopes) => { ...allScopes, [scope]: [] }, { })
   }
 
   allFields () {
-    return [].concat(this.fields.global).concat(this.fields.playbook).concat(this.fields.character)
+    return Object.values(this.fields).reduce((scopeFields, allFields) => allFields.concat(scopeFields), [])
   }
 
-  // When defining a global, playbook or character field.
-  // The initialization process for each is different:
-  // global fields get a value immediately, playbook fields get a value while parsing the playbook
-  // and character fields get the values on character creation.
   parseDefinition (name, value, scope, playbook='all') {
-  	const field = { name, scope }
-    switch (scope) {
-      case 'global':
-        if (value === 'large') {
-          field.value = this.context.rawRules[name]
-        } else {
-          field.value = value
-        }
-        break
-      case 'playbook':
-        const [optional, nameAfterOptional] = getFlag(name, OPTIONAL_PREFIX)
-        field.optional = optional
-        field.name = nameAfterOptional
-        field.type = value
-        break
-      case 'character':
-        Object.assign(field, this.fieldValueGetter(name, value, null, playbook))
-        break
-      default:
-        throw new ParsingError('Illegal field scope')
+    const fieldDefinitionParser = this[`parse${capitalCase(scope)}FieldDefinition`]
+    if (!fieldDefinitionParser) {
+      throw new ParsingError('Illegal field scope')
     }
+    const field = fieldDefinitionParser(name, value, playbook)
     this.fields[scope].push(field)
     return field
   }
 
-  parseFieldValue (name, value, playbook = 'all') {
-    const fieldDefinition = this.allFields().find(field => field.name === name)
-    if (!fieldDefinition) {
-      throw new ParsingError(`Unknown field: ${name}`)
+  parseGlobalFieldDefinition (name, value) {
+    if (value === 'large') {
+      value = this.context.rawRules[name]
     }
-
-    playbook = fieldDefinition.scope === 'playbook' ? playbook : 'all'
-    return { ...fieldDefinition, ...this.fieldValueGetter(name, value, fieldDefinition.type, playbook), playbook }
+    return new Field.GlobalField(name, value)
   }
 
-  fieldValueGetter (name, value, type, playbook) {
+  parsePlaybookFieldDefinition (name, value) {
+    const [optional, nameAfterOptional] = getFlag(name, OPTIONAL_PREFIX)
+    return new Field.PlaybookField(nameAfterOptional, value, optional)
+  }
+
+  parseCharacterFieldDefinition (name, value, playbook) {
     const [useChoice, valueChoice] = getFlag(value, CHOICE_PREFIX)
+
     if (useChoice) {
-      const choice = this.context.choiceParser.parse(null, valueChoice, playbook)
-      if (!choice.name) {
-        choice.name = name
-      }
-      return { choice }
-    } else {
-      return { formula: this.context.formulaParser.parseUsage(value, { type }) }
+      const choice = this.context.choiceParser.parseDefintion(null, valueChoice, playbook)
+      choice.name = choice.name || name
+      return new Field.ChoiceField(name, playbook, choice)
     }
+
+    const formulaCall = this.context.formulaParser.parseUsage(value)
+    return new Field.FormulaField(name, playbook, formulaCall)
+  }
+
+  parseFieldUsage (name) {
+    return this.allFields().find(field => field.name === name)
   }
 }
 

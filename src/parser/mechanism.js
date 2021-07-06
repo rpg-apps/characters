@@ -3,9 +3,7 @@ import Mechanism from '../models/rules/mechanism'
 import { parseFields } from './parsing-utils'
 
 export default function parseMechanism (name, rawMechanism, context) {
-  const fields = parseFields(rawMechanism, PARSERS, context)
-  fields.name = name
-  return new Mechanism(fields)
+  return new Mechanism({ ...parseFields(rawMechanism, PARSERS, context), name })
 }
 
 const PARSERS = {

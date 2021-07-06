@@ -8,7 +8,7 @@ mechanisms:
       look options: string array array
     character fields:
       name: choose freely from name options
-      description: choose freely long text
+      description: choose long text
       optional title: choose freely from title options
       look: choose freely from look options
   expirience:
@@ -17,58 +17,65 @@ mechanisms:
       xp: 0
   roll:
     formulas:
-      modifier for <field:stat>: stat<9?-1:stat<13?0:stat<16?1:stat<18?2:3
+      modifier for <number:stat>: stat<9?-1:stat<13?0:stat<16?1:stat<18?2:3
       roll: 2d6
-      Str: Str-Weak
-      Dex: Dex-Shakey
-      Con: Con-Sick
-      Int: Int-Stunned
-      Wis: Wis-Confused
-      Cha: Cha-Scarred
+      str: str-(weak?1:0)
+      dex: dex-(shakey?1:0)
+      con: con-(sick?1:0)
+      int: int-(stunned?1:0)
+      wis: wis-(confused?1:0)
+      cha: cha-(scarred?1:0)
+      miss: "1..6"
+      failure: "1..6"
+      hit: "7..15"
+      partialSuccess: "7..9"
+      success: "10..15"
     global fields:
       initial stats: [8, 9, 12, 13, 15 ,16]
     choices:
-      stats: unique from initial stats
+      stat: unique from initial stats
     character fields:
-      Strength: choose stats
-      Dexterity: choose stats
-      Constitution: choose stats
-      Intelligence: choose stats
-      Wisdom: choose stats
-      Charisma: choose stats
-      Str: auto calc modifier for Strength
-      Dex: auto calc modifier for Dexterity
-      Con: auto calc modifier for Constitution
-      Int: auto calc modifier for Intelligence
-      Wis: auto calc modifier for Wisdom
-      Cha: auto calc modifier for Charisma
-      Weak: false
-      Shakey: false
-      Sick: false
-      Stunned: false
-      Confused: false
-      Scarred: false
+      strength: choose stat
+      dexterity: choose stat
+      constitution: choose stat
+      intelligence: choose stat
+      wisdom: choose stat
+      charisma: choose stat
+      str: auto calc modifier for strength
+      dex: auto calc modifier for dexterity
+      con: auto calc modifier for constitution
+      int: auto calc modifier for intelligence
+      wis: auto calc modifier for wisdom
+      cha: auto calc modifier for charisma
+      weak: false
+      shakey: false
+      sick: false
+      stunned: false
+      confused: false
+      scarred: false
     effects:
-      roll <formula> {outcomes}:
-        roll formula:
-          1-6: [outcomes.miss, outcomes.failure]
-          7-9: [outcomes.hit, outcomes.partialSuccess]
-          10-15: [outcomes.hit, outcomes.success]
+      take a debility:
+        choose Which debility do you want to take:
+          Weak: set weak = true
+          Shakey: set shakey = true
+          Sick: set sick = true
+          Stunned: set stunned = true
+          Confused: set confused = true
+          Scarred: set scarred = true
       remove a debility:
         choose Which debility do you want to remove:
-          Weak: set Weak = false
-          Shakey: set Shakey = false
-          Sick: set Sick = false
-          Stunned: set Stunned = false
-          Confused: set Confused = false
-          Scarred: set Scarred = false
+          Weak: set weak = false
+          Shakey: set shakey = false
+          Sick: set sick = false
+          Stunned: set stunned = false
+          Confused: set confused = false
+          Scarred: set scarred = false
       take <formula> forward <trigger>: modify once <trigger> <formula>
       take <formula> ongoing <trigger>: modify <trigger> <formula>
   holds:
     types:
       hold:
         name: string
-        count: number
         options: effect array
     character fields:
       holds: hold array
@@ -76,12 +83,14 @@ mechanisms:
       hold <count> <name> {options}:
         repeat count times:
           add {name,options} to holds
-      hold <count> <name>: hold count name {}
+      hold <count> <name>: hold count name
       hold <count> {options}: hold count nameMove options
-      hold <count>: hold count nameMove {}
+      hold <count>: hold count nameMove
       use <name> to {options}: set hold[item.name=name].options = options
-      use {options}: use moveName to {options}
+      use {options}: use moveName to options
   move gaining:
+    formulas:
+      moves 2-10: moves 2-5 and moves 6-10
     playbook fields:
       moves 2-5: move array
       moves 6-10: move array
@@ -89,7 +98,7 @@ mechanisms:
       add advanced move:
         is level<6:
           yes: add choice from moves 2-5 to moves
-          no: add choice from moves 6-10 to moves
+          no: add choice from moves 2-10 to moves
   race:
     types:
       race:
@@ -100,15 +109,16 @@ mechanisms:
     choices:
       race:
         choose: from race options
-        on choice: add choice.move to moves
+        on choice: add raceMove to moves
     character fields:
       race: choose race and take name
       raceMove: choose race and take move
   damage:
     playbook fields:
-      damage: formula
+      baseDamage: formula
       maxHp: formula
     character fields:
+      damage: baseDamage
       hp: maxHp
       armor: 0
     effects:
@@ -157,11 +167,16 @@ mechanisms:
       gear: startingGear
       weight: auto calc sum(gear, gear.equipment.weight)
     effects:
-      use gear [<amount>] (with tag <name>|<tag>):
+      # TODO redo this!!
+      use gear [<amount>] (with tag <tag>|<name>):
         is gear[gear.name=name|gear.tags[tag]].uses:
           yes:
             is gear[gear.name=name|gear.tags[tag]].uses>amount:
-              yes: 
+              yes: reduce amount from gear[name?gear.name=name:gear.tags.includes(tag)].amount
+              no:
+                is gear[gear.name=name].uses=amount:
+                  yes: remove gear[gear.name=name] from gear
+                  no: show Not enough name
           no:
         is gear[name?gear.name=name:gear.tags.includes(tag)].amount>amount:
           yes: reduce amount from gear[name?gear.name=name:gear.tags.includes(tag)].amount
@@ -245,7 +260,6 @@ tags:
     effect: modify all -1
   - tag: On use <effect>
     effect: <effect>
-  
 equipment:
   - name: Ragged Bow
     tags: [Near]
@@ -522,7 +536,7 @@ moves:
           choose Is the ally you?:
             yes: modifiy against the enemy +1 forward
             no: no effect
-        Deal damage to the attacker equal to your level.: deal damage level/2
+        Deal damage to the attacker equal to your level.: deal level/2
   Spout Lore:
     text: >
       When you consult your accumulated knowledge about something, roll+Int.

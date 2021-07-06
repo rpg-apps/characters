@@ -1,59 +1,29 @@
-import { ParsingError, getFlag } from '../parsing-utils'
+import { getFlag } from '../parsing-utils'
+
+import Type from '../../models/rules/context/type'
 
 export default class TypeParser {
   constructor(context) {
     this.context = context
-    this.types = [].concat(Object.entries(PRESET_TYPES).map(([name, parseValue]) => ({ name, parseValue })))
+    this.types = [].concat(Type.PRESETS)
   }
 
   parseDefinition (name, definition) {
-    const type = {
-      name, definition,
-      parseValue: (value) => Object.assign(this.parseValue(value, definition), { type: name })
-    }
+    fieldTypes = Object.entries(definition).reduce(([field, typeDef], types) => { ...types, [field]: this.parseUsage(typeDef) }, { })
+    const type = Type.ComplexType(name, fieldTypes)
     this.types.push(type)
     return type
   }
 
-  // When using a type to parse a value
-  parseValue (raw, type, params = { }) {
-    if (type.constructor !== String) {
-      return Object.entries(type)
-      .reduce((value, [fieldName, fieldType]) =>
-        Object.assign(value, { [fieldName]: this.parseValue(raw[fieldName], fieldType, params) })
-      , { })
-    }
-
-    const [array, childType] = getFlag(type, ARRAY_SUFFIX, true)
+  parseUsage (name) {
+    const [array, childTypeName] = getFlag(name, ARRAY_SUFFIX, true)
     if (array) {
-      if (!Array.isArray(raw)) throw new ParsingError('Array field is not an array')
-      return raw.map(arrayItem => this.parseValue(arrayItem, childType, params))
-    } else {
-      const typeHandler = this.types.find(t => t.name === type)
-      if (!typeHandler) throw new ParsingError(`Unkonw type ${type}`)
-      return typeHandler.parseValue(raw, this.context, params)
+      const childType = this.parseUsage(childTypeName)
+      return new Type.Array(childType)
     }
-  }
-}
 
-const PRESET_TYPES = {
-  boolean: value => {
-    if (typeof value === Boolean)              return value
-    else if (['yes', 'true'].includes(value))  return true
-    else if (['no', 'false'].includes(value))  return false
-    throw new ParsingError('No such boolean value')
-  },
-  'long text': value => String(value),
-  string: value => String(value),
-  number: value => {
-    try {
-      return parseInt(value)
-    } catch (error) {
-      throw new ParsingError(error.message)
-    }
-  },
-  formula: (value, { formulaParser }, params) => formulaParser.parseUsage(value, params),
-  move: (value, context) => context.parseMove('', value, context)
+    return this.types.find(type => type.name === name)
+  }
 }
 
 const ARRAY_SUFFIX = 'array'

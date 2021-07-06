@@ -19,33 +19,29 @@ const parsers = {
   playbook: parsePlaybook
 }
 
-export function parse (yamls) {
-  console.log('started parsing')
-  console.log('loading raw rules...')
+export function parse (yamls, log=console.log) {
+  log('started parsing')
+  log('loading raw rules...')
   const rawRules = mergeRuleBundles(yamls)
-  console.log('raw rules', rawRules)
+  log('raw rules', rawRules)
   const context = new Context(rawRules, { parseMove })
   const parsedRules = Object.entries(rawRules)
-    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context) }), { })
+    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context, log) }), { })
 
   const rulebook = new Rulebook(Object.assign(parsedRules, { context: context.extract() }))
-  console.log('Finished parsing')
-  console.log(rulebook)
+  log('Finished parsing')
+  log(rulebook)
   return rulebook
 }
 
-function mergeRuleBundles (ruleBundles) {
+// Allow more then one rulebook YAML to reference the same mechanism, move or playbook.
+// The Later YAMLs have priority
+const  mergeRuleBundles = ruleBundles => {
   return ruleBundles.reduce((allRules, rulesBundle) => {
     Object.entries(rulesBundle).forEach(([field, value]) => {
-      if (!allRules[field]) {
-        allRules[field] = {}
-      }
-
+      allRules[field] ||= {}
       Object.entries(value).forEach(([key, entry]) => {
-        if (allRules[field][key] === undefined) {
-          allRules[field][key] = {}
-        }
-        
+        allRules[field][key] ||= {}
         Object.assign(allRules[field][key], entry)
       })
     })
@@ -53,12 +49,12 @@ function mergeRuleBundles (ruleBundles) {
   }, { })
 }
 
-function parseEntries (field, entries, context) {
+const parseEntries = (field, entries, context, log) => {
   const parser = parsers[pluralize.singular(field)]
   const parsedEntries = []
   if (parser) {
     Object.entries(entries).forEach(([entryName, rawEntry]) => parsedEntries.push(parser(entryName, rawEntry, context)))
-    console.log(field, parsedEntries)
+    log(field, parsedEntries)
   }
   return parsedEntries
 }

@@ -3,6 +3,10 @@ export default class Character {
     Object.assign(this, props)
   }
 
+  calc (formula) {
+    return this.context.getValue(formula, this)
+  }
+
   stats () {
     return [
       { name: 'Strength', value: this.strength, debility: this.weak },
