@@ -1,6 +1,6 @@
 import { getFlag } from '../parsing-utils'
 
-import Type from '../../models/rules/context/type'
+import Type from '../../models/rules/mechanism/type'
 
 export default class TypeParser {
   constructor(context) {
@@ -9,8 +9,8 @@ export default class TypeParser {
   }
 
   parseDefinition (name, definition) {
-    fieldTypes = Object.entries(definition).reduce(([field, typeDef], types) => { ...types, [field]: this.parseUsage(typeDef) }, { })
-    const type = Type.ComplexType(name, fieldTypes)
+    const fieldTypes = Object.entries(definition).reduce((types, [field, typeDef]) => ({ ...types, [field]: this.parseUsage(typeDef) }), { })
+    const type = new Type.ComplexType(name, fieldTypes)
     this.types.push(type)
     return type
   }

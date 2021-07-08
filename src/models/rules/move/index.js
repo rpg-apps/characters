@@ -1,4 +1,3 @@
-import Effect from './effect'
 import Trigger from './trigger'
 
 class BasicMove {
@@ -23,7 +22,6 @@ Move.Multiclass = class MulticlassMove extends BasicMove {
 }
 
 Move.BasicMove = BasicMove
-Move.Effect = Effect
 Move.Trigger = Trigger
 
 export default Move

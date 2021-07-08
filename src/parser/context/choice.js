@@ -1,6 +1,6 @@
-import { ParsingError, getFlag } from '../parsing-utils'
+import { getFlag } from '../parsing-utils'
 
-import Choice from '../../models/rules/context/choice'
+import Choice from '../../models/rules/mechanism/choice'
 
 export default class ChoiceParser {
   constructor(context) {
@@ -8,10 +8,10 @@ export default class ChoiceParser {
     this.choices = []
   }
 
-  parseDefintion (name, definition, playbook = 'all', effect = undefined) {
+  parseDefinition (name, definition, playbook = 'all', effect = undefined) {
     if (definition.constructor !== String) {
       const effect = definition['on choice'] ? this.context.effectParser.parseUsage(definition['on choice']) : undefined
-      return this.parse(name, definition.choose, playbook, effect)
+      return this.parseDefinition(name, definition.choose, playbook, effect)
     }
 
     const existingChoice = this.choices.find(c => definition.startsWith(c.name))
@@ -34,11 +34,11 @@ export default class ChoiceParser {
     const [from, definitionAfterChooseFromCheck] = getFlag(definitionAfterUniqueCheck, CHOOSE_FROM_PREFIX)
     if (from) {
       const from = this.context.fieldParser.allFields().find(field => field.name === definitionAfterChooseFromCheck)
-      if (!from) throw new ParsingError(`Field not found: ${definitionAfterChooseFromCheck}`)
+      if (!from) throw new Error(`Field not found: ${definitionAfterChooseFromCheck}`)
       return { from, unique }
-    } else {
-      return this.context.typesParser.parseUsage(definitionAfterChooseFromCheck)
     }
+    
+    return this.context.typeParser.parseUsage(definitionAfterChooseFromCheck)
   }
 }
 

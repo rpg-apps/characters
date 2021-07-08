@@ -2,7 +2,7 @@ import React from 'react'
 import SwipeableViews from 'react-swipeable-views'
 
 import RulesContext from '../../contexts/rules-context'
-import CharacterBuilder from '../../models/character-builder'
+import CharacterBuilder from '../../models/character-creation'
 
 import '../../css/pages/character-creation.scss'
 

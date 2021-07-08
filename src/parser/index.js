@@ -4,6 +4,8 @@
 // mechanisms menifistation in the playbook view? how to make it extendible? USE CSS
 
 import pluralize from 'pluralize'
+import { capitalCase } from 'change-case'
+import merge from 'deepmerge'
 
 import parseMove from './move'
 import parsePlaybook from './playbook'
@@ -13,48 +15,28 @@ import Rulebook from '../models/rules'
 
 import Context from './context'
 
-const parsers = {
-  mechanism: parseMechanism,
-  move: parseMove,
-  playbook: parsePlaybook
-}
+const parsers = { parseMechanism, parseMove, parsePlaybook }
 
 export function parse (yamls, log=console.log) {
   log('started parsing')
   log('loading raw rules...')
-  const rawRules = mergeRuleBundles(yamls)
+  const rawRules = merge.all(yamls)
   log('raw rules', rawRules)
-  const context = new Context(rawRules, { parseMove })
+  const context = new Context(rawRules, { parseMove, parseMechanism })
   const parsedRules = Object.entries(rawRules)
-    .reduce((rules, [field, entries]) => Object.assign(rules, { [field]: parseEntries(field, entries, context, log) }), { })
+    .reduce((rules, [field, entries]) => ({ ...rules, [field]: parseEntries(field, entries, context, log) }), { })
 
-  const rulebook = new Rulebook(Object.assign(parsedRules, { context: context.extract() }))
+  const rulebook = new Rulebook(parsedRules)
   log('Finished parsing')
   log(rulebook)
   return rulebook
 }
 
-// Allow more then one rulebook YAML to reference the same mechanism, move or playbook.
-// The Later YAMLs have priority
-const  mergeRuleBundles = ruleBundles => {
-  return ruleBundles.reduce((allRules, rulesBundle) => {
-    Object.entries(rulesBundle).forEach(([field, value]) => {
-      allRules[field] ||= {}
-      Object.entries(value).forEach(([key, entry]) => {
-        allRules[field][key] ||= {}
-        Object.assign(allRules[field][key], entry)
-      })
-    })
-    return allRules
-  }, { })
-}
-
 const parseEntries = (field, entries, context, log) => {
-  const parser = parsers[pluralize.singular(field)]
-  const parsedEntries = []
-  if (parser) {
-    Object.entries(entries).forEach(([entryName, rawEntry]) => parsedEntries.push(parser(entryName, rawEntry, context)))
-    log(field, parsedEntries)
-  }
+  const parser = parsers[`parse${capitalCase(pluralize.singular(field))}`]
+  if (!parser)   return Array.isArray(entries) ? entries : Object.entries(entries).map(([name, value]) => ({ ...value, name }))
+  
+  const parsedEntries = Object.entries(entries).map(([entryName, rawEntry]) => parser(entryName, rawEntry, context))
+  log(field, parsedEntries)
   return parsedEntries
 }

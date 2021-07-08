@@ -6,12 +6,19 @@ export default function parseMechanism (name, rawMechanism, context) {
   return new Mechanism({ ...parseFields(rawMechanism, PARSERS, context), name })
 }
 
+const collectionObjectParser = (name, method = 'parseDefinition') => {
+  return (collection, context) => {
+    const parser = context[`${name}Parser`]
+    return Object.entries(collection).map(([key, value]) => parser[method](key, value))
+  }
+}
+
 const PARSERS = {
-  types: (types, { typeParser }) => Object.entries(types).map(([name, type]) => typeParser.parseDefinition(name, type)),
-  formulas: (formulas, { formulaParser }) => Object.entries(formulas).map(([formula, meaning]) => formulaParser.parseDefinition(formula, meaning)),
-  globalFields: (fields, { fieldParser }) => Object.entries(fields).map(([field, value]) => fieldParser.parseDefinition(field, value, 'global')),
-  playbookFields: (fields, { fieldParser }) => Object.entries(fields).map(([field, value]) => fieldParser.parseDefinition(field, value, 'playbook')),
-  choices: (choices, { choiceParser }) => Object.entries(choices).map(([name, choice]) => choiceParser.parse(name, choice)),
-  characterFields: (fields, { fieldParser }) => Object.entries(fields).map(([field, value]) => fieldParser.parseDefinition(field, value, 'character')),
-  effects: (effects, { effectParser }) => Object.entries(effects).map(([effect, meaning]) => effectParser.parseDefinition(effect, meaning))
+  types: collectionObjectParser('type'),
+  formulas: collectionObjectParser('formula'),
+  globalFields: collectionObjectParser('field', 'parseGlobalFieldDefinition'),
+  playbookFields: collectionObjectParser('field', 'parsePlaybookFieldDefinition'),
+  choices: collectionObjectParser('choice'),
+  characterFields: collectionObjectParser('field', 'parseCharacterFieldDefinition'),
+  effects: collectionObjectParser('effect'),
 }

@@ -3,13 +3,7 @@ import Playebook from '../models/rules/playbook'
 import { parseFields } from './parsing-utils'
 
 export default function parsePlaybook (name, rawPlaybook, context) {
-  return new Playebook({ ...parseFields(rawPlaybook, getParsers(context, name), context), name })
-}
-
-const getParsers = ({ fieldParser }, playbookName) => {
-  // TODO add specific mechanism parsing
-  return fieldParser.fields.playbook.reduce((parsers, fieldDefinition) => {
-    const parser = (rawField, { fieldParser }) => fieldParser.parseFieldValue(fieldDefinition.name, rawField, playbookName)
-    return Object.assign(parsers, { [fieldDefinition.name]: parser })
-  }, { })
+  // TODO what about formula initialized values?
+  const fields = context.fieldParser.fields.playbook.reduce((fields, fieldDefinition) => ({ ...fields, [fieldDefinition.name]: rawPlaybook[fieldDefinition.name] }), { })
+  return { name, ...fields }
 }

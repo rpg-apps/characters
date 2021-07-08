@@ -28,7 +28,7 @@ mechanisms:
       miss: "1..6"
       failure: "1..6"
       hit: "7..15"
-      partialSuccess: "7..9"
+      patrial success: "7..9"
       success: "10..15"
     global fields:
       initial stats: [8, 9, 12, 13, 15 ,16]
@@ -41,12 +41,12 @@ mechanisms:
       intelligence: choose stat
       wisdom: choose stat
       charisma: choose stat
-      str: auto calc modifier for strength
-      dex: auto calc modifier for dexterity
-      con: auto calc modifier for constitution
-      int: auto calc modifier for intelligence
-      wis: auto calc modifier for wisdom
-      cha: auto calc modifier for charisma
+      str: auto modifier for strength
+      dex: auto modifier for dexterity
+      con: auto modifier for constitution
+      int: auto modifier for intelligence
+      wis: auto modifier for wisdom
+      cha: auto modifier for charisma
       weak: false
       shakey: false
       sick: false
@@ -165,7 +165,7 @@ mechanisms:
       startingGear: equipment array
     character fields:
       gear: startingGear
-      weight: auto calc sum(gear, gear.equipment.weight)
+      weight: sum(gear, gear.equipment.weight)
     effects:
       # TODO redo this!!
       use gear [<amount>] (with tag <tag>|<name>):
@@ -547,7 +547,7 @@ moves:
     effect:
       roll roll+Int:
         success: The GM will tell you something interesting and useful about the subject relevant to your situation, and might ask you “How do you know this?” Tell them the truth, now.
-        partialSuccess: The GM will only tell you something interesting — it’s on you to make it useful, and might ask you “How do you know this?” Tell them the truth, now.
+        patrial success: The GM will only tell you something interesting — it’s on you to make it useful, and might ask you “How do you know this?” Tell them the truth, now.
   Discern Realities:
     text: >
       When you closely study a situation or person, roll+Wis.
@@ -584,7 +584,7 @@ moves:
     effect:
       roll roll+Cha:
         success: They do what you ask if you first promise what they ask of you.
-        partialSuccess: They will do what you ask, but need some concrete assurance of your promise, right now.
+        patrial success: They will do what you ask, but need some concrete assurance of your promise, right now.
   Aid or Interfere:
     text: >
       When you help or hinder someone you have a bond with, roll+Bond with them.
@@ -988,7 +988,7 @@ playbooks:
             success:
               - They treat you as the most obvious threat to be dealt with and ignore your companions.
               - modify damage against them +2 ongoing
-          partialSuccess: Only a few (the weakest or most foolhardy among them) fall prey to your taunting.
+          patrial success: Only a few (the weakest or most foolhardy among them) fall prey to your taunting.
       choose:
         Full Plate and Packing Steel:
           text: You ignore the clumsy tag on armor you wear.

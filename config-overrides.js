@@ -1,6 +1,13 @@
+const { override, addBabelPlugins  } = require('customize-cra')
 const rewireYAML = require('react-app-rewire-yaml')
 
-module.exports = function override(config, env) {
-  config = rewireYAML(config, env)
-  return config
+function addYaml(config, env) {
+  return rewireYAML(config, env)
 }
+
+module.exports = override(
+  rewireYAML,
+  ...addBabelPlugins(
+    '@babel/plugin-proposal-logical-assignment-operators'
+  )
+)
