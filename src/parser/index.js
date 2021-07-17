@@ -1,7 +1,7 @@
-// TODO what's left:
-// formula parsing
-// modifier target parsing
-// mechanisms menifistation in the playbook view? how to make it extendible? USE CSS
+// BUGS IN PARSER
+// 
+// - parse inner effects?
+// - the parser thinks numbers are addition
 
 import pluralize from 'pluralize'
 import { capitalCase } from 'change-case'

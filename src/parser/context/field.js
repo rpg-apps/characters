@@ -1,5 +1,3 @@
-import { capitalCase } from 'change-case'
-
 import { getFlag } from '../parsing-utils'
 
 import Field from '../../models/rules/mechanism/field'
