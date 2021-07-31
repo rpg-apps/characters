@@ -62,7 +62,7 @@ Effect.PRESETS = [
   new Effect('add <formula:value> to <field:field>', ({ field, value }, { character }) => character.fields[field].push(value)),
   new Effect('remove <formula:value> from <field:field>', ({ field, value }, { character }) => character.fields[field].value.splice(field.value.indexOf(value))),
   new Effect('set <formula:value> = <field:field>', ({ field, value }, { character }) => { character.fields[field].value = value }),
-  new Effect('change <field:field> <formula:value>', ({ field, value }, { character }) => { character.fields[field].value += value }),
+  new Effect('change <field:field> by <formula:value>', ({ field, value }, { character }) => { character.fields[field].value += value }),
 
   new Effect('modify <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifier.push({ filter, value }) }),
   new Effect('modify once <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifier.push({ filter, value, once: true }) }),

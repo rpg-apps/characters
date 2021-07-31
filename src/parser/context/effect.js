@@ -6,7 +6,6 @@ export default class EffectParser {
     this.effects = [].concat(Effect.PRESETS)
   }
 
-  // When defining an effecct using the 'effects' field
   parseDefinition (pattern, definition) {
     const effectCall = this.parseUsage(definition)
     const effect = new Effect.ComplexEffect(pattern, effectCall)
@@ -14,7 +13,6 @@ export default class EffectParser {
     return effect
   }
 
-  // When using an effect in another effect or in an 'effect' field
   parseUsage (raw) {
     const effect = this.effects.find(effect => effect.match(raw))
     if (!effect) return raw

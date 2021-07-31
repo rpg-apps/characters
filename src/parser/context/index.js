@@ -14,14 +14,4 @@ export default class ParsingContext {
     this.effectParser = new EffectParser(this)
     Object.assign(this, externalParsers)
   }
-
-  extract () {
-    return {
-      types: this.typeParser.types,
-      choices: this.choiceParser.choices,
-      fields: this.fieldParser.allFields(),
-      formulas: this.formulaParser.formulas,
-      effects: this.formulaParser.effects,
-    }
-  }
 }

@@ -13,7 +13,7 @@ class Move extends BasicMove {
   }
 }
 
-// Multilclass moves are a spcecial kind of move that allows you to chose from another class
+// Multilclass moves are a special kind of move that allows you to chose from another class
 Move.Multiclass = class MulticlassMove extends BasicMove {
   constructor ({ name, text, classRestrictions, levelRestrictions }) {
     super({ name, text })

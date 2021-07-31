@@ -6,7 +6,7 @@ export default class Mechanism {
   }
 
   static join (...mechanisms) {
-    let distinctMechanisms = mechanisms.reduce((distinctMechanismsObject, singleMechanism) => Object.assign(distinctMechanismsObject, { [singleMechanism.name]: singleMechanism }, { }))
+    let distinctMechanisms = mechanisms.reduce((distinctMechanismsObject, singleMechanism) => ({ ...distinctMechanismsObject, [singleMechanism.name]: singleMechanism }))
     return new Mechanism(merge.all(Object.values(distinctMechanisms)))
   }
 }

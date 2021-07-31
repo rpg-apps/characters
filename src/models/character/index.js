@@ -30,7 +30,7 @@ export default class Character {
   }
 
   execute(effectCall, executioner) { // an executioner has the ability to display an output and recieve an input
-    return effectCall.calculator.execute(effectCall, this, executioner)
+    return this.calculator.execute(effectCall, this, executioner)
   }
 }
 

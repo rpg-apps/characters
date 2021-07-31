@@ -17,13 +17,13 @@ import Context from './context'
 
 const parsers = { parseMechanism, parseMove, parsePlaybook }
 
+const rulesFields = Object.keys(parsers).map(key => pluralize(key.replace('parse', '').toLowerCase()))
+
 export function parse (yamls, log=console.log) {
-  log('started parsing')
-  log('loading raw rules...')
   const rawRules = merge.all(yamls)
-  log('raw rules', rawRules)
   const context = new Context(rawRules, { parseMove, parseMechanism })
   const parsedRules = Object.entries(rawRules)
+    .filter(([field]) => rulesFields.includes(field))
     .reduce((rules, [field, entries]) => ({ ...rules, [field]: parseEntries(field, entries, context, log) }), { })
 
   const rulebook = new Rulebook(parsedRules)
@@ -34,9 +34,5 @@ export function parse (yamls, log=console.log) {
 
 const parseEntries = (field, entries, context, log) => {
   const parser = parsers[`parse${capitalCase(pluralize.singular(field))}`]
-  if (!parser)   return Array.isArray(entries) ? entries : Object.entries(entries).map(([name, value]) => ({ ...value, name }))
-  
-  const parsedEntries = Object.entries(entries).map(([entryName, rawEntry]) => parser(entryName, rawEntry, context))
-  log(field, parsedEntries)
-  return parsedEntries
+  return Object.entries(entries).map(([entryName, rawEntry]) => parser(entryName, rawEntry, context))
 }

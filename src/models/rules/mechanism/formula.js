@@ -53,11 +53,11 @@ Formula.Call = class FormulaCall extends Valuble {
 }
 
 Formula.PRESETS = [
-  new Formula.PresetFormula('<boolean:condition>?<number:onTrue>:<number:onFalse>', 'number', params => (params.condition ? params.onTrue : params.onFalse)),
+  new Formula.PresetFormula('<boolean:condition>\\?<number:onTrue>:<number:onFalse>', 'number', params => (params.condition ? params.onTrue : params.onFalse)),
   
-  new Formula.PresetFormula('<number:A>+<number:B>', 'number', params => params.A + params.B),
+  new Formula.PresetFormula('<number:A>\\+<number:B>', 'number', params => params.A + params.B),
   new Formula.PresetFormula('<number:A>-<number:B>', 'number', params => params.A - params.B),
-  new Formula.PresetFormula('<number:A>*<number:B>', 'number', params => params.A * params.B),
+  new Formula.PresetFormula('<number:A>\\*<number:B>', 'number', params => params.A * params.B),
   new Formula.PresetFormula('<number:A>/<number:B>', 'number', params => params.A / params.B),
 
   new Formula.PresetFormula('<number:A>=<number:B>', 'boolean', params => params.A === params.B),
@@ -67,8 +67,8 @@ Formula.PRESETS = [
   new Formula.PresetFormula('<number:A>>=<number:B>', 'boolean', params => params.A >= params.B),
   new Formula.PresetFormula('<number:A>!=<number:B>', 'boolean', params => params.A !== params.B),
 
-  new Formula.PresetFormula('<boolean:A>|<boolean:B>', 'boolean', params => params.A || params.B),
-  new Formula.PresetFormula('<boolean:A>&<boolean:B>', 'boolean', params => params.A && params.B),
+  new Formula.PresetFormula('<boolean:A>\\|<boolean:B>', 'boolean', params => params.A || params.B),
+  new Formula.PresetFormula('<boolean:A>\\&<boolean:B>', 'boolean', params => params.A && params.B),
   new Formula.PresetFormula('!<boolean:A>', 'boolean', params => !params.A),
 
   new Formula.PresetFormula('<array:A> or <array:B>', 'array', params => [].concat(params.A).concat(params.B)),

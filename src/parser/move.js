@@ -12,7 +12,7 @@ const PARSERS = {
     let automatic
     [automatic, trigger] = getFlag(trigger, AUTOMATIC_TRIGGER_PREFIX)
     if (automatic) {
-      return new Move.Trigger.On(formulaParser.parseUsage(trigger, 'boolean'))
+      return new Move.Trigger.On(trigger)
     } else {
       return new Move.Trigger(trigger)
     }

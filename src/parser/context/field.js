@@ -16,7 +16,7 @@ export default class FieldParser {
     if (value === 'large') {
       value = this.context.rawRules[name]
     }
-    
+
     const field = new Field.GlobalField(name, value)
     this.fields.global.push(field)
     return field
@@ -40,10 +40,9 @@ export default class FieldParser {
 
       field = new Field.ChoiceField(name, playbook, choice)
     } else {
-      const [auto, valueAuto] = getFlag(value, AUTO_PREFIX)
-      const formulaCall = this.context.formulaParser.parseUsage(valueAuto)
+      const [auto, formula] = getFlag(value, AUTO_PREFIX)
 
-      field = auto ? new Field.FormulaField(name, playbook, formulaCall) : new Field.ValueField(name, playbook, formulaCall)
+      field = auto ? new Field.FormulaField(name, playbook, formula) : new Field.ValueField(name, playbook, formula)
     }
 
 

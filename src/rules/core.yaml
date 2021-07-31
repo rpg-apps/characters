@@ -17,7 +17,7 @@ mechanisms:
       xp: 0
   roll:
     formulas:
-      modifier for <number:stat>: stat<9?-1:stat<13?0:stat<16?1:stat<18?2:3
+      modifier for <number:stat>: stat<9?-1:(stat<13?0:(stat<16?1:(stat<18?2:3))
       roll: 2d6
       str: str-(weak?1:0)
       dex: dex-(shakey?1:0)
@@ -123,7 +123,7 @@ mechanisms:
       armor: 0
     effects:
       deal <formula>: show <formula>
-      take damage: subtract (input(formula:damage))-input(bool:ignore armor)?0:max(0,armor-(input(number:piercing))) from hp
+      take damage: change hp by -1*(input(formula:damage))-input(bool:ignore armor)?0:max(0,armor-(input(number:piercing)))
       heal <formula>: add formula to hp
   bonds:
     playbook fields:
@@ -143,8 +143,8 @@ mechanisms:
     choices:
       alignment: from alignment options
     character fields:
-      alignment: choose alignment and take name
-      alignmentGoal: choose alignment and take goal
+      alignment: choose alignment and use name
+      alignmentGoal: choose alignment and use goal
   equipment:
     types:
       tag:
@@ -611,11 +611,11 @@ moves:
       - You catch a glimpse of what lies beyond the Black Gates of Death’s Kingdom (the GM will describe it).
       - roll roll:
           success:
-            - change stat hp +1
+            - change hp by 1
             - You’ve cheated Death — you’re in a bad spot but you’re still alive.
           partial success:
             choose Death himself will offer you a bargain.:
-              Take Death’s bargain and stabilize: change stat hp +1
+              Take Death’s bargain and stabilize: change hp by 1
               Don’t take Death’s bargain and pass beyond the Black Gates into whatever fate awaits you: die
           miss: die
   Encumrance:
@@ -645,7 +645,7 @@ moves:
             trigger move: Level up
           no: no effect
       - choose Did you get at least a few uninterrupted hours of sleep?:
-          yes: change stat hp +(maxHP/2)
+          yes: change hp by maxHP/2
           no: no effect
   Take Watch:
     text: >
@@ -700,21 +700,21 @@ moves:
         - choose Choose one of your bonds that you feel is resolved (completely explored, no longer relevant, or otherwise). Ask the player of the character you have the bond with if they agree. If they do, mark XP and write a new bond with whomever you wish.:
               Resolve a bond:
                       - resolve bond
-                      - change stat xp +1
+                      - change xp by 1
                       - create bond
               Create a new bond: create bond
               Do not resolve a bond: no effect
         - choose Did I fulfill my alignemnt goal?:
-            yes: change stat xp +1
+            yes: change xp by 1
             no: no effect
         - choose Did we learn something new and important about the world?:
-            yes: change stat xp +1
+            yes: change xp by 1
             no: no effect
         - choose Did we overcome a notable monster or enemy?:
-            yes: change stat xp +1
+            yes: change xp by 1
             no: no effect
         - choose Did we loot a memorable treasure?:
-            yes: change stat xp +1
+            yes: change xp by 1
             no: no effect
   Level Up:
     text: >
@@ -726,16 +726,16 @@ moves:
       * Choose one of your stats and increase it by 1 (this may change your modifier). Changing your Constitution increases your maximum and current HP. Ability scores can’t go higher than 18.
     trigger: When you have downtime (hours or days) and XP equal to (or greater than) your current level+7
     effect:
-      - change stat xp -level-7
-      - change stat level +1
+      - change xp by (-1*level)-7
+      - change level by 1
       - add advanced move
       - choose Choose one of your stats to increase:
-          Strength: change stat Strength +1
-          Dexterity: change stat Dexterity +1
-          Constitution: change stat Constitution +1
-          Intelligence: change stat Intelligence +1
-          Wisdom: change stat Wisdom +1
-          Charisma: change stat Charisma +1
+          Strength: change Strength by 1
+          Dexterity: change Dexterity by 1
+          Constitution: change Constitution by 1
+          Intelligence: change Intelligence by 1
+          Wisdom: change Wisdom by 1
+          Charisma: change Charisma by 1
   Carouse:
     text: >
       When you return triumphant and throw a big party, spend 100 coins and roll +1 for every extra 100 coins spent.
@@ -785,16 +785,16 @@ moves:
     trigger: When you do nothing but rest in comfort and safety
     effect:
       choose How long do you rest?:
-        One day - recover all your HP: change stat hp +maxHP
+        One day - recover all your HP: change hp by maxHP
         Three days, or two days with a healer - also remove a debility:
-          - change stat hp +maxHP
+          - change hp by maxHP
           - choose Choose a debility to remove:
-              Weak: change stat Weak =false
-              Shakey: change stat Shakey =false
-              Sick: change stat Sick =false
-              Stunned: change stat Stunned =false
-              Confused: change stat Confused =false
-              Scarred: change stat Scarred =false
+              Weak: set Weak false
+              Shakey: set Shakey false
+              Sick: set Sick false
+              Stunned: set Stunned false
+              Confused: set Confused false
+              Scarred: set Scarred false
   Recruit:
     text: >
       When you put out word that you’re looking to hire help, roll:
@@ -932,7 +932,7 @@ playbooks:
           trigger: At the beginning of each session
           effect:
             choose Did you answer the GM's question:
-              yes: change stat xp +1
+              yes: change xp by 1
               no: no effect
     character fields:
       appetites: choose freely from appetite options

@@ -22,14 +22,14 @@ export default class ChoiceParser {
     }
 
     const [free, definitionAfterFreeCheck] = getFlag(definition, FREE_CHOICE_PREFIX)
-    const type = this.parseChoiceDefinitionType(definitionAfterFreeCheck)
+    const type = this.getChoiceType(definitionAfterFreeCheck)
 
     const choice = new Choice.BasicChoice(name, type, playbook, free)
     this.choices.push(choice)
     return choice
   }
 
-  parseChoiceDefinitionType (definition) {
+  getChoiceType (definition) {
     const [unique, definitionAfterUniqueCheck] = getFlag(definition, UNIQUE_CHOICE_PREFIX)
     const [from, definitionAfterChooseFromCheck] = getFlag(definitionAfterUniqueCheck, CHOOSE_FROM_PREFIX)
     if (from) {
@@ -37,7 +37,7 @@ export default class ChoiceParser {
       if (!from) throw new Error(`Field not found: ${definitionAfterChooseFromCheck}`)
       return { from, unique }
     }
-    
+
     return this.context.typeParser.parseUsage(definitionAfterChooseFromCheck)
   }
 }

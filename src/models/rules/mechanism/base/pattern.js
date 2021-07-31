@@ -9,8 +9,11 @@ export default class Pattern {
 
   regex () {
     let str = this.raw.replace(/{.+?}/, '').trim()
-    this.params.forEach(param => { str = str.replace(`<${param.name}>`, `(?<${param.name}>.*)`).replace(`<${param.type}:${param.name}>`, `(?<${param.name}>.*)`) })
-    return new RegExp(str)
+    this.params.forEach(param => {
+      const paramMatch = `(?<${param.name}>${REGEX_WITHOUT_PARENTHASSES})`
+      str = str.replace(`<${param.name}>`, paramMatch).replace(`<${param.type}:${param.name}>`, paramMatch)
+    })
+    return new RegExp(`^${str}$`)
   }
 
   match (raw) {
@@ -18,7 +21,8 @@ export default class Pattern {
   }
 
   extract (raw) {
-    const [rawParams, optionsParam] = this._forRawWithOptions(raw, r => this.regex().exec(r).groups, o => ({ [this._optionsName()]: o }), { })
+    const [rawParams, optionsParam] = this._forRawWithOptions(raw, r => (this.regex().exec(r).groups || {}), o => ({ [this._optionsName()]: o }), { })
+    Object.keys(rawParams).forEach(key => { rawParams[key] = rawParams[key].match(/^\(.*\)$/) ? rawParams[key].substring(1, rawParams[key].length - 1) : rawParams[key] })
     return { ...rawParams, ...optionsParam }
   }
 
@@ -47,5 +51,7 @@ Pattern.Param = class PatternParam {
   }
 }
 
-Pattern.Param.REGEX = /<(.+?)>/g
+const REGEX_WITHOUT_PARENTHASSES = '[^\\)]+?(\\(.+?)?'
+
+Pattern.Param.REGEX = /<(\w+:?\w+?)>/g
 Pattern.Param.SEPERATOR = ':'

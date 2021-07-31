@@ -12,7 +12,7 @@ export default class Calculator {
 
   calc (raw, character, type = undefined) {
     const valuble = this.valubles.find(valuble => valuble.match(raw))
-    
+
     if (valuble)
       return valuble.getValue(character, (rawValue, type) => this.calc(rawValue, this, type))
 
