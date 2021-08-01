@@ -1,6 +1,8 @@
+import Playbook from './playbook'
+
 export default class Rulebook {
-  constructor (rules) {
-    Object.assign(this, rules)
-    // this.playbooks.forEach(playbook => { playbook.setRules(this) })
+  constructor (mechanisms, moves) {
+    Object.assign(this, { mechanisms, moves })
+    this.playbooks = []
   }
 }

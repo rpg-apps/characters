@@ -33,29 +33,6 @@ Effect.ComplexEffect = class ComplexEffect extends Effect {
   }
 }
 
-Effect.Call = class EffectCall extends Valuble {
-  constructor (effect, params) {
-    super()
-    Object.assign(this, { effect, params })
-  }
-
-  match (raw) {
-    return this.pattern.regex().exec(raw)
-  }
-
-  getValue (character, getValubleValue) {
-    const parameterTypes = this.effect.pattern.getParameterTypes()
-    const effectParams = Object.entries(this.params)
-      .reduce(([key, rawValue], params) => ({ ...params, [key]: getValubleValue(rawValue, parameterTypes[key]) }), { })
-    return (executioner) => this.effect.execute(effectParams, { executioner, character })
-  }
-
-  execute (character, executioner, getValubleValue) {
-    const action = this.getValue(character, getValubleValue)
-    return action(executioner)
-  }
-}
-
 Effect.PRESETS = [
   new Effect('show <string:something>', ({ something }, { executioner }) => executioner.output(something)),
 

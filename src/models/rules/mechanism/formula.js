@@ -29,26 +29,8 @@ Formula.ComplexFormula = class ComplexFormula extends Formula {
     this.formulaCall = formulaCall
   }
 
-  getValue (params, character) {
-    return this.formulaCall.getValue(character)
-  }
-}
-
-Formula.Call = class FormulaCall extends Valuble {
-  constructor (formula, params) { // params are an object of raw strings to be calculated using the character/calculator.js calc function
-    super()
-    Object.assign(this, { formula, params })
-  }
-
-  match (raw) {
-    return this.pattern.regex().exec(raw)
-  }
-
-  getValue (character, getValubleValue) {
-    const parameterTypes = this.formula.pattern.getParameterTypes()
-    const formulaParams = Object.entries(this.params)
-      .reduce(([key, rawValue], params) => ({ ...params, [key]: getValubleValue(rawValue, parameterTypes[key]) }), { })
-    return this.formula.getValue(formulaParams, character)
+  getValue (params, character, getValubleValue) {
+    return this.formulaCall.getValue(character, getValubleValue)
   }
 }
 

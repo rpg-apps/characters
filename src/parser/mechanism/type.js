@@ -1,5 +1,4 @@
 import { getFlag } from '../parsing-utils'
-
 import Type from '../../models/rules/mechanism/type'
 
 export default class TypeParser {

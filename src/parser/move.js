@@ -2,13 +2,13 @@ import Move from '../models/rules/move'
 
 import { parseFields, getFlag } from './parsing-utils'
 
-export default function parseMove (name, rawMove, context) {
-  return new Move({ ...parseFields(rawMove, PARSERS, context), name })
+export default function parseMove (name, rawMove) {
+  return new Move({ ...parseFields(rawMove, PARSERS), name })
 }
 
 const PARSERS = {
   text: text => text,
-  trigger: (trigger, { formulaParser }) => {
+  trigger: trigger => {
     let automatic
     [automatic, trigger] = getFlag(trigger, AUTOMATIC_TRIGGER_PREFIX)
     if (automatic) {
@@ -17,7 +17,7 @@ const PARSERS = {
       return new Move.Trigger(trigger)
     }
   },
-  effect: (effect, { effectParser }) => effectParser.parseUsage(effect)
+  effect: effect => effect
 }
 
 const AUTOMATIC_TRIGGER_PREFIX = 'on'

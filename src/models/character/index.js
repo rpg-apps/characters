@@ -6,7 +6,7 @@ import Field from '../rules/mechanism/field'
 export default class Character {
   constructor (playbook) {
     this.playbook = playbook
-    this.choices = {}
+    this.creationChoices = {}
     this.calculator = new Calculator(this)
     this.history = new History()
   }
@@ -36,7 +36,7 @@ export default class Character {
 
 /*
 {
-  choices: { <choice name>: value, ... },
+  creationChoices: { <choice name>: value, ... },
   fields: { <field name>: value, ... }, // fields are initialized using calc, but can be changed, unless they are auto
   modifiers: [{ filter: () => { should the modifier be used? }, value: formula, once: boolean }...],
   history: [] // a History object containing array of effects and values calculated, with metadata on each event

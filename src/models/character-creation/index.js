@@ -1,46 +1,46 @@
 import Character from '../character'
 
 export default class CharacterBuilder {
-  constructor (playbook, rulebook) {
-    this.playbook = playbook
+  constructor (rulebook) {
     this.rulebook = rulebook
-    this.choices = this.loadChoices()
-    this.currentChoices = [this.choices[0]]
-    this.character = new Character({ playbook, rulebook })
-    this.done = false
+    this.status = CharacterBuilder.STATUS.CHOSING_PLAYBOOK
+    this.choice = null
   }
 
-  loadFields () {
-    return this.load('fields')
+  choosePlaybook (playbookName) {
+    this._validateStatus(CharacterBuilder.STATUS.CHOSING_PLAYBOOK)
+    this.playbook = this.rulebook.playbooks.find(playbook => playbook.name === playbookName)
+    if (!this.playbook) {
+      throw new Error(`Playbook not found: ${playbookName}`)
+    }
+    this.character = new Character(this.playbook)
+    this.status = CharacterBuilder.STATUS.CHOOSING_CHARACTER_TRAITS
+    this.nextChoice()
   }
 
-  loadChoices () {
-    return this.load('choices')
-      .map(choice => ({ ...choice, value: undefined }))
-  }
-
-  choose (choice, value) {
-    choice.value = value
-    this.currentChoices = [this.choices[this.choices.indexOf(choice)+1]]
-    if (this.currentChoices === undefined) {
-      this.done = true
+  chooseCharacterTrait (name, value) {
+    this._validateStatus(CharacterBuilder.STATUS.CHOOSING_CHARACTER_TRAITS)
+    this.character.creationChoices[name] = value
+    this.nextChoice()
+    if (!this.choice) {
+      this.status = CharacterBuilder.STATUS.DONE
     }
   }
 
-  load (key) {
-    return this.rulebook.context[key].filter(({ playbook }) => playbook === 'all' || playbook === this.playbook.name || playbook === undefined)
+  nextChoice () {
+    this.choice = this.playbook.choices.find(choice => !this.character.creationChoices.hasOwnProperty(choice.name))
   }
 
-  getValue (fieldName) {
-    const field = this.load('fields').find(({ name }) => name === fieldName)
-    if (!field) {
-      return undefined
-    }
-
-    if (field.choice) {
-      return field.choice.value
-    } else {
-      return this.playbook.getValue(fieldName)      
+  _validateStatus (status) {
+    if (this.status !== status) {
+      throw new Error('Illegal operation. Character builder not at this stage')
     }
   }
+}
+
+
+CharacterBuilder.STATUS = {
+  CHOSING_PLAYBOOK: 'choosing playbook',
+  CHOOSING_CHARACTER_TRAITS: 'choosing character traits',
+  DONE: 'done'
 }

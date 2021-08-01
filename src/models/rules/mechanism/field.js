@@ -58,13 +58,13 @@ Field.ChoiceField = class ChoiceField extends Field.CharacterField {
 }
 
 Field.FormulaField = class FormulaField extends Field.CharacterField {
-  constructor (name, playbook, formulaCall) {
+  constructor (name, playbook, calculationFormula) {
     super(name, playbook)
-    this.formulaCall = formulaCall
+    this.calculationFormula = calculationFormula
   }
 
   getValue (character) {
-    return this.formulaCall.getValue(character)
+    return this.calculationFormula.getValue(character)
   }
 }
 
