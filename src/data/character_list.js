@@ -4,7 +4,7 @@ const storage = localStorage
 const PREFIX = 'character-'
 
 export function get (name) {
-	return new Character(JSON.parse(storage.getItem(`${PREFIX}${name}`)))
+	return Character.load(JSON.parse(storage.getItem(`${PREFIX}${name}`)))
 }
 
 export function getAll () {

@@ -6,7 +6,7 @@ export default class Field extends Valuble {
     Object.assign(this, { name, scope })
   }
 
-  getValue (character) {
+  async getValue (character) {
     throw new Error('getValue should not be called on Field class directly')
   }
 }
@@ -23,7 +23,7 @@ Field.GlobalField = class GlobalField extends Field {
     this.value = value
   }
 
-  getValue () {
+  async getValue () {
     return this.value
   }
 }
@@ -34,8 +34,8 @@ Field.PlaybookField = class PlaybookField extends Field {
     Object.assign(this, { type, optional })
   }
 
-  getValue (character) {
-    return character.playbook[this.name]
+  async getValue (character) {
+    return character.playbook.fields[this.name]
   }
 }
 
@@ -52,8 +52,8 @@ Field.ChoiceField = class ChoiceField extends Field.CharacterField {
     this.choice = choice
   }
 
-  getValue (character) {
-    return character.choices.find(choice => choice.name === this.choice.name).value
+  async getValue (character) {
+    return this.choices.getValue(character)
   }
 }
 
@@ -63,8 +63,8 @@ Field.FormulaField = class FormulaField extends Field.CharacterField {
     this.calculationFormula = calculationFormula
   }
 
-  getValue (character) {
-    return this.calculationFormula.getValue(character)
+  async getValue (character) {
+    return await character.get(this.calculationFormula)
   }
 }
 
@@ -74,7 +74,7 @@ Field.ValueField = class ValueField extends Field.CharacterField {
     this.initializationFormula = initializationFormula
   }
 
-  getValue (character) {
+  async getValue (character) {
     return character.fields[this.name]
   }
 }

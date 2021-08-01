@@ -1,5 +1,3 @@
-import Formula from './formula'
-import Effect from './effect'
 import Move from '../move'
 
 export default class Type {
@@ -36,7 +34,7 @@ Type.ComplexType = class ComplexType extends Type {
     this.fieldTypes = fieldTypes
   }
 
-  // Recursivly parse values using the types definied in the constructor
+  // Recursively parse values using the types definied in the constructor
   parseValue (raw) {
     return Object.entries(this.fieldTypes).reduce((parsed, [field, type]) => ({ ...parsed, [field]: type.parseValue(raw[field]) }), { })
   }
@@ -56,7 +54,6 @@ Type.PRESETS = [
     const [start, end] = value.split('..').map(i => Number(i))
     return { start, end }
   }),
-  // TODO parse this somehow?!
   new Type.PresetType('formula', value => value), // TODO fix this
   new Type.PresetType('effect', value => value), // TODO fix this
   new Type.PresetType('move', value => new Move(value))

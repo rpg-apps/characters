@@ -8,7 +8,7 @@ export default function parsePlaybook (name, rawPlaybook, rulebook, mechanismPar
     .filter((mechanism, index, array) => array.every((otherMechanism, otherIndex) => otherMechanism.name !== mechanism.name || otherIndex >= index))
 
   const rules = mechanisms.reduce((rules, mechanism) => {
-    Object.entries(mechanism).forEach(([key, value]) => {
+    Object.entries(mechanism).filter(([key]) => !['name'].includes(key)).forEach(([key, value]) => {
       rules[key] = (rules[key] || []).concat(value)
     })
     return rules

@@ -15,11 +15,11 @@ export default class CharacterCreation extends React.Component {
   }
 
   componentDidMount () {
-    this.setState({ rulebook: this.context })
+    this.setState({ rulebook: this.context, builder: new CharacterBuilder(this.context) })
   }
 
   setPlaybook (playbook) {
-    this.setState({ playbook, builder: new CharacterBuilder(playbook, this.context) })
+    this.setState({ playbook, builder: new CharacterBuilder(this.context) })
   }
 
   getPlaybookSelection () {

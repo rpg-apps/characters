@@ -33,6 +33,12 @@ Effect.ComplexEffect = class ComplexEffect extends Effect {
   }
 }
 
+Effect.Modifier = class Modifier {
+  constructor ({ filter, value, once=false }) {
+    Object.assign(this, { filter, value, once })
+  }
+}
+
 Effect.PRESETS = [
   new Effect('show <string:something>', ({ something }, { executioner }) => executioner.output(something)),
 
@@ -41,8 +47,8 @@ Effect.PRESETS = [
   new Effect('set <formula:value> = <field:field>', ({ field, value }, { character }) => { character.fields[field].value = value }),
   new Effect('change <field:field> by <formula:value>', ({ field, value }, { character }) => { character.fields[field].value += value }),
 
-  new Effect('modify <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifier.push({ filter, value }) }),
-  new Effect('modify once <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifier.push({ filter, value, once: true }) }),
+  new Effect('modify <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifiers.push({ filter, value }) }),
+  new Effect('modify once <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifiers.push({ filter, value, once: true }) }),
   
   new Effect('roll <formula:value> {outcomes}', ({ value, outcomes }, { executioner, character }) => {
     Object.entries(outcomes)

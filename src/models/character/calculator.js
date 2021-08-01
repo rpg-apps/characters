@@ -2,19 +2,19 @@ export default class Calculator {
   constructor (playbook) {
     this.playbook = playbook
     this.valubles = []
-      .concat(this.playbook.choices)
-      .concat(this.playbook.characterFields)
-      .concat(this.playbook.playbookFields)
-      .concat(this.playbook.globalFields)
-      .concat(this.playbook.formulas)
-      .concat(this.playbook.effects)
+      .concat(this.playbook.rules.choices)
+      .concat(this.playbook.rules.characterFields)
+      .concat(this.playbook.rules.playbookFields)
+      .concat(this.playbook.rules.globalFields)
+      .concat(this.playbook.rules.formulas)
+      .concat(this.playbook.rules.effects)
   }
 
-  calc (raw, character, type = undefined) {
+  async calc (raw, character, type = undefined) {
     const valuble = this.valubles.find(valuble => valuble.match(raw))
 
     if (valuble)
-      return valuble.getValue(character, (rawValue, type) => this.calc(rawValue, this, type))
+      return await valuble.getValue(character, (rawValue, type) => this.calc(rawValue, this, type))
 
     return this.playbook.types.find(t => t.name === type)?.parseValue(raw) || raw
   }

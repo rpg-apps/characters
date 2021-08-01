@@ -17,12 +17,8 @@ Choice.BasicChoice = class BasicChoice extends Choice {
     Object.assign(this, { name, type, free })
   }
 
-  getValue (character) {
-    return character.choices[this.name]
-  }
-
-  toString () {
-    return this.name
+  async getValue (character) {
+    return character.creationChoices[this.name]
   }
 }
 
@@ -32,13 +28,9 @@ Choice.ProxyChoice = class ProxyChoice extends Choice {
     Object.assign(this, { originalChoice, field })
   }
 
-  getValue (character) {
+  async getValue (character) {
     const originalChoiceValue = this.originalChoice.getValue(character)
     if (this.field === 'root' || this.field === undefined)  return originalChoiceValue
     return originalChoiceValue?.[this.field]
-  }
-
-  toString () {
-    return `${this.originalChoice.toString()}.${this.field}`
   }
 }

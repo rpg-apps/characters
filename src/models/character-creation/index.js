@@ -1,5 +1,7 @@
 import Character from '../character'
 
+import Field from '../rules/mechanism/field'
+
 export default class CharacterBuilder {
   constructor (rulebook) {
     this.rulebook = rulebook
@@ -31,13 +33,20 @@ export default class CharacterBuilder {
     this.choice = this.playbook.choices.find(choice => !this.character.creationChoices.hasOwnProperty(choice.name))
   }
 
+  async getCharacter () {
+    this._validateStatus(CharacterBuilder.STATUS.DONE)
+    this.character.fields = this.playbook.characterFields
+      .filter(field => field instanceof Field.ValueField)
+      .reduce(async (fields, field) => ({ ...fields, [field.name]: await this.character.get(field.initializationFormula) }))
+    return this.character
+  }
+
   _validateStatus (status) {
     if (this.status !== status) {
       throw new Error('Illegal operation. Character builder not at this stage')
     }
   }
 }
-
 
 CharacterBuilder.STATUS = {
   CHOSING_PLAYBOOK: 'choosing playbook',
