@@ -1,11 +1,17 @@
 #new {
+  .react-swipeable-view-container > * {
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
   .playbook {
     box-sizing: border-box;
-    height: 100vh;
-    width: 100vw;
+    height: calc(100vh - 2rem);
+    width: calc(100vw - 2rem);
     background-size: contain;
     background-repeat: no-repeat;
     background-position-x: right;
+    position: relative;
 
     display: inline-flex;
     flex-direction: column;
@@ -14,9 +20,22 @@
 
     .subtitle {
     	flex-grow: 1;
+      text-align: justify;
     }
 
-    .content {
+    .actions {
+      display: flex;
+      justify-content: space-around;
+
+      .button {
+        background: black;
+        border-radius: 0.5rem;
+        padding: 0.5em 1em;
+        font-size: 1.5rem;
+      }
+    }
+
+    .about.text {
       font-size: 0.9rem;
       vertical-align: bottom;
       text-align: justify;
@@ -24,6 +43,22 @@
       > :not(:last-child) {
         margin-bottom: 0.2rem;
       }
+    }
+
+    &.hidden-about .about.text {
+      display: none;
+    }
+
+    &.showing-about .about.text {
+      position: absolute;
+      background: rgba(0,0,0,0.8);
+      width: calc(100% - 2rem);
+      height: calc(100% - 11rem);
+      top: 6rem;
+      left: 1rem;
+      border-radius: 1rem;
+      padding: 1rem;
+      box-sizing: border-box;
     }
   }
 
@@ -99,7 +134,7 @@
 
   .paladin {
     background-image: url('../../images/classes-backgrounds/paladin.jpg');
-    background-color: #568bb5;
+    background-color: #184969;
     color: white;
     .subtitle {
       color: #568bb5;

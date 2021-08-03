@@ -33,7 +33,7 @@ export default class CharacterBuilder {
     this.choice = this.playbook.choices.find(choice => !this.character.creationChoices.hasOwnProperty(choice.name))
   }
 
-  async getCharacter () {
+  async finish () {
     this._validateStatus(CharacterBuilder.STATUS.DONE)
     this.character.fields = this.playbook.characterFields
       .filter(field => field instanceof Field.ValueField)
@@ -43,7 +43,7 @@ export default class CharacterBuilder {
 
   _validateStatus (status) {
     if (this.status !== status) {
-      throw new Error('Illegal operation. Character builder not at this stage')
+      throw new Error(`Illegal operation. Character builder is ${this.status} not ${status}`)
     }
   }
 }
