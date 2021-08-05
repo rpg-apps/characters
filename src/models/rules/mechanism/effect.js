@@ -49,7 +49,7 @@ Effect.PRESETS = [
 
   new Effect('modify <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifiers.push({ filter, value }) }),
   new Effect('modify once <string:filter> <formula:value>', ({ filter, value }, { character }) => { character.modifiers.push({ filter, value, once: true }) }),
-  
+
   new Effect('roll <formula:value> {outcomes}', ({ value, outcomes }, { executioner, character }) => {
     Object.entries(outcomes)
       .filter(([range]) => range === value || (range.start <= value && range.end >= value))

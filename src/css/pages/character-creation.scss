@@ -167,4 +167,65 @@
       color: #1c3609;
     }
   }
+
+  .choice {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    .choice.button {
+      font-size: 2rem;
+      padding: 0.5rem;
+      box-sizing: border-box;
+      background: white;
+      text-align: center;
+      height: 4rem;
+    }
+  }
+
+  .field.choice {
+    input[type="text"] {
+        width: calc(100vw - 4rem);
+        margin: 2rem;
+        padding: 0.5rem;
+        box-sizing: border-box;
+        border-radius: 0.5rem;
+        border: none;
+    }
+
+    .options {
+      overflow-y: scroll;
+    }
+
+    .option.button {
+      display: inline-block;
+      width: calc(50% - 4rem);
+      margin: 1rem 2rem;
+      padding: 1rem 0;
+      box-sizing: border-box;
+      background: #018b00;
+      border-radius: 1rem;
+      text-align: center;
+
+      &.chosen {
+        background: #015700;
+      }
+    }
+  }
+
+  .text.choice input {
+    flex-grow: 1;
+  }
+
+  .text.choice textarea {
+    font-family: 'MedievalSharp', cursive;
+    font-weight: bold;
+    font-size: 1.2rem;
+    width: calc(100vw - 4rem);
+    margin: 1rem 2rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    flex-grow: 1;
+  }
 }

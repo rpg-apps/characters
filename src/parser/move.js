@@ -8,6 +8,7 @@ export default function parseMove (name, rawMove) {
 
 const PARSERS = {
   text: text => text,
+  type: type => type,
   trigger: trigger => {
     let automatic
     [automatic, trigger] = getFlag(trigger, AUTOMATIC_TRIGGER_PREFIX)

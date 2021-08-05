@@ -20,7 +20,7 @@ export default class Formula extends Valuble {
 Formula.PresetFormula = class PresetFormula extends Formula {
   constructor (pattern, type, getValue) {
     super(pattern, type)
-    this.getValue = getValue
+    this.getValue = async (character, getValubleValue, params) => await getValue(params)
   }
 }
 
@@ -30,8 +30,8 @@ Formula.ComplexFormula = class ComplexFormula extends Formula {
     this.formulaCall = formulaCall
   }
 
-  async getValue (params, character, getValubleValue) {
-    return this.formulaCall.getValue(character, getValubleValue)
+  async getValue (character, getValubleValue, params) {
+    return 
   }
 }
 

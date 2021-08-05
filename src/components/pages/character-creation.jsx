@@ -6,12 +6,10 @@ import CharacterBuilder from '../../models/character-creation'
 
 import '../../css/pages/character-creation.scss'
 
-const MAX_BUTTONS = 3
-
 export default class CharacterCreation extends React.Component {
   constructor () {
     super()
-    this.state = { rulebook: undefined, builder: undefined, about: undefined }
+    this.state = { rulebook: undefined, builder: undefined, about: undefined, choiceValue: undefined }
   }
 
   componentDidMount () {
@@ -21,6 +19,14 @@ export default class CharacterCreation extends React.Component {
   setPlaybook (playbook) {
     this.state.builder.choosePlaybook(playbook.name)
     this.forceUpdate()
+  }
+
+  chooseCharacterTrait () {
+    const { builder, choiceValue } = this.state
+    const { choice } = builder
+
+    builder.chooseCharacterTrait(choice.name, choiceValue)
+    this.setState({ choiceValue: undefined })
   }
 
   toggleAbout (playbook) {
@@ -50,11 +56,11 @@ export default class CharacterCreation extends React.Component {
   }
 
   renderPlaybookChoice () {
-    const { rulebook, builder } = this.state
+    const { rulebook } = this.state
 
     return <SwipeableViews enableMouseEvents>
-      {/* Add index view */}
-      {rulebook.playbooks.map(playbook => <div className={`playbook ${playbook.name} ${(this.state.about === playbook.name) ? 'showing-about' : 'hidden-about'}`}>
+      {/* TODO Add index view */}
+      {rulebook.playbooks.map(playbook => <div key={playbook.name} className={`playbook ${playbook.name} ${(this.state.about === playbook.name) ? 'showing-about' : 'hidden-about'}`}>
         <div className='title'>{playbook.name}</div>
         <div className='subtitle'>{playbook.fields['in a sentence']}</div>
         <div className='actions'>
@@ -71,36 +77,46 @@ export default class CharacterCreation extends React.Component {
   renderCharacterTraitChoice () {
     const choice = this.state.builder.choice
 
-    // if (choice.type.hasOwnProperty('from')) {
-    //   const chocieOptions = this.state.builder.getValue(choice.type.from.name)
-    //   if (!chocieOptions) {
-    //     return ''
-    //   }
+    if (choice.type.hasOwnProperty('from')) {
+      return this.renderFieldChoice(choice)
+    }
 
-    //   const renderOptionsChoice = (options) => {
-    //     return <div className='from'>
-    //       {options.length > MAX_BUTTONS ? <select>{options.map(option => <option>{option}</option>)}</select> : options.map(option => <div className='button'>{option}</div>)}
-    //       {choice.free ? <input placeholder='Select another' /> : ''}
-    //     </div>
-    //   }
-
-    //   if (Array.isArray(chocieOptions[0])) {
-    //     return chocieOptions.map(renderOptionsChoice)
-    //   } else {
-    //     return renderOptionsChoice(chocieOptions)
-    //   }
-
-    // }
-
-    // if (choice.type === 'text') {
-    //   return <input name={choice.name} placeholder={choice.name} />
-    // }
-
-    // if (choice.type === 'long text') {
-    //   return <textarea name={choice.name} placeholder={choice.name}/>
-    // }
-
+    switch (choice.type.name) {
+      case 'text':  return this.renderTextChoice(choice)
+      case 'long text':  return this.renderLongTextChoice(choice)
+    }
     return JSON.stringify(choice)
+  }
+
+  renderFieldChoice (choice) {
+    const options = this.state.builder.playbook.fields[choice.type.from]
+
+    return <div className={`${choice.name} field choice`}>
+      <div className='title'>{choice.name}</div>
+      {choice.free ? <input type='text' value={this.state.choiceValue} name={choice.name} onChange={event => this.setState({ choiceValue: event.target.value })} /> : ''}
+      <div className='options'>
+        {options.map(option => <div className={`${this.state.choiceValue === option ? 'chosen' : ''} option button`} onClick={() => this.setState({ choiceValue: option })}>
+          {(option.constructor === String) ? option : Object.entries(option).map(([key, value]) => <div className={key}>{value}</div>)}
+        </div>)}
+      </div>
+      <div className='choice button' onClick={() => this.chooseCharacterTrait()}>next</div>
+    </div>
+  }
+
+  renderTextChoice (choice) {
+    return <div className={`${choice.name} text choice`}>
+      <div className='title'>{choice.name}</div>
+      <input type='text' value={this.state.choiceValue} name={choice.name} onChange={event => this.setState({ choiceValue: event.target.value })} />
+      <div className='choice button' onClick={() => this.chooseCharacterTrait()}>next</div>
+    </div>
+  }
+
+  renderLongTextChoice (choice) {
+    return <div className={`${choice.name} long text choice`}>
+      <div className='title'>{choice.name}</div>
+      <textarea name={choice.name} value={this.state.choiceValue} onChange={event => this.setState({ choiceValue: event.target.value })} />
+      <div className='choice button' onClick={() => this.chooseCharacterTrait()}>next</div>
+    </div>
   }
 }
 

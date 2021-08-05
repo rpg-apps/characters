@@ -23,9 +23,7 @@ export default class FieldParser {
   }
 
   parsePlaybookFieldDefinition (name, value) {
-    const [optional, nameAfterOptional] = getFlag(name, OPTIONAL_PREFIX)
-
-    const field = new Field.PlaybookField(nameAfterOptional, this.context.typeParser.parseUsage(value), optional)
+    const field = new Field.PlaybookField(name, this.context.typeParser.parseUsage(value))
     this.fields.playbook.push(field)
     return field
   }

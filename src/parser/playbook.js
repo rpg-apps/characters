@@ -4,12 +4,14 @@ export default function parsePlaybook (name, rawPlaybook, rulebook, mechanismPar
   const mechanisms = []
     .concat(rulebook.mechanisms)
     .concat(Object.entries(rawPlaybook.mechanisms || {})
-      .map(([rawMechanismName, rawMechanism]) => mechanismParser.parse(rawMechanism)))
+      .map(([rawMechanismName, rawMechanism]) => mechanismParser.parse(rawMechanismName, rawMechanism)))
     .filter((mechanism, index, array) => array.every((otherMechanism, otherIndex) => otherMechanism.name !== mechanism.name || otherIndex >= index))
 
   const rules = mechanisms.reduce((rules, mechanism) => {
     Object.entries(mechanism).filter(([key]) => !['name'].includes(key)).forEach(([key, value]) => {
-      rules[key] = (rules[key] || []).concat(value)
+      rules[key] ||= []
+      const itemsToAdd = JOIN_FILTERS.hasOwnProperty(key) ? value.filter(item => rules[key].every(existingItem => JOIN_FILTERS[key](item) !== JOIN_FILTERS[key](existingItem))) : value
+      rules[key] = rules[key].concat(itemsToAdd)
     })
     return rules
   }, { })
@@ -25,4 +27,10 @@ export default function parsePlaybook (name, rawPlaybook, rulebook, mechanismPar
   }, rules.globalFields.reduce((fields, field) => ({ ...fields, [field.name]: field.value }), { }))
 
   return new Playbook({ name, fields, characterFields: rules.characterFields, choices: rules.choices, rules })
+}
+
+const JOIN_FILTERS = {
+  types: type => type.name,
+  effects: effect => effect.pattern.raw,
+  formulas: formula => formula.pattern.raw,
 }

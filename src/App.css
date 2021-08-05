@@ -4,3 +4,8 @@ body {
     font-family: 'MedievalSharp', cursive;
     font-weight: bold;
 }
+
+#root > * {
+    width: 100vw;
+    height: 100vh;
+}

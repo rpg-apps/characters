@@ -29,9 +29,9 @@ Field.GlobalField = class GlobalField extends Field {
 }
 
 Field.PlaybookField = class PlaybookField extends Field {
-  constructor (name, type, optional) {
+  constructor (name, type) {
     super(name, Field.SCOPE.PLAYBOOK)
-    Object.assign(this, { type, optional })
+    Object.assign(this, { type })
   }
 
   async getValue (character) {

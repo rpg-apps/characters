@@ -4,12 +4,10 @@ mechanisms:
       in a sentence: string
       introduction: string
       name options: string array
-      optional title options: string array
       look options: string array array
     character fields:
       name: choose freely from name options
       description: choose long text
-      optional title: choose freely from title options
       look: choose freely from look options
   expirience:
     character fields:
@@ -55,7 +53,7 @@ mechanisms:
       scarred: false
     effects:
       take a debility:
-        choose Which debility do you want to take:
+        choose which debility do you want to take:
           Weak: set weak = true
           Shakey: set shakey = true
           Sick: set sick = true
@@ -63,7 +61,7 @@ mechanisms:
           Confused: set confused = true
           Scarred: set scarred = true
       remove a debility:
-        choose Which debility do you want to remove:
+        choose which debility do you want to remove:
           Weak: set weak = false
           Shakey: set shakey = false
           Sick: set sick = false
@@ -84,10 +82,10 @@ mechanisms:
         repeat count times:
           add {name,options} to holds
       hold <count> <name>: hold count name
-      hold <count> {options}: hold count nameMove options
+      hold <count> {options}: hold count move-name options
       hold <count>: hold count nameMove
       use <name> to {options}: set hold[item.name=name].options = options
-      use {options}: use moveName to options
+      use {options}: use move-name to options
   move gaining:
     formulas:
       moves 2-10: moves 2-5 and moves 6-10
@@ -109,17 +107,17 @@ mechanisms:
     choices:
       race:
         choose: from race options
-        on choice: add raceMove to moves
+        on choice: add race move to moves
     character fields:
       race: choose race and take name
-      raceMove: choose race and take move
+      race move: choose race and take move
   damage:
     playbook fields:
-      baseDamage: formula
-      maxHp: formula
+      base damage: formula
+      max hp: formula
     character fields:
-      damage: baseDamage
-      hp: maxHp
+      damage: auto base damage
+      hp: max hp
       armor: 0
     effects:
       deal <formula>: show <formula>
@@ -144,7 +142,7 @@ mechanisms:
       alignment: from alignment options
     character fields:
       alignment: choose alignment and use name
-      alignmentGoal: choose alignment and use goal
+      alignment goal: choose alignment and use goal
   equipment:
     types:
       tag:
@@ -162,7 +160,7 @@ mechanisms:
       equipment: large
     playbook fields:
       load: formula
-      startingGear: equipment array
+      starting gear: equipment array
     character fields:
       gear: startingGear
       weight: sum(gear, gear.equipment.weight)
@@ -461,6 +459,7 @@ equipment:
 moves:
   # ---------------- Basic Moves ------------------
   Hack and Slash:
+    type: basic
     text: >
       When you attack an enemy in melee, roll+Str.
       * On a 10+, you deal your damage to the enemy and avoid their attack. At your option, you may choose to do +1d6 damage but expose yourself to the enemy’s attack.
@@ -474,6 +473,7 @@ moves:
             no: deal damage
         partial success: [deal damage, take damage]
   Volley:
+    type: basic
     text: >
       When you take aim and shoot at an enemy at range, roll+Dex.
       * On a 10+, you have a clear shot — deal your damage.
@@ -491,6 +491,7 @@ moves:
             You have to take what you can get, -1d6 damage.: take -1d6 forward to damage
             You have to take several shots, reducing your ammo by one.: use gear with tag ammo
   Defy Danger:
+    type: basic
     text: >
       When you act despite an imminent threat or suffer a calamity, say how you deal with it and roll. If you do it
       * by powering through, +Str
@@ -515,6 +516,7 @@ moves:
           success: You do what you set out to, the threat doesn’t come to bear.
           partial success: "You stumble, hesitate, or flinch: the GM will offer you a worse outcome, hard bargain, or ugly choice."
   Defend:
+    type: basic
     text: >
       When you stand in defense of a person, item, or location under attack, roll+Con.
       * On a 10+, hold 3.
@@ -538,6 +540,7 @@ moves:
             no: no effect
         Deal damage to the attacker equal to your level.: deal level/2
   Spout Lore:
+    type: basic
     text: >
       When you consult your accumulated knowledge about something, roll+Int.
       * On a 10+, the GM will tell you something interesting and useful about the subject relevant to your situation.
@@ -549,6 +552,7 @@ moves:
         success: The GM will tell you something interesting and useful about the subject relevant to your situation, and might ask you “How do you know this?” Tell them the truth, now.
         patrial success: The GM will only tell you something interesting — it’s on you to make it useful, and might ask you “How do you know this?” Tell them the truth, now.
   Discern Realities:
+    type: basic
     text: >
       When you closely study a situation or person, roll+Wis.
       * On a 10+, ask the GM 3 questions from the list below.
@@ -575,6 +579,7 @@ moves:
           - What here is not what it appears to be?
       - modifiy when acting on the answers +1 forward
   Parley:
+    type: basic
     text: >
       When you have leverage on a GM Character and manipulate them, roll+Cha.
       Leverage is something they need or want.
@@ -586,6 +591,7 @@ moves:
         success: They do what you ask if you first promise what they ask of you.
         patrial success: They will do what you ask, but need some concrete assurance of your promise, right now.
   Aid or Interfere:
+    type: basic
     text: >
       When you help or hinder someone you have a bond with, roll+Bond with them.
       * On a 10+ they take +1 or -2, your choice. 
@@ -600,6 +606,7 @@ moves:
         partial success also: You expose yourself to danger, retribution, or cost.
   # --------------- Special Moves -----------------
   Last Breath:
+    type: special
     text: >
       When you’re dying you catch a glimpse of what lies beyond the Black Gates of Death’s Kingdom (the GM will describe it).
       Then roll (just roll, +nothing — yeah, Death doesn’t care how tough or cool you are).
@@ -619,6 +626,7 @@ moves:
               Don’t take Death’s bargain and pass beyond the Black Gates into whatever fate awaits you: die
           miss: die
   Encumrance:
+    type: special
     text: >
       When you make a move while carrying weight you may be encumbered. If your weight carried is:
 
@@ -631,6 +639,7 @@ moves:
         yes: modify all autofail forced ongoing until weight<=load+2
         no: modify all -1 forced ongoing until weight>load+2||wright<=load
   Make Camp:
+    type: special
     text: >
       When you settle in to rest consume a ration.
       If you’re somewhere dangerous decide the watch order as well.
@@ -648,6 +657,7 @@ moves:
           yes: change hp by maxHP/2
           no: no effect
   Take Watch:
+    type: special
     text: >
       When you’re on watch and something approaches the camp roll+Wis.
       * On a 10+, you’re able to wake the camp and prepare a response, everyone in the camp takes +1 forward.
@@ -662,6 +672,7 @@ moves:
           partial success: You react just a moment too late; your companions in camp are awake but haven’t had time to prepare. They have weapons and armor but little else.
           miss: Whatever lurks outside the campfire’s light has the drop on you.
   Undertake a Perilous Journey:
+    type: special
     text: >
       When you travel through hostile territory, choose one member of the party to act as trailblazer, one to scout ahead, and one to be quartermaster. Each character with a job to do rolls+Wis.
       * On a 10+:
@@ -687,6 +698,7 @@ moves:
               success: You will spot any trouble quick enough to let you get the drop on it.
               partial success: No one gets the drop on you but you don’t get the drop on them either.
   End Of Session:
+    type: special
     text: >
       When you reach the end of a session, choose one of your bonds that you feel is resolved (completely explored, no longer relevant, or otherwise). Ask the player of the character you have the bond with if they agree. If they do, mark XP and write a new bond with whomever you wish.
 
@@ -717,6 +729,7 @@ moves:
             yes: change xp by 1
             no: no effect
   Level Up:
+    type: special
     text: >
       When you have downtime (hours or days) and XP equal to (or greater than) your current level+7, you can reflect on your experiences and hone your skills.
       * Subtract your current level+7 from your XP.
@@ -737,6 +750,7 @@ moves:
           Wisdom: change Wisdom by 1
           Charisma: change Charisma by 1
   Carouse:
+    type: special
     text: >
       When you return triumphant and throw a big party, spend 100 coins and roll +1 for every extra 100 coins spent.
       * On a 10+, choose 3.
@@ -764,6 +778,7 @@ moves:
             - You gain useful information.
             - You are not entangled, ensorcelled, or tricked.
   Supply:
+    type: special
     text: >
       When you go to buy something with gold on hand, if it’s something readily available in the settlement you’re in, you can buy it at market price.
       If it’s something special, beyond what’s usually available here, or non-mundane, roll+Cha.
@@ -778,6 +793,7 @@ moves:
               success: You find what you’re looking for at a fair price.
               partial success: You’ll have to pay more or settle for something that’s not exactly what you wanted, but close. The GM will tell you what your options are.
   Recover:
+    type: special
     text: >
       When you do nothing but rest in comfort and safety after a day of rest you recover all your HP.
       After three days of rest you remove one debility of your choice.
@@ -796,6 +812,7 @@ moves:
               Confused: set Confused false
               Scarred: set Scarred false
   Recruit:
+    type: special
     text: >
       When you put out word that you’re looking to hire help, roll:
       * +1 if you make it known that your pay is generous
@@ -821,6 +838,7 @@ moves:
                 Bring them along: Bring them along
                 Turn them away: modify recruit -1 forced forward
   Outstanding Warrants:
+    type: special
     text: >
       When you return to a civilized place in which you’ve caused trouble before, roll+Cha.
       * On a 10+, word has spread of your deeds and everyone recognizes you.
@@ -836,6 +854,7 @@ moves:
           - Word has spread of your deeds and everyone recognizes you.
           - "The GM chooses a complication: the local constabulary has a warrant out for your arrest, someone has put a price on your head or someone important to you has been put in a bad spot as a result of your actions."
   Bolster:
+    type: special
     text: >
       When you spend your leisure time in study, meditation, or hard practice, you gain preparation.
       * If you prepare for a week or more, take 1 preparation.
@@ -866,11 +885,11 @@ playbooks:
     damage: d8
     max hp: Constitution+8
     alignment options:
-      - alignemnt: good
+      - name: good
         goal: Slay a menace to the innocent.
-      - alignemnt: lawful
+      - name: lawful
         goal: Duel a worthy opponent.
-      - alignemnt: evil
+      - name: evil
         goal: Pick a fight with somebody weaker than you.
     bond options:
       - <char> broke up a fight I was involved in. I was probably going to lose, but they don’t need to know that part.
@@ -880,14 +899,166 @@ playbooks:
     race options:
       - name: Elf
         move:
+          type: race
           text: You descend from an ancient martial tradition. Gain +1 to spout lore on anything related to warfare.
           trigger: constant
           effect: take +1 ongoing to spout lore on anything related to warfare.
       - name: Human
         move:
+          type: race
           text: Your fighting style is showy and impressive. Gain +1 forward to parley with anyone who has seen you fight.
           trigger: constant
           effect: take +1 ongoing to parley with anyone who has seen you fight.
+    starting moves:
+      Arcane Bladework:
+        type: starting
+        text: >
+          When you attempt to incorporate magic into a melee attack, roll+int.
+            * On a 10+, deal your damage and apply 1 technique.
+            * On a 7-9, deal your damage and apply 1 technique, and your opponent attacks you.
+        trigger: When you attempt to incorporate magic into a melee attack
+        effect:
+          roll roll+int:
+            success: [apply technic before, deal damage]
+            partial success: [apply technic after, deal damage, take damage]
+      Throw Down The Gauntlet:
+        type: starting
+        text: >
+          When you challenge someone to a duel, roll+cha.
+            * On a 10+, they choose 2 if they do not accept.
+            * On a 7-9, they choose 1 if they do not accept.
+              * You take +1 ongoing against them until they defeat you
+              * They lose the respect of their peers and underlings
+              * They retreat
+        trigger: When you challenge someone to a duel
+        effect:
+          roll roll+cha:
+            success:
+              choose Do they accept?:
+                yes: no effect
+                no: choose 2
+            partial success:
+              choose Do they accept?:
+                yes: no effect
+                no: choose 1
+            options:
+              You take +1 ongoing against them until they defeat you: take +1 ongoing against them until they defeat you
+              They lose the respect of their peers and underlings: They lose the respect of their peers and underlings
+              They retreat: They retreat
+      The Riddle of Steel:
+        type: starting
+        text: >
+          When you cross swords with a humanoid opponent, gain +1 forward to discern realities about them. In addition, you may add the following to the list of questions you can ask:
+              * What is this person about to do?
+              * What emotion drives this person?
+              * What is this person trying to hide?
+        trigger: When you cross swords with a humanoid opponent
+        effect:
+          - take +1 forward to discern realities against them.
+          - take +[What is this person about to do?, What emotion drives this person?, What is this person trying to hide?] forward to discern realities options against them
+      Student of the Blade:
+        type: starting
+        text: Begin play with 4 techniques.
+        trigger: constnat
+    mechanisms:
+      techniques:
+        types:
+          technique:
+            name: string
+            text: string
+            before: effect
+            after: effect
+        effects:
+          apply technique before:
+            - set technique = choose from aquired techniques
+            - execute technique.before
+          apply technique after:
+            - execute technique.after
+            - set technique = null
+        global fields:
+          all techniques:
+            - name: Flowing
+              text: If your attack kills a target, you may immediately attack a new target as if you had gotten a 7-9 on the move you initially used.
+              before: no effect
+              after:
+                choose did your attack killed the target?:
+                  no: no effect
+                  yes:
+                    choose do you want to immediately attack a new target as if you had gotten a 7-9 on the move you initially used?:
+                      no: no effect
+                      yes: [deal damage, take damage]
+            - name: Freezing
+              text: Your attack freezes and shatters a portion of your opponent’s armor. After you deal your damage, reduce their armor by 1 until they repair it.
+              before: no effect
+              after: no effect
+            - name: Galvanic
+              text: Electricity courses through your blade, numbing one of your target’s limbs.
+              before: no effect
+              after: no effect
+            - name: Void-Edged
+              text: The edge of your weapon hums with an unearthly light. You may slice through inanimate objects with ease and add the ‘messy’ tag to your attack.
+              before: no effect
+              after: no effect
+            - name: Mirage
+              text: You create illusions of yourself that strike additional enemies near your target. Illusions deal your damage but do not apply any techniques.
+              before: no effect
+              after: deal damage
+            - name: Tethering
+              text: Your attack pins your target’s shadow to the ground, preventing them from moving more than a few feet from their current location.
+              before: no effect
+              after: no effect
+            - name: Elaborate
+              text: >
+                When you apply this technique, roll+dex.
+                  * On a 10+, deal an additional 1d8 damage.
+                  * On a 7-9, this technique has no effect, but it looks really cool!
+                  * On a miss, your showboating costs you in some substantial way – the GM will tell you how.
+              before:
+                roll roll+dex:
+                  success: take +1d8 forward to damage
+                  partial success: this technique has no effect, but it looks really cool!
+                  miss: your showboating costs you in some substantial way – the GM will tell you how.
+              after: no effect
+            - name: Earthshaker
+              text: Your attack concludes with an eruption of stone and earth from the ground, launching your target into the air.
+              before: no effect
+              after: no effect
+            - name: Burning
+              text: Your attack deals an extra 1d4 damage and lights anything flammable.
+              before: take +1d4 forward to damage
+              after: anything flammable is lit up
+            - name: Soul-Siphoning
+              text: Your attack heals you for 1d4. Heal 1d8 instead if this attack kills your target.
+              before: no effect
+              after:
+                choose did the attack kill the target:
+                  yes: heal 1d8
+                  no: heal 1d4
+            - name: Torrential
+              text: Your attack ends with a flurry of strikes that your opponent must dedicate effort to blocking or avoiding. If they instead attack you in response to your attack, deal your damage again (this does not apply techniques).
+              before: no effect
+              after:
+                choose did your opponent attack you?:
+                  yes: deal damage
+                  no: no effect
+            - name: Burst
+              text: Your attack deals an additional 1d4 damage and gains the ‘forceful’ tag.
+              before: take +1d4 forward to damage
+              after: no effect
+            - name: Quicksilver
+              text: Your blade cuts faster than the eye can see, preventing your opponent from mounting a proper defense. Gain 2 piercing on your attack.
+              before: take +2 forward to piercing
+              after: no effect
+            - name: Warding
+              text: Your attack creates a ring of light around you and your target that other creatures (and their projectiles) cannot cross.
+              before: no effect
+              after: no effect
+            - name: Dust Devil
+              text: Your attack kicks up a small tornado of dust and grit at your target’s feet, obscuring visibility.
+              before: no effect
+              after: no effect
+        character fields:
+          aquired techniques: choose 4 from all techinques
   barbarian:
     in a sentence: A warrior from outside society in some infinite search
     introduction: >
