@@ -13,7 +13,7 @@ export default class Characters extends React.Component {
   }
 
   async componentDidMount () {
-    const characters = getAll()
+    const characters = await getAll()
     this.setState({ characters })
   }
 
@@ -32,7 +32,7 @@ export default class Characters extends React.Component {
         <svg width="100%" height="100%">
           <line x1="10%" y1="50%" x2="90%" y2="50%" stroke="rgba(22,23,67,1)" strokeWidth="5px"></line>
           <line x1="50%" y1="10%" x2="50%" y2="90%" stroke="rgba(22,23,67,1)" strokeWidth="5px"></line>
-          </svg>
+        </svg>
       </Link>
     </div>
   }

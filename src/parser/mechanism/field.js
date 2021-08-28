@@ -1,53 +1,49 @@
-import { getFlag } from '../parsing-utils'
+import { Flag } from '../parsing-utils'
+import MechanismFieldParser from './mechanism_field_parser'
 
 import Field from '../../models/rules/mechanism/field'
 
-export default class FieldParser {
-  constructor(context) {
-    this.context = context
-    this.fields = Object.values(Field.SCOPE).reduce((allScopes, scope) => ({ ...allScopes, [scope]: [] }), { })
-  }
-
-  allFields () {
-    return Object.values(this.fields).reduce((scopeFields, allFields) => allFields.concat(scopeFields), [])
-  }
-
-  parseGlobalFieldDefinition (name, value) {
+export class GlobalFieldParser extends MechanismFieldParser {
+  parseDefinition (name, value) {
     if (value === 'large') {
       value = this.context.rawRules[name]
     }
 
     const field = new Field.GlobalField(name, value)
-    this.fields.global.push(field)
-    return field
-  }
-
-  parsePlaybookFieldDefinition (name, value) {
-    const field = new Field.PlaybookField(name, this.context.typeParser.parseUsage(value))
-    this.fields.playbook.push(field)
-    return field
-  }
-
-  parseCharacterFieldDefinition (name, value, playbook) {
-    const [useChoice, valueChoice] = getFlag(value, CHOICE_PREFIX)
-    let field
-
-    if (useChoice) {
-      const choice = this.context.choiceParser.parseDefinition(name, valueChoice, playbook)
-      choice.name = choice.name || name
-
-      field = new Field.ChoiceField(name, playbook, choice)
-    } else {
-      const [auto, formula] = getFlag(value, AUTO_PREFIX)
-
-      field = auto ? new Field.FormulaField(name, playbook, formula) : new Field.ValueField(name, playbook, formula)
-    }
-
-    this.fields.character.push(field)
-    return field
+    return this.save(field)
   }
 }
 
-const OPTIONAL_PREFIX = 'optional'
-const CHOICE_PREFIX = 'choose'
-const AUTO_PREFIX = 'auto'
+export class PlaybookFieldParser extends MechanismFieldParser {
+  parseDefinition (name, value) {
+    const field = new Field.PlaybookField(name, this.context.typeParser.parseUsage(value))
+    return this.save(field)
+  }
+}
+
+export class CharacterFieldParser extends MechanismFieldParser {
+  parseDefinition (name, value) {
+    const field = CHOICE_FLAG.execute(value, {
+      onTrue: choiceValue => this.parseChoiceField(name, choiceValue),
+      onFalse: () => this.parseValueField(name, value)
+    })
+
+    return this.save(field)
+  }
+
+  parseChoiceField (name, choiceValue) {
+    const choice = this.context.choiceParser.parseUsage(name, choiceValue)
+    choice.name = choice.name || name
+    return new Field.ChoiceField(name, choice)
+  }
+
+  parseValueField (name, value) {
+    return AUTO_FLAG.execute(value, {
+      onTrue: formula => new Field.FormulaField(name, formula),
+      onFalse: () => new Field.ValueField(name, value)
+    })
+  }
+}
+
+const CHOICE_FLAG = new Flag.Prefix('choose')
+const AUTO_FLAG = new Flag.Prefix('auto')

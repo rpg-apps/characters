@@ -1,14 +1,13 @@
+import MechanismFieldParser from './mechanism_field_parser'
 import Effect from '../../models/rules/mechanism/effect'
 
-export default class EffectParser {
+export default class EffectParser extends MechanismFieldParser {
   constructor(context) {
-    this.context = context
-    this.effects = [].concat(Effect.PRESETS)
+    super(context, Effect.PRESETS, { saveBefore: true })
   }
 
   parseDefinition (pattern, definition) {
     const effect = new Effect.ComplexEffect(pattern, definition)
-    this.effects.unshift(effect)
-    return effect
+    return this.save(effect)
   }
 }

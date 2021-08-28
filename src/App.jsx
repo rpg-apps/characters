@@ -1,5 +1,5 @@
 import './App.css'
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Characters from './components/pages/characters'
 import Character from './components/pages/character'

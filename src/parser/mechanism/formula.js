@@ -1,14 +1,13 @@
+import MechanismFieldParser from './mechanism_field_parser'
 import Formula from '../../models/rules/mechanism/formula'
 
-export default class FormulaParser {
+export default class FormulaParser extends MechanismFieldParser {
   constructor(context) {
-    this.context = context
-    this.formulas = [].concat(Formula.PRESETS)
+    super(context, Formula.PRESETS, { saveBefore: true })
   }
 
   parseDefinition (pattern, definition, type) {
     const formula = new Formula.ComplexFormula(pattern, definition)
-    this.formulas.unshift(formula)
-    return formula
+    return this.save(formula)
   }
 }

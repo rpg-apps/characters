@@ -1,6 +1,6 @@
-import Valuble from './base/valuble'
+import Valuable from './base/valuable'
 
-export default class Field extends Valuble {
+export default class Field extends Valuable {
   constructor (name, scope) {
     super()
     Object.assign(this, { name, scope })
@@ -40,26 +40,25 @@ Field.PlaybookField = class PlaybookField extends Field {
 }
 
 Field.CharacterField = class CharacterField extends Field {
-  constructor (name, playbook='all') {
+  constructor (name) {
     super(name, Field.SCOPE.CHARACTER)
-    this.playbook = playbook
   }
 }
 
 Field.ChoiceField = class ChoiceField extends Field.CharacterField {
-  constructor (name, playbook, choice) {
-    super(name, playbook)
-    this.choice = choice
+  constructor (name, choiceUsage) {
+    super(name)
+    this.choiceUsage = choiceUsage
   }
 
   async getValue (character) {
-    return this.choices.getValue(character)
+    return this.choiceUsage.getValue(character)
   }
 }
 
 Field.FormulaField = class FormulaField extends Field.CharacterField {
-  constructor (name, playbook, calculationFormula) {
-    super(name, playbook)
+  constructor (name, calculationFormula) {
+    super(name)
     this.calculationFormula = calculationFormula
   }
 
@@ -69,8 +68,8 @@ Field.FormulaField = class FormulaField extends Field.CharacterField {
 }
 
 Field.ValueField = class ValueField extends Field.CharacterField {
-  constructor (name, playbook, initializationFormula) {
-    super(name, playbook)
+  constructor (name, initializationFormula) {
+    super(name)
     this.initializationFormula = initializationFormula
   }
 

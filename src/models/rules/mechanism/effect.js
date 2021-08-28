@@ -1,4 +1,4 @@
-import Valuble from './base/valuble'
+import Valuable from './base/valuable'
 import Pattern from './base/pattern'
 
 export default class Effect {

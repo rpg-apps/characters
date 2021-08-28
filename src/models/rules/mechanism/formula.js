@@ -1,7 +1,7 @@
-import Valuble from './base/valuble'
+import Valuable from './base/valuable'
 import Pattern from './base/pattern'
 
-export default class Formula extends Valuble {
+export default class Formula extends Valuable {
   constructor (pattern, type = undefined) {
     super()
     this.pattern = new Pattern(pattern)
@@ -20,7 +20,7 @@ export default class Formula extends Valuble {
 Formula.PresetFormula = class PresetFormula extends Formula {
   constructor (pattern, type, getValue) {
     super(pattern, type)
-    this.getValue = async (character, getValubleValue, params) => await getValue(params)
+    this.getValue = async (character, getValuableValue, params) => await getValue(params)
   }
 }
 
@@ -30,7 +30,7 @@ Formula.ComplexFormula = class ComplexFormula extends Formula {
     this.formulaCall = formulaCall
   }
 
-  async getValue (character, getValubleValue, params) {
+  async getValue (character, getValuableValue, params) {
     return 
   }
 }

@@ -1,7 +1,7 @@
 export default class Calculator {
   constructor (playbook) {
     this.playbook = playbook
-    this.valubles = []
+    this.valuables = []
       .concat(this.playbook.rules.choices)
       .concat(this.playbook.rules.characterFields)
       .concat(this.playbook.rules.playbookFields)
@@ -11,10 +11,10 @@ export default class Calculator {
   }
 
   async calc (raw, character, type = undefined) {
-    const valuble = this.valubles.find(valuble => valuble.match(raw))
+    const valuable = this.valuables.find(valuable => valuable.match(raw))
 
-    if (valuble)
-      return await valuble.getValue(character, (rawValue, type) => this.calc(rawValue, this, type))
+    if (valuable)
+      return await valuable.getValue(character, (rawValue, type) => this.calc(rawValue, this, type))
 
     return this.playbook.types.find(t => t.name === type)?.parseValue(raw) || raw
   }

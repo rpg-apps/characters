@@ -1,20 +1,13 @@
-import Valuble from './base/valuble'
+import Valuable from './base/valuable'
 
-export default class Choice extends Valuble {
-  constructor (playbook = 'all') {
-    super()
-    this.playbook = playbook
+export default class Choice extends Valuable {
+  constructor (name, type, playbook = 'all') {
+    super(playbook)
+    Object.assign(this, { name, type, playbook })
   }
 
   match (raw) {
-    return raw === this.toString()
-  }
-}
-
-Choice.BasicChoice = class BasicChoice extends Choice {
-  constructor (name, type, playbook, free = false) {
-    super(playbook)
-    Object.assign(this, { name, type, free })
+    return raw === this.name
   }
 
   async getValue (character) {
@@ -22,10 +15,14 @@ Choice.BasicChoice = class BasicChoice extends Choice {
   }
 }
 
-Choice.ProxyChoice = class ProxyChoice extends Choice {
-  constructor (originalChoice, field = 'root') {
-    super(originalChoice.playbook)
-    Object.assign(this, { originalChoice, field })
+Choice.Usage = class ChoiceUsage extends Valuable {
+  constructor (choice, field = 'root') {
+    super()
+    Object.assign(this, { choice, field })
+  }
+
+  match (raw) {
+    return this.choice.match(raw)
   }
 
   async getValue (character) {

@@ -31,14 +31,14 @@ mechanisms:
     global fields:
       initial stats: [8, 9, 12, 13, 15 ,16]
     choices:
-      stat: unique from initial stats
+      stat: from initial stats assign {strength,dexterity,constitution,intelligence,wisdom,charisma}
     character fields:
-      strength: choose stat
-      dexterity: choose stat
-      constitution: choose stat
-      intelligence: choose stat
-      wisdom: choose stat
-      charisma: choose stat
+      strength: choose stat and take strength
+      dexterity: choose stat and take dexterity
+      constitution: choose stat and take constitution
+      intelligence: choose stat and take intelligence
+      wisdom: choose stat and take wisdom
+      charisma: choose stat and take charisma
       str: auto modifier for strength
       dex: auto modifier for dexterity
       con: auto modifier for constitution
@@ -105,12 +105,10 @@ mechanisms:
     playbook fields:
       race options: race array
     choices:
-      race:
-        choose: from race options
-        on choice: add race move to moves
+      race: from race options
     character fields:
       race: choose race and take name
-      race move: choose race and take move
+      race move: choose race and take move and after add race move to moves
   damage:
     playbook fields:
       base damage: formula
@@ -141,8 +139,8 @@ mechanisms:
     choices:
       alignment: from alignment options
     character fields:
-      alignment: choose alignment and use name
-      alignment goal: choose alignment and use goal
+      alignment: choose alignment and take name
+      alignment goal: choose alignment and take goal
   equipment:
     types:
       tag:

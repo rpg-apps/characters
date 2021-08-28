@@ -4,6 +4,10 @@
     box-sizing: border-box;
   }
 
+  .index.playbook {
+    background: white;
+  }
+
   .playbook {
     box-sizing: border-box;
     height: calc(100vh - 2rem);
@@ -23,22 +27,15 @@
       text-align: justify;
     }
 
-    .actions {
-      display: flex;
-      justify-content: space-around;
-
-      .button {
-        background: black;
-        border-radius: 0.5rem;
-        padding: 0.5em 1em;
-        font-size: 1.5rem;
-      }
-    }
-
     .about.text {
       font-size: 0.9rem;
+      margin: -1rem;
+      padding: 1rem;
+      box-sizing: border-box;
       vertical-align: bottom;
       text-align: justify;
+      transition-property: opacity, background, height;
+      transition-duration: 1s;
 
       > :not(:last-child) {
         margin-bottom: 0.2rem;
@@ -46,19 +43,15 @@
     }
 
     &.hidden-about .about.text {
-      display: none;
+      height: 3.3rem;
+      overflow: hidden;
+      opacity: 0.5;
     }
 
     &.showing-about .about.text {
-      position: absolute;
+      height: 50%;
       background: rgba(0,0,0,0.8);
-      width: calc(100% - 2rem);
-      height: calc(100% - 11rem);
-      top: 6rem;
-      left: 1rem;
-      border-radius: 1rem;
-      padding: 1rem;
-      box-sizing: border-box;
+      overflow: scroll;
     }
   }
 

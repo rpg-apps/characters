@@ -1,5 +1,5 @@
 import TypeParser from './type'
-import FieldParser from './field'
+import { GlobalFieldParser, PlaybookFieldParser, CharacterFieldParser } from './field'
 import ChoiceParser from './choice'
 import FormulaParser from './formula'
 import EffectParser from './effect'
@@ -18,13 +18,13 @@ export default class MechanismParser {
     parseFields(rawMechanism, this._parsers(), this)
     return new Mechanism({
       name,
-      types: this.typeParser.types,
-      formulas: this.formulaParser.formulas,
-      effects: this.effectParser.effects,
-      choices: this.choiceParser.choices,
-      globalFields: this.fieldParser.fields.global,
-      playbookFields: this.fieldParser.fields.playbook,
-      characterFields: this.fieldParser.fields.character
+      types: this.typeParser.data,
+      formulas: this.formulaParser.data,
+      effects: this.effectParser.data,
+      choices: this.choiceParser.data,
+      globalFields: this.globalFieldParser.data,
+      playbookFields: this.playbookFieldParser.data,
+      characterFields: this.characterFieldParser.data
     })
   }
 
@@ -33,7 +33,9 @@ export default class MechanismParser {
     this.formulaParser = new FormulaParser(this)
     this.effectParser = new EffectParser(this)
     this.choiceParser = new ChoiceParser(this)
-    this.fieldParser = new FieldParser(this)
+    this.globalFieldParser = new GlobalFieldParser(this)
+    this.playbookFieldParser = new PlaybookFieldParser(this)
+    this.characterFieldParser = new CharacterFieldParser(this)
   }
 
   _parsers () {
@@ -42,9 +44,9 @@ export default class MechanismParser {
       formulas: this._collectionObjectParser('formula'),
       effects: this._collectionObjectParser('effect'),
       choices: this._collectionObjectParser('choice'),
-      globalFields: this._collectionObjectParser('field', 'parseGlobalFieldDefinition'),
-      playbookFields: this._collectionObjectParser('field', 'parsePlaybookFieldDefinition'),
-      characterFields: this._collectionObjectParser('field', 'parseCharacterFieldDefinition'),
+      globalFields: this._collectionObjectParser('globalField'),
+      playbookFields: this._collectionObjectParser('playbookField'),
+      characterFields: this._collectionObjectParser('characterField'),
     }
   }
   _collectionObjectParser (name, method = 'parseDefinition') {
