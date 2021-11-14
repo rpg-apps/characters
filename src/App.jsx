@@ -1,22 +1,23 @@
 import './App.css'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import Characters from './components/pages/characters'
+import Login from './components/pages/login'
+import Home from './components/pages/home'
+import New from './components/pages/new'
 import Character from './components/pages/character'
-import CharacterCreation from './components/pages/character-creation'
-import Gear from './components/pages/gear'
-import Moves from './components/pages/moves'
-import Bonds from './components/pages/bonds'
+
+import { loggedIn } from './logic/login'
 
 function App() {
+  if (!loggedIn()) {
+    return <Login />
+  }
+
   return <Router>
     <Switch>
-      <Route path='/character/:name/gear' component={Gear}/>
-      <Route path='/character/:name/moves' component={Moves}/>
-      <Route path='/character/:name/bonds' component={Bonds}/>
       <Route path='/character/:name' component={Character}/>
-      <Route path='/new' component={CharacterCreation}/>
-      <Route path='/' component={Characters}/>
+      <Route path='/new' component={New}/>
+      <Route path='/' component={Index}/>
     </Switch>
   </Router>
 }
