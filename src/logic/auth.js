@@ -16,5 +16,5 @@ export default {
   login: User.login,
   logout: User.logout,
   loggedIn: () => true, //Boolean(User.user),
-  currentUser: () => User.user
+  getCurrentUser: () => User.user
 }

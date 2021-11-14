@@ -6,10 +6,10 @@ import Home from './components/pages/home'
 import New from './components/pages/new'
 import Character from './components/pages/character'
 
-import { loggedIn } from './logic/login'
+import auth from './logic/auth'
 
 function App() {
-  if (!loggedIn()) {
+  if (!auth.loggedIn()) {
     return <Login />
   }
 
@@ -17,7 +17,7 @@ function App() {
     <Switch>
       <Route path='/character/:name' component={Character}/>
       <Route path='/new' component={New}/>
-      <Route path='/' component={Index}/>
+      <Route path='/' component={Home}/>
     </Switch>
   </Router>
 }

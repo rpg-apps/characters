@@ -1,7 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
 #root > * {
-    width: 100vw;
-    height: 100vh;
-    background: black;
+  width: 100vw;
+  height: 100vh;
+  background: #151515;
+}
+
+.loading.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  text-decoration: none;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  color: black;
+  margin: 1rem;
+}
+
+.button svg {
+  margin-right: 0.5rem;
 }
