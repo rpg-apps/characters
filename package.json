@@ -5,34 +5,40 @@
   "repository": "https://github.com/idanstark42/dw-characters",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.14.5",
     "change-case": "^4.1.2",
+    "customize-cra": "^1.0.0",
+    "deepmerge": "^4.2.2",
     "gh-pages": "^3.1.0",
+    "is-mobile": "^3.0.0",
+    "is-plain-object": "^5.0.0",
+    "pluralize": "^8.0.0",
     "react": "^17.0.2",
+    "react-app-polyfill": "^2.0.0",
+    "react-app-rewire-yaml": "^1.1.0",
+    "react-app-rewired": "^2.1.8",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-swipeable": "^6.2.0",
+    "react-swipeable-views": "^0.13.9",
     "sass": "^1.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
       "react-app"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "browserslist": [
+    "last 1 chrome version",
+    "last 1 firefox version",
+    "last 1 safari version"
+  ],
+  "devDependencies": {}
 }

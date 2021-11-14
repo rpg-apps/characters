@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
 
-body {
-    font-family: 'MedievalSharp', cursive;
-    font-weight: bold;
+#root > * {
+    width: 100vw;
+    height: 100vh;
+    background: black;
 }
