@@ -1,0 +1,25 @@
+.home.page {
+  display: flex;
+  flex-direction: column;
+
+  .characters {
+    height: calc(100vh - 5rem);
+
+    .character {
+      margin: 1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      color: black;
+      background: white;
+    }
+  }
+
+  .footer {
+    height: 5rem;
+
+    .button {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

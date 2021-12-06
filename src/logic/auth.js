@@ -12,9 +12,11 @@ class User {
   }
 }
 
-export default {
+const auth = {
   login: User.login,
   logout: User.logout,
   loggedIn: () => true, //Boolean(User.user),
   getCurrentUser: () => User.user
 }
+
+export default auth

@@ -1,0 +1,63 @@
+.home.page .character.dungeon-world-core {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    top: 0.5rem;
+    right: 0.5rem;
+    border-radius: 0.5rem;
+    background-image: url('../../images/games/dungeon-world/symbol.jpg');
+    background-size: contain;
+  }
+
+  display: grid;
+  grid-template-columns: 0fr 0fr 1fr;
+  grid-column-gap: 0.2rem;
+  grid-template-areas:
+    "name name name"
+    "level race class";
+
+
+  > .field[name='name'] {
+    grid-area: name;
+    font: 1.4rem MedievalSharp;
+    line-height: 1rem;
+    &::after { content: attr(value); }
+  }
+
+  > .field[name='xp'] {
+    display: none;
+  }
+
+  > .field[name='level'] {
+    grid-area: level;
+    min-width: max-content;
+    font: italic 1rem MedievalSharp;
+    &::before { content: 'lvl. '; }
+    &::after { content: attr(value); }
+  }
+
+  > .field[name='race'] > .field[name='name'] {
+    grid-area: race;
+    font: italic 1rem MedievalSharp;
+    &::after { content: attr(value); }
+  }
+
+  > .field[name='playbook'] > .field[name='name'] {
+    grid-area: class;
+    font: italic 1rem MedievalSharp;
+    &::after { content: attr(value); }
+  }
+
+  &.thief {
+    background-image: url('../../images/classes-icons/thief.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: #3f2167;
+    color: white;
+  }
+}
