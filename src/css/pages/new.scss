@@ -1,0 +1,22 @@
+.new.page {
+  display: flex;
+  justify-content: center;
+
+  > .pre-choice {
+    width: 100vw;
+    height: 100vh;
+
+    > .title {
+      color: white;
+      text-align: center;
+      font: bold 2rem MedievalSharp;
+      line-height: 3rem;
+    }
+
+    &.choose.game .field {
+      height: 8.8rem;
+      margin: 1rem;
+      border-radius: 0.5rem;
+    }
+  }
+}

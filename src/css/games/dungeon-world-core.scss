@@ -61,3 +61,9 @@
     color: white;
   }
 }
+
+.new.page .choose.game .field[value*='dungeon-world'] {
+  background: url('../../images/games/dungeon-world/banner.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}

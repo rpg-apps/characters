@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
 
+import '../../css/pages/new.scss'
+
 import Field from '../presentation/field'
 import { supportedRulebooks, getRules } from '../../logic/rules'
 
 export default function New () {
-  <WithChoice options={supportedRulebooks()} after={getRules}>{rules =>
-    <WithChoice options={rules.characters.builder.playbooks} after={name => rules.characters.builder.start(name)}>{() => {
-      const ChoiceComponent = Choices[rules.characters.builder.choice.constructor.name]
-      return <ChoiceComponent builder={rules.characters.builder} />
-    }}</WithChoice>
-  }</WithChoice>
+  return <div className='new page'>
+    <WithChoice title='choose game' options={supportedRulebooks()} after={async rule => await getRules([rule])}>{rules => {
+      console.log(rules)
+      return <WithChoice options={rules.characters.builder.playbooks} after={name => rules.characters.builder.start(name)}>{() => {
+        const ChoiceComponent = Choices[rules.characters.builder.choice.constructor.name]
+        return <ChoiceComponent builder={rules.characters.builder} />
+      }}</WithChoice>
+    }
+    }</WithChoice>
+  </div>
 }
 
-function WithChoice ({ options, children, after }) {
+function WithChoice ({ title, options, children, after }) {
   const [value, setValue] = useState()
 
   const set = async option => {
@@ -21,8 +27,12 @@ function WithChoice ({ options, children, after }) {
   }
 
   if (!value) {
-    return <div className='pre-choice'>
-      {options.map(option => <Field className={value === option ? 'selected' : ''} {...option} onClick={async () => await set(option)}/>)}
+    if (options.length === 1) {
+      set(options[0])
+    }
+    return <div className={`pre-choice ${title}`}>
+      <div className='title'>{title}</div>
+      {options.map(option => <Field key={option} className={value === option ? 'selected' : ''} value={option} onClick={async () => await set(option)}/>)}
     </div>
   }
 
