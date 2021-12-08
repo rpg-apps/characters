@@ -9,10 +9,12 @@ export default function New () {
   return <div className='new page'>
     <WithChoice title='choose game' options={supportedRulebooks()} after={async rule => await getRules([rule])}>{rules => {
       console.log(rules)
-      return <WithChoice options={rules.characters.builder.playbooks} after={name => rules.characters.builder.start(name)}>{() => {
-        const ChoiceComponent = Choices[rules.characters.builder.choice.constructor.name]
-        return <ChoiceComponent builder={rules.characters.builder} />
-      }}</WithChoice>
+      return <div className={`rules ${rules.rulebooks.join(' ')}`}>
+        <WithChoice title='playbook' options={rules.characters.builder.playbookOptions()} after={name => rules.characters.builder.start(name)}>{() => {
+          const ChoiceComponent = Choices[rules.characters.builder.choice.constructor.name]
+          return <ChoiceComponent builder={rules.characters.builder} />
+        }}</WithChoice>
+      </div>
     }
     }</WithChoice>
   </div>
@@ -32,7 +34,9 @@ function WithChoice ({ title, options, children, after }) {
     }
     return <div className={`pre-choice ${title}`}>
       <div className='title'>{title}</div>
-      {options.map(option => <Field key={option} className={value === option ? 'selected' : ''} value={option} onClick={async () => await set(option)}/>)}
+      <div className='options'>
+        {options.map(option => <Field key={option} className={value === option ? 'selected' : ''} value={option} onClick={async () => await set(option)}/>)}
+      </div>
     </div>
   }
 

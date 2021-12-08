@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
 
-  > .pre-choice {
+  .pre-choice {
     width: 100vw;
     height: 100vh;
 
@@ -11,6 +11,12 @@
       text-align: center;
       font: bold 2rem MedievalSharp;
       line-height: 3rem;
+      height: 3rem;
+    }
+
+    > .options {
+      height: calc(100% - 3rem);
+      overflow-y: scroll;
     }
 
     &.choose.game .field {

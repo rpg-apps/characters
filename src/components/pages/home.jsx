@@ -15,7 +15,7 @@ export default function Home (props) {
     <With className='home page' load={async () => await getUserCharacters(user) }>
       {characters =>
         [<div className='characters'>
-          {characters.map((character, index) => <Link key={index} to={`/character/${character.fields.name}`}>
+          {characters.map(character => <Link key={character.fields.name} to={`/character/${character.fields.name}`}>
             <Character character={character}/>
           </Link>)}
         </div>,

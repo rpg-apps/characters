@@ -67,3 +67,16 @@
   background-size: contain;
   background-repeat: no-repeat;
 }
+
+.new.page .dungeon-world.core .playbook .field {
+  height: 5rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  background: white;
+
+  &::before {
+    content: attr(value);
+    margin: 1rem;
+    font: bold 1.5rem MedievalSharp;
+  }
+}
