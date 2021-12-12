@@ -82,3 +82,99 @@
     font: bold 1.5rem MedievalSharp;
   }
 }
+
+.character.page > .character {
+  width: 100vw;
+  height: 100vh;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 6rem;
+  grid-template-rows: 2.5rem repeat(6, 1fr) 2.5rem;
+  grid-template-areas:
+    "name name name xp"
+    "info info info strength"
+    "info info info dexterity"
+    "info info info constitution"
+    "info info info intelligence"
+    "info info info wisdom"
+    "moves moves moves charisma"
+    "equipment equipment equipment settings";
+
+  > .field {
+    position: relative;
+  }
+
+  // -------------------- header --------------------
+
+  > .field[name='name'] {
+    grid-area: name;
+    font: 1.4rem MedievalSharp;
+    line-height: 1rem;
+    color: white;
+    &::after { content: attr(value); }
+  }
+
+  > .field[name='xp'], > .field[name='level'] { grid-area: xp }
+
+  .field[name='xp'] {
+
+  }
+
+  // -------------------- stats --------------------
+
+  > .field[name='strength'],      > .field[name='str'] { grid-area: strength; }
+  > .field[name='dexterity'],     > .field[name='dex'] { grid-area: dexterity; }
+  > .field[name='constitution'],  > .field[name='con'] { grid-area: constitution; }
+  > .field[name='intelligence'],  > .field[name='int'] { grid-area: intelligence; }
+  > .field[name='wisdom'],        > .field[name='wis'] { grid-area: wisdom; }
+  > .field[name='charisma'],      > .field[name='cha'] { grid-area: charisma; }
+
+  > .field[name='strength'],
+  > .field[name='dexterity'],
+  > .field[name='constitution'],
+  > .field[name='intelligence'],
+  > .field[name='wisdom'],
+  > .field[name='charisma'] {
+    color: white;
+    margin: 0.2rem 0 0.5rem 0.2rem;
+    border-radius: 0.5rem 0 0 0.5rem;
+
+    &::before {
+      position: absolute;
+      top: 0.2rem;
+      right: 0.2rem;
+      content: attr(value);
+    }
+    &::after {
+      position: absolute;
+      bottom: 0.2rem;
+      right: 0;
+      text-align: center;
+      width: 100%;
+      content: attr(name);
+    }
+  }
+
+  > .field[name='str'],
+  > .field[name='dex'],
+  > .field[name='con'],
+  > .field[name='int'],
+  > .field[name='wis'],
+  > .field[name='cha'] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font: 2.4rem MedievalSharp;
+
+    &::after { content: attr(value); }
+  }
+
+  > .field[name='strength']     { background: #630000; }
+  > .field[name='dexterity']    { background: darkblue; }
+  > .field[name='constitution'] { background: darkgreen; }
+  > .field[name='intelligence'] { background: darkorange; }
+  > .field[name='wisdom']       { background: purple; }
+  > .field[name='charisma']     { background: deeppink }
+
+}

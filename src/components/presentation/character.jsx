@@ -12,9 +12,9 @@ export function Character ({ character }) {
 
 function renderField ([key, value]) {
   if (typeof value === 'object') {
-    return <Field name={key} className='complex'>
+    return <Field key={key} name={key} className='complex'>
       {Object.entries(value).map(renderField)}
     </Field>
   }
-  return <Field name={key} value={value} />
+  return <Field key={key} name={key} value={value} />
 }

@@ -14,12 +14,12 @@ export default function Home (props) {
   return <AuthContext.Consumer>{user =>
     <With className='home page' load={async () => await getUserCharacters(user) }>
       {characters =>
-        [<div className='characters'>
+        [<div key='characters' className='characters'>
           {characters.map(character => <Link key={character.fields.name} to={`/character/${character.fields.name}`}>
             <Character character={character}/>
           </Link>)}
         </div>,
-        <div className='footer'>
+        <div key='footer' className='footer'>
           <Link key='new' to='/new' className='button'><FaPlus /> Create</Link>
         </div>]
       }
