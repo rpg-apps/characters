@@ -108,16 +108,52 @@
 
   > .field[name='name'] {
     grid-area: name;
-    font: 1.4rem MedievalSharp;
-    line-height: 1rem;
+    font: bold 1.4rem MedievalSharp;
+    margin-left: 1rem;
+    line-height: 2.5rem;
     color: white;
     &::after { content: attr(value); }
   }
 
   > .field[name='xp'], > .field[name='level'] { grid-area: xp }
 
-  .field[name='xp'] {
+  > .field[name='level'] {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-left: 0.5rem;
+    color: white;
+    font: bold 1.4rem MedievalSharp;
+    background: linear-gradient(to bottom, transparent 24%, black 25%, black 78%, transparent 0);
+    width: 90%;
+    border-radius: 0 0.5rem 0.5rem 0;
 
+    &::before {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      margin-left: -0.5rem;
+      border: 2px solid #9b029b;
+      background: #151515;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 2rem;
+      content: attr(value);
+    }
+  }
+
+  @for $lvl from 1 through 10 {
+    @for $xp from 1 through $lvl+7 {
+      > .field[name='xp'][value='#{$xp}'] ~ .field[name='level'][value='#{$lvl}']::after {
+        content: '';
+        margin-left: -0.5rem;
+        background: #9b029b;
+        border-radius: 0 0.5rem 0.5rem 0;
+        height: 50%;
+        width: ($xp) / ($lvl+7) * 100%;
+      }
+    }
   }
 
   // -------------------- stats --------------------
@@ -170,11 +206,11 @@
     &::after { content: attr(value); }
   }
 
-  > .field[name='strength']     { background: #630000; }
-  > .field[name='dexterity']    { background: darkblue; }
-  > .field[name='constitution'] { background: darkgreen; }
-  > .field[name='intelligence'] { background: darkorange; }
-  > .field[name='wisdom']       { background: purple; }
-  > .field[name='charisma']     { background: deeppink }
+  > .field[name='strength']     { background: #44110A; }
+  > .field[name='dexterity']    { background: #072818; }
+  > .field[name='constitution'] { background: #101E33; }
+  > .field[name='intelligence'] { background: #1A0E2D; }
+  > .field[name='wisdom']       { background: #453A02; }
+  > .field[name='charisma']     { background: #462206; }
 
 }
