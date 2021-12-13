@@ -23,18 +23,18 @@
     "level race class";
 
 
-  > .field[name='name'] {
+  > .field[name=name] {
     grid-area: name;
     font: 1.4rem MedievalSharp;
     line-height: 1rem;
     &::after { content: attr(value); }
   }
 
-  > .field[name='xp'] {
+  > .field[name=xp] {
     display: none;
   }
 
-  > .field[name='level'] {
+  > .field[name=level] {
     grid-area: level;
     min-width: max-content;
     font: italic 1rem MedievalSharp;
@@ -42,13 +42,13 @@
     &::after { content: attr(value); }
   }
 
-  > .field[name='race'] > .field[name='name'] {
+  > .field[name=race] {
     grid-area: race;
     font: italic 1rem MedievalSharp;
     &::after { content: attr(value); }
   }
 
-  > .field[name='playbook'] > .field[name='name'] {
+  > .field[name=playbook] > .field[name=name] {
     grid-area: class;
     font: italic 1rem MedievalSharp;
     &::after { content: attr(value); }
@@ -64,22 +64,24 @@
   }
 }
 
-.new.page .choose.game .field[value*='dungeon-world'] {
-  background: url('../../images/games/dungeon-world/banner.jpg');
-  background-size: contain;
-  background-repeat: no-repeat;
-}
+.new.page {
+  .choose.game .field[value*='dungeon-world'] {
+    background: url('../../images/games/dungeon-world/banner.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 
-.new.page .dungeon-world.core .playbook .field {
-  height: 5rem;
-  margin: 1rem;
-  border-radius: 0.5rem;
-  background: white;
-
-  &::before {
-    content: attr(value);
+ .dungeon-world.core .playbook .field {
+    height: 5rem;
     margin: 1rem;
-    font: bold 1.5rem MedievalSharp;
+    border-radius: 0.5rem;
+    background: white;
+
+    &::before {
+      content: attr(value);
+      margin: 1rem;
+      font: bold 1.5rem MedievalSharp;
+    }
   }
 }
 
@@ -89,15 +91,21 @@
 
   display: grid;
   grid-template-columns: repeat(3, 1fr) 6rem;
-  grid-template-rows: 2.5rem repeat(6, 1fr) 2.5rem;
+  grid-template-rows: 2.5rem repeat(12, 1fr) 2.5rem;
   grid-template-areas:
     "name name name xp"
     "info info info strength"
+    "info info info strength"
+    "info info info dexterity"
     "info info info dexterity"
     "info info info constitution"
+    "info info info constitution"
     "info info info intelligence"
-    "info info info wisdom"
-    "moves moves moves charisma"
+    "moves moves moves intelligence"
+    "moves moves moves wisdom"
+    "moves moves moves wisdom"
+    "equipment equipment equipment charisma"
+    "equipment equipment equipment charisma"
     "equipment equipment equipment settings";
 
   > .field {
@@ -106,7 +114,7 @@
 
   // -------------------- header --------------------
 
-  > .field[name='name'] {
+  > .field[name=name] {
     grid-area: name;
     font: bold 1.4rem MedievalSharp;
     margin-left: 1rem;
@@ -115,17 +123,26 @@
     &::after { content: attr(value); }
   }
 
-  > .field[name='xp'], > .field[name='level'] { grid-area: xp }
+  > .field[name=xp], > .field[name=level] { grid-area: xp }
 
-  > .field[name='level'] {
+  > .field[name=xp] {
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background: black;
+  }
+
+  $xp-color: #74005a;
+
+  > .field[name=level] {
     display: flex;
     justify-content: left;
     align-items: center;
     margin-left: 0.5rem;
+    margin-top: 0.5rem;
     color: white;
     font: bold 1.4rem Cinzel;
-    background: linear-gradient(to bottom, transparent 24%, black 25%, black 78%, transparent 0);
-    width: 90%;
     border-radius: 0 0.5rem 0.5rem 0;
 
     &::before {
@@ -133,8 +150,8 @@
       justify-content: center;
       align-items: center;
       z-index: 1;
-      margin-left: -0.5rem;
-      border: 2px solid #9b029b;
+      margin-left: -1rem;
+      border: 2px solid $xp-color;
       background: #151515;
       width: 2rem;
       height: 2rem;
@@ -145,10 +162,10 @@
 
   @for $lvl from 1 through 10 {
     @for $xp from 1 through $lvl+7 {
-      > .field[name='xp'][value='#{$xp}'] ~ .field[name='level'][value='#{$lvl}']::after {
+      > .field[name=xp][value='#{$xp}'] ~ .field[name=level][value='#{$lvl}']::after {
         content: '';
         margin-left: -0.5rem;
-        background: #9b029b;
+        background: $xp-color;
         border-radius: 0 0.5rem 0.5rem 0;
         height: 50%;
         width: ($xp) / ($lvl+7) * 100%;
@@ -158,22 +175,22 @@
 
   // -------------------- stats --------------------
 
-  > .field[name='strength'],      > .field[name='str'] { grid-area: strength; }
-  > .field[name='dexterity'],     > .field[name='dex'] { grid-area: dexterity; }
-  > .field[name='constitution'],  > .field[name='con'] { grid-area: constitution; }
-  > .field[name='intelligence'],  > .field[name='int'] { grid-area: intelligence; }
-  > .field[name='wisdom'],        > .field[name='wis'] { grid-area: wisdom; }
-  > .field[name='charisma'],      > .field[name='cha'] { grid-area: charisma; }
+  > .field[name=strength],      > .field[name=str], > .field[name=weak]     { grid-area: strength; }
+  > .field[name=dexterity],     > .field[name=dex], > .field[name=shakey]   { grid-area: dexterity; }
+  > .field[name=constitution],  > .field[name=con], > .field[name=sick]     { grid-area: constitution; }
+  > .field[name=intelligence],  > .field[name=int], > .field[name=stunned]  { grid-area: intelligence; }
+  > .field[name=wisdom],        > .field[name=wis], > .field[name=confused] { grid-area: wisdom; }
+  > .field[name=charisma],      > .field[name=cha], > .field[name=scarred]  { grid-area: charisma; }
 
-  > .field[name='strength'],
-  > .field[name='dexterity'],
-  > .field[name='constitution'],
-  > .field[name='intelligence'],
-  > .field[name='wisdom'],
-  > .field[name='charisma'] {
+  > .field[name=strength],
+  > .field[name=dexterity],
+  > .field[name=constitution],
+  > .field[name=intelligence],
+  > .field[name=wisdom],
+  > .field[name=charisma] {
     color: white;
-    margin: 0.2rem 0 0.5rem 0.2rem;
-    border-radius: 0.5rem 0 0 0.5rem;
+    margin: 0.5rem 0 0.2rem 0;
+    border-radius: 1rem 0 0 1rem;
 
     &::before {
       position: absolute;
@@ -192,12 +209,12 @@
     }
   }
 
-  > .field[name='str'],
-  > .field[name='dex'],
-  > .field[name='con'],
-  > .field[name='int'],
-  > .field[name='wis'],
-  > .field[name='cha'] {
+  > .field[name=str],
+  > .field[name=dex],
+  > .field[name=con],
+  > .field[name=int],
+  > .field[name=wis],
+  > .field[name=cha] {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -207,11 +224,89 @@
     &::after { content: attr(value); }
   }
 
-  > .field[name='strength']     { background: #44110A; }
-  > .field[name='dexterity']    { background: #072818; }
-  > .field[name='constitution'] { background: #101E33; }
-  > .field[name='intelligence'] { background: #1A0E2D; }
-  > .field[name='wisdom']       { background: #453A02; }
-  > .field[name='charisma']     { background: #462206; }
+  > .field[name=weak],
+  > .field[name=shakey],
+  > .field[name=sick],
+  > .field[name=stunned],
+  > .field[name=confused],
+  > .field[name=scarred] {
+    height: fit-content;
+    width: fit-content;
+    transform: rotate(-30deg) translate(-0.2rem, 1.2rem);
+    font: bold 0.7rem MedievalSharp;
+    color: white;
+
+    &[value='true']::after { content: attr(name); }
+  }
+
+  > .field[name=strength]     { background: #44110A; }
+  > .field[name=dexterity]    { background: #072818; }
+  > .field[name=constitution] { background: #101E33; }
+  > .field[name=intelligence] { background: #1A0E2D; }
+  > .field[name=wisdom]       { background: #453A02; }
+  > .field[name=charisma]     { background: #462206; }
+
+  // -------------------- collections --------------------
+
+  > .field[name=moves], > .field[name=equipment] {
+    margin: 1rem;
+    border: solid 1px black;
+    overflow-x: scroll;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+
+    > * {
+      aspect-ratio: 1;
+      flex: 10 0 auto;
+      background: #61501e;
+      border-radius: 0.5rem;
+    }
+  }
+
+  > .field[name=moves] {
+    grid-area: moves;
+    margin-bottom: 0.5rem;
+
+    .field[name=name] {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      padding: 0.5rem;
+      box-sizing: border-box;
+      font: bold 0.7rem Cinzel;
+
+      &::before {
+        content: '';
+        // TODO background-image: url('images/games/dungeon-world/moves/' attr(value) '.jpg')
+      }
+      &::after { content: attr(value); }
+    }
+  }
+  > .field[name=equipment] {
+    grid-area: equipment;
+    margin-top: 0.5rem;
+
+    .field[name=name] {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      padding: 0.5rem;
+      box-sizing: border-box;
+      font: bold 0.7rem Cinzel;
+
+      &::before {
+        content: '';
+        // TODO background-image: url('images/games/dungeon-world/equipment/' attr(value) '.jpg')
+      }
+      &::after { content: attr(value); }
+    }
+  }
 
 }
