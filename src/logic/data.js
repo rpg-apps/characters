@@ -6,7 +6,7 @@ export default async function getUserCharacters (user) {
       playbook: { name: 'thief', fields: {} },
       fields: {
         name: 'Veronica Alamano',
-        description: 'Never dependent, stay strong and no nonsense.',
+        description: 'Never dependent, stay strong and no nonsense. Ver grew up in a poor part of the city. Her father was a drunk and her mother was a prostitute. When she was fourteen, she came back from school to find out that her father killed her mother in a drunk rage.',
         look: 'Slim body under a hood, dark brown hair',
         race: 'human',
         xp: 5,
@@ -29,14 +29,16 @@ export default async function getUserCharacters (user) {
         charisma: 9,
         cha: 0,
         scarred: false,
+        armor: 1,
         damage: 'd8',
         hp: 10,
-        'max hp': 'constitution+10',
+        'max hp': 21,
         alignment: 'good',
         moves: [{ name: 'hack and Slash' }, { name: 'Volley' }, { name: 'Defy Danger' }, { name: 'Defend' }, { name: 'Spout Lore' }, { name: 'Discern Realities' }, { name: 'Parley' }, { name: 'Aid or Interfere' }],
         equipment: [{ name: 'Ragged Bow' }, { name: 'Bundle of Arrows' }, { name: 'Dagger' }, { name: 'Adventuring Gear' }, { name: 'Dungeon Rations' }],
         bonds: ['I stole something from them.', 'She knows incriminating details about me.']
-      }
+      },
+      notes: ''
     }
   ]
 }
