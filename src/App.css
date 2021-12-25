@@ -28,3 +28,14 @@
 a {
   text-decoration: none;
 }
+
+.ReactModalPortal > * {
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+.ReactModalPortal > * > * {
+  background: #151515 !important;
+  border: none !important;
+  color: white;
+}

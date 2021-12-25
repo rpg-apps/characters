@@ -7,7 +7,7 @@ import Character from './components/pages/character'
 
 import './App.css'
 
-import './css/games/dungeon-world-core.scss'
+import './games/dungeon-world/core.scss'
 
 import auth from './logic/auth'
 import AuthContext from './components/presentation/auth-context'

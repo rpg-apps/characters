@@ -38,7 +38,9 @@ export default async function getUserCharacters (user) {
         equipment: [{ name: 'Ragged Bow' }, { name: 'Bundle of Arrows' }, { name: 'Dagger' }, { name: 'Adventuring Gear' }, { name: 'Dungeon Rations' }],
         bonds: ['I stole something from them.', 'She knows incriminating details about me.']
       },
-      notes: ''
+      notes: '',
+      settings: { },
+      execute: console.log
     }
   ]
 }

@@ -12,7 +12,7 @@
     top: 0.5rem;
     right: 0.5rem;
     border-radius: 0.5rem;
-    background-image: url('../../images/games/dungeon-world/symbol.jpg');
+    background-image: url('./images/symbol.jpg');
     background-size: contain;
   }
 
@@ -55,8 +55,10 @@
     &::after { content: attr(value); }
   }
 
+  .settings { display: none; }
+
   &.thief {
-    background-image: url('../../images/classes-icons/thief.jpg');
+    background-image: url('./images/classes-icons/thief.jpg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: right;
@@ -67,7 +69,7 @@
 
 .new.page {
   .choose.game .field[value*='dungeon-world'] {
-    background: url('../../images/games/dungeon-world/banner.jpg');
+    background: url('./images/banner.jpg');
     background-size: contain;
     background-repeat: no-repeat;
   }
@@ -384,6 +386,17 @@
     overflow-y: scroll;
 
     &::after { content: attr(value); }
+  }
+
+  // -------------------- settings --------------------
+
+  .settings {
+    grid-area: settings;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
   }
 
 }
