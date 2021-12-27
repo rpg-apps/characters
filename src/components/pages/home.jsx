@@ -4,15 +4,22 @@ import { FaPlus } from 'react-icons/fa'
 
 import '../../css/pages/home.scss'
 
-import AuthContext from '../presentation/auth-context'
+import { useAuth } from '../presentation/auth-context'
 import With from '../presentation/with'
 import getUserCharacters from '../../logic/data'
 import { Character } from '../presentation/character'
 
 export default function Home (props) {
-  // TODO change this according to correct rules API
-  return <AuthContext.Consumer>{user =>
-    <With className='home page' load={async () => await getUserCharacters(user) }>
+  const { user } = useAuth()
+
+  React.useEffect(() => {
+    (async () => {
+      const characterJsons = await user.callFunction('getCharacters')
+      console.log(characterJsons)
+    }) ()
+  }, [user])
+
+  return <With className='home page' load={async () => await getUserCharacters(user) }>
       {characters =>
         [<div key='characters' className='characters'>
           {characters.map(character => <Link key={character.fields.name} to={`/character/${character.fields.name}`}>
@@ -24,5 +31,4 @@ export default function Home (props) {
         </div>]
       }
     </With>
-  }</AuthContext.Consumer>
 }
