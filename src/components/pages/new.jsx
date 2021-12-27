@@ -2,13 +2,16 @@ import React, { useState } from 'react'
 
 import '../../css/pages/new.scss'
 
+import { useRules } from '../contexts/rules-context'
+
 import Field from '../presentation/field'
-import { supportedRulebooks, getRules } from '../../logic/rules'
+import { SUPPORTED_RULEBOOKS } from '../../games'
 
 export default function New () {
+  const rules = useRules()
+
   return <div className='new page'>
-    <WithChoice title='choose game' options={supportedRulebooks()} after={async rule => await getRules([rule])}>{rules => {
-      console.log(rules)
+    <WithChoice title='choose game' options={SUPPORTED_RULEBOOKS} after={async rulebook => await rules.get([rulebook])}>{rules => {
       return <div className={`rules ${rules.rulebooks.join(' ')}`}>
         <WithChoice title='playbook' options={rules.characters.builder.playbookOptions()} after={name => rules.characters.builder.start(name)}>{() => {
           const ChoiceComponent = Choices[rules.characters.builder.choice.constructor.name]

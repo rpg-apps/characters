@@ -1,7 +1,7 @@
 import DWCore from './dungeon-world/core'
 
-const games = {
+export const adapters = {
   'dungeon-world': { core: DWCore }
 }
 
-export default games
+export const SUPPORTED_RULEBOOKS = ['dungeon-world core']

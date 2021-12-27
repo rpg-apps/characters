@@ -1,11 +1,11 @@
 import React from 'react'
 import { noCase } from 'change-case'
 
-import games from '../../games'
+import { adapters } from '../../games'
 import Field from './field'
 import CharacterSettings from './character-settings'
 
-export class Character extends React.Component  {
+export default class Character extends React.Component  {
   constructor ({ character }) {
     super()
     this.character = character
@@ -14,7 +14,7 @@ export class Character extends React.Component  {
   handleEvent ({ name, value }, event) {
     const characterHandlers = this.character.rulebooks.reduce((results, rulebook) => {
       const [game, rules] = rulebook.split(' ')
-      return { ...results, ...games[game][rules].getHandlers(this.character.settings) }
+      return { ...results, ...adapters[game][rules].getHandlers(this.character.settings) }
     }, { })
 
     const eventType = noCase(event._reactName?.substr(2) || `Swipe${event.dir}`)
@@ -26,7 +26,7 @@ export class Character extends React.Component  {
   settings () {
     return this.character.rulebooks.reduce((results, rulebook) => {
       const [game, rules] = rulebook.split(' ')
-      return { ...results, ...games[game][rules].settings }
+      return { ...results, ...adapters[game][rules].settings }
     }, { })
   }
 
