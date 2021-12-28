@@ -1,14 +1,18 @@
 import React from 'react'
 import { noCase } from 'change-case'
+import Modal from 'react-modal'
 
 import { adapters } from '../../games'
 import Field from './field'
 import CharacterSettings from './character-settings'
 
+Modal.setAppElement('#root')
+
 export default class Character extends React.Component  {
   constructor ({ character }) {
     super()
     this.character = character
+    this.state = { focus: undefined }
   }
 
   handleEvent ({ name, value }, event) {
@@ -31,7 +35,7 @@ export default class Character extends React.Component  {
   }
 
   output (text) {
-
+    this.setState({ focus: text })
   }
 
   input (text, type = 'string') {
@@ -40,6 +44,10 @@ export default class Character extends React.Component  {
 
   choose (text, options, count = 1) {
 
+  }
+
+  closeFocus () {
+    this.setState({ focus: undefined })
   }
 
   fields () {
@@ -53,6 +61,7 @@ export default class Character extends React.Component  {
     return <div className={`character ${this.character.playbook.name} ${this.character.rulebooks.map(rb => rb.replace(' ', '-')).join(' ')}`}>
       {this.fields().map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={this.handleEvent.bind(this)} />)}
       <CharacterSettings settings={this.settings()} value={this.character.settings} />
+      <Modal isOpen={Boolean(this.state.focus)} onRequestClose={() => this.closeFocus()}>{this.state.focus}</Modal>
     </div>
   }
 }

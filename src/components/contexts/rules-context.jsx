@@ -21,5 +21,5 @@ export function WithRules ({ children }) {
 
   const key = rulebooks => rulebooks.join('/')
 
-  return <RulesContext.Provider value={{ ...cache, get, set }}>{children}</RulesContext.Provider>
+  return <RulesContext.Provider value={{ get, set }}>{children}</RulesContext.Provider>
 }

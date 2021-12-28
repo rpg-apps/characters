@@ -11,11 +11,16 @@ export const useCharacters = () => useContext(CharactersContext)
 export function WithCharacters ({ children }) {
   const { user } = useAuth()
   const rules = useRules()
+  const [characterJsons, setCharacterJsons] = useState(false)
   const [characters, setCharacters] = useState(false)
 
   useEffect(() => {
+    (async () => setCharacterJsons(await user.callFunction('getCharacters'))) ()
+  }, [])
+
+  useEffect(() => {
     (async () => {
-      const characterJsons = await user.callFunction('getCharacters')
+      if (!characterJsons)  return
       const chars = []
       for (const json of characterJsons) {
         const char = await (await rules.get(json.rulebooks)).characters.load(json)
@@ -24,7 +29,7 @@ export function WithCharacters ({ children }) {
       }
       setCharacters(chars)
     }) ()
-  }, [user, rules])
+  }, [user, rules, characterJsons])
 
   if (!characters) return <Loader className='home page' />
 
