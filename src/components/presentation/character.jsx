@@ -15,15 +15,16 @@ export default class Character extends React.Component  {
     this.state = { focus: undefined }
   }
 
-  handleEvent ({ name, value }, event) {
+  async handleEvent ({ name, value }, event) {
     const characterHandlers = this.character.rulebooks.reduce((results, rulebook) => {
       const [game, rules] = rulebook.split(' ')
       return { ...results, ...adapters[game][rules].getHandlers(this.character.settings) }
     }, { })
 
     const eventType = noCase(event._reactName?.substr(2) || `Swipe${event.dir}`)
-    if (characterHandlers[name] && characterHandlers[name][eventType]) {
-      this.character.execute(characterHandlers?.[name]?.[eventType], this)
+    if (characterHandlers?.[name]?.[eventType]) {
+      await this.character.execute(characterHandlers?.[name]?.[eventType], this)
+      this.forceUpdate()
     }
   }
 

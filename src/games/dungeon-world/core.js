@@ -12,17 +12,19 @@ const getHandlers = settings => {
 
 
   // -------------------- main stats --------------------
-  handlers.['max hp'] = { 'swipe up': 'add 1 to hp' }
-  handlers.['max hp'] = { 'swipe up': 'remove 1 from hp' }
+  handlers.['max hp'] = {
+   'swipe up': 'add 1 to hp',
+   'swipe down': 'remove 1 from hp'
+  }
 
   // -------------------- stats --------------------
   const stats = { strength: 'weak', dexterity: 'shakey', constitution: 'sick', intelligence: 'stunned', wisdom: 'confused', charisma: 'scarred' }
   Object.entries(stats).forEach(([stat, debility]) => {
     const modifier = stat.substring(0, 3)
     handlers[modifier] = {
-      'swiped up': `add 1 to ${stat}`,
-      'swiped down': `remove 1 from ${stat}`,
-      'swiped right': `toggle ${debility}`
+      'swipe up': `add 1 to ${stat}`,
+      'swipe down': `remove 1 from ${stat}`,
+      'swipe right': `toggle ${debility}`
     }
 
     if (settings?.stats?.rollOnSwipe) {
