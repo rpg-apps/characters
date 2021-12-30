@@ -16,16 +16,17 @@ export function WithCharacters ({ children }) {
 
   useEffect(() => {
     (async () => setCharacterJsons(await user.callFunction('getCharacters'))) ()
-  }, [])
+  }, [user])
 
   useEffect(() => {
     (async () => {
       if (!characterJsons)  return
       const chars = []
       for (const json of characterJsons) {
-        const char = await (await rules.get(json.rulebooks)).characters.load(json)
-        char.id = json._id
-        chars.push(char)
+        const character = await (await rules.get(json.rulebooks)).characters.load(json)
+        character.id = json._id
+        character.save = async () => await user.callFunction('updateCharacter', { id: character.id.toString(), character: character.toJson() })
+        chars.push(character)
       }
       setCharacters(chars)
     }) ()

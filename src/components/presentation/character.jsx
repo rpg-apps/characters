@@ -25,6 +25,7 @@ export default class Character extends React.Component  {
     if (characterHandlers?.[name]?.[eventType]) {
       await this.character.execute(characterHandlers?.[name]?.[eventType], this)
       this.forceUpdate()
+      await this.character.save()
     }
   }
 
