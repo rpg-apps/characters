@@ -1,25 +1,24 @@
+@import "../utils.scss";
+
+$footer-height: 5rem;
+
 .home.page {
   display: flex;
   flex-direction: column;
 
   .characters {
-    height: calc(100vh - 5rem);
+    height: calc(#{$page-height} - #{$footer-height});
 
     .character {
-      margin: 1rem;
-      padding: 1rem;
-      border-radius: 0.5rem;
+      margin: $large-gap;
+      padding: $large-gap;
+      border-radius: $border-radius;
       color: black;
       background: white;
     }
   }
 
   .footer {
-    height: 5rem;
-
-    .button {
-      display: flex;
-      justify-content: center;
-    }
+    height: $footer-height;
   }
 }

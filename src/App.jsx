@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
+import './App.scss'
+
 import Home from './components/pages/home'
 import New from './components/pages/new'
 import Character from './components/pages/character'
-
-import './App.css'
 
 import './games/dungeon-world/core.scss'
 

@@ -1,28 +1,62 @@
 @use 'sass:math';
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel&family=Metamorphous&display=swap');
+$page-height: 100vh;
+$page-width: 100vw;
+$full: 100%;
 
+$large-gap: 1rem;
+$small-gap: 0.5rem;
+$tiny-gap: 0.2rem;
+$border-radius: $small-gap;
+
+$background-color: #151515;
+$modal-background-color: rgba(0, 0, 0, 0.75);
+
+%centering {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%page-size {
+  width: $page-width;
+  height: $page-height;
+}
+
+%round {
+  border-radius: $border-radius;
+}
+
+%inverted {
+  background: white;
+  color: black;
+}
+
+%invisible {
+  display: none;
+}
 .home.page .character.dungeon-world-core {
   position: relative;
 
   &::before {
     content: "";
     position: absolute;
+    aspect-ratio: 1;
     width: 1.5rem;
     height: 1.5rem;
-    top: 0.5rem;
-    right: 0.5rem;
-    border-radius: 0.5rem;
+    top: $small-gap;
+    right: $small-gap;
+    border-radius: $border-radius;
     background-image: url('./images/symbol.jpg');
     background-size: contain;
   }
 
   display: grid;
-  grid-template-columns: 0fr 0fr 1fr;
-  grid-column-gap: 0.2rem;
+  grid-template: 0fr 0fr 1fr / 1fr 1fr;
+  grid-column-gap: $tiny-gap;
   grid-template-areas:
     "name name name"
     "level race class";
-
 
   > .field[name=name] {
     grid-area: name;
@@ -31,9 +65,7 @@
     &::after { content: attr(value); }
   }
 
-  > .field[name=xp] {
-    display: none;
-  }
+  > .field[name=xp] { @extend %invisible; }
 
   > .field[name=level] {
     grid-area: level;
@@ -89,12 +121,11 @@
 }
 
 .character.page > .character.dungeon-world-core {
-  width: 100vw;
-  height: 100vh;
+  width: $page-width;
+  height: $page-height;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr) 5rem;
-  grid-template-rows: 2.5rem repeat(12, 1fr) 2.5rem;
+  grid-template: 2.5rem repeat(12, 1fr) 2.5rem/repeat(3, 1fr) 5rem;
   gap: 0.5rem;
   padding-left: 0.5rem;
   padding-bottom: 0.5rem;
@@ -109,9 +140,9 @@
     "moves moves moves constitution"
     "moves moves moves intelligence"
     "moves moves moves intelligence"
-    "equipment equipment equipment wisdom"
-    "equipment equipment equipment wisdom"
-    "equipment equipment equipment charisma"
+    "gear gear gear wisdom"
+    "gear gear gear wisdom"
+    "gear gear gear charisma"
     "notes notes notes charisma"
     "notes notes notes settings";
 
@@ -159,7 +190,7 @@
       z-index: 1;
       margin-left: -1rem;
       border: 2px solid $xp-color;
-      background: #151515;
+      background: $background-color;
       width: 2rem;
       height: 2rem;
       border-radius: 2rem;
@@ -210,7 +241,7 @@
       right: 0;
       text-align: center;
       font: 0.7rem Cinzel;
-      width: 100%;
+      width: $full;
       content: attr(name);
     }
   }
@@ -315,7 +346,7 @@
 
   // -------------------- collections --------------------
 
-  > .field[name=moves], > .field[name=equipment] {
+  > .field[name=moves], > .field[name=gear] {
     overflow-x: scroll;
     padding: 0.5rem;
     background: #172022;
@@ -340,7 +371,7 @@
       justify-content: space-between;
       align-items: center;
       text-align: center;
-      height: 100%;
+      height: $full;
       padding: 0.5rem;
       box-sizing: border-box;
       font: bold 0.7rem Cinzel;
@@ -352,8 +383,8 @@
       &::after { content: attr(value); }
     }
   }
-  > .field[name=equipment] {
-    grid-area: equipment;
+  > .field[name=gear] {
+    grid-area: gear;
 
     .field[name=name] {
       display: flex;
@@ -361,14 +392,14 @@
       justify-content: space-between;
       align-items: center;
       text-align: center;
-      height: 100%;
+      height: $full;
       padding: 0.5rem;
       box-sizing: border-box;
       font: bold 0.7rem Cinzel;
 
       &::before {
         content: '';
-        // TODO background-image: url('images/games/dungeon-world/equipment/' attr(value) '.jpg')
+        // TODO background-image: url('images/games/dungeon-world/gear/' attr(value) '.jpg')
       }
       &::after { content: attr(value); }
     }

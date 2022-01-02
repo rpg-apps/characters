@@ -1,28 +1,32 @@
+@import "../utils.scss";
+
+$title-height: 3rem;
+$game-card-height: 8.8rem;
+
 .new.page {
   display: flex;
   justify-content: center;
 
   .pre-choice {
-    width: 100vw;
-    height: 100vh;
+    width: $page-width;
+    height: $page-height;
 
     > .title {
       color: white;
       text-align: center;
-      font: bold 2rem MedievalSharp;
-      line-height: 3rem;
-      height: 3rem;
+      line-height: $title-height;
+      height: $title-height;
     }
 
     > .options {
-      height: calc(100% - 3rem);
+      height: calc(#{$page-height} - #{$title-height});
       overflow-y: scroll;
     }
 
     &.choose.game .field {
-      height: 8.8rem;
-      margin: 1rem;
-      border-radius: 0.5rem;
+      height: $game-card-height;
+      margin: $large-gap;
+      border-radius: $border-radius;
     }
   }
 }

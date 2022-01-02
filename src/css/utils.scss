@@ -1,0 +1,38 @@
+/* This file includes the basic variables, extendable classes and elements that can be reused throughout the games css and the app */
+
+$page-height: 100vh;
+$page-width: 100vw;
+$full: 100%;
+
+$large-gap: 1rem;
+$small-gap: 0.5rem;
+$tiny-gap: 0.2rem;
+$border-radius: $small-gap;
+
+$background-color: #151515;
+$modal-background-color: rgba(0, 0, 0, 0.75);
+
+%centering {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+%page-size {
+  width: $page-width;
+  height: $page-height;
+}
+
+%round {
+  border-radius: $border-radius;
+}
+
+%inverted {
+  background: white;
+  color: black;
+}
+
+%invisible {
+  display: none;
+}
+

@@ -12,21 +12,28 @@ export default class Character extends React.Component  {
   constructor ({ character }) {
     super()
     this.character = character
-    this.state = { focus: undefined }
+    this.state = { focus: undefined, handlers: { } }
+  }
+
+  async componentDidMount () {
+    await this.refreshHandlers()
   }
 
   async handleEvent ({ name, value }, event) {
-    const characterHandlers = this.character.rulebooks.reduce((results, rulebook) => {
-      const [game, rules] = rulebook.split(' ')
-      return { ...results, ...adapters[game][rules].getHandlers(this.character.settings) }
-    }, { })
-
     const eventType = noCase(event._reactName?.substr(2) || `Swipe${event.dir}`)
-    if (characterHandlers?.[name]?.[eventType]) {
-      await this.character.execute(characterHandlers?.[name]?.[eventType], this)
+    if (this.state.handlers?.[name]?.[eventType]) {
+      await this.character.execute(this.state.handlers?.[name]?.[eventType], this)
       this.forceUpdate()
       await this.character.save()
     }
+  }
+
+  async refreshHandlers () {
+    const handlers = this.character.rulebooks.reduce((results, rulebook) => {
+      const [game, rules] = rulebook.split(' ')
+      return { ...results, ...adapters[game][rules].getHandlers(this.character.settings) }
+    }, { })
+    this.setState({ handlers })
   }
 
   settings () {
@@ -62,7 +69,7 @@ export default class Character extends React.Component  {
   render () {
     return <div className={`character ${this.character.playbook.name} ${this.character.rulebooks.map(rb => rb.replace(' ', '-')).join(' ')}`}>
       {this.fields().map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={this.handleEvent.bind(this)} />)}
-      <CharacterSettings settings={this.settings()} value={this.character.settings} />
+      <CharacterSettings settings={this.settings()} value={this.character.settings} onChange={() => this.refreshHandlers()} />
       <Modal isOpen={Boolean(this.state.focus)} onRequestClose={() => this.closeFocus()}>{this.state.focus}</Modal>
     </div>
   }

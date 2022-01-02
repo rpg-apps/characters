@@ -6,7 +6,7 @@ import Input from './input'
 
 Modal.setAppElement('#root')
 
-export default function CharacterSettings ({ settings, value }) {
+export default function CharacterSettings ({ settings, value, onChange }) {
   const [showing, setShowing] = useState(false)
   const toggle = () => setShowing(!showing)
 
@@ -19,6 +19,7 @@ export default function CharacterSettings ({ settings, value }) {
             <Input text={text} type={type} afterInput={settingValue => {
               value[groupTitle] = value[groupTitle] || {}
               value[groupTitle][settingTitle] = settingValue
+              onChange()
             }} />
           </div>)}
         </div>)}

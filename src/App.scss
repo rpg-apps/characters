@@ -1,0 +1,33 @@
+@import "./css/utils.scss";
+
+#root > * {
+  @extend %page-size;
+  background: $background-color;
+}
+
+.loading.page {
+  @extend %centering;
+}
+
+.button {
+  @extend %centering;
+  @extend %round;
+  @extend %inverted;
+  margin: $large-gap;
+  padding: $small-gap $large-gap;
+
+  svg {
+    margin-right: $small-gap;
+  }
+}
+
+.ReactModalPortal > * {
+  z-index: 1;
+  background: $modal-background-color !important;
+
+  > * {
+    background: $background-color !important;
+    border: none !important;
+    color: white;
+  }
+}
