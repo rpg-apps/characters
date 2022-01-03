@@ -1,40 +1,10 @@
 @use 'sass:math';
+
+@import "../../css/utils.scss";
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel&family=Metamorphous&display=swap');
-$page-height: 100vh;
-$page-width: 100vw;
-$full: 100%;
 
-$large-gap: 1rem;
-$small-gap: 0.5rem;
-$tiny-gap: 0.2rem;
-$border-radius: $small-gap;
 
-$background-color: #151515;
-$modal-background-color: rgba(0, 0, 0, 0.75);
 
-%centering {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-%page-size {
-  width: $page-width;
-  height: $page-height;
-}
-
-%round {
-  border-radius: $border-radius;
-}
-
-%inverted {
-  background: white;
-  color: black;
-}
-
-%invisible {
-  display: none;
-}
 .home.page .character.dungeon-world-core {
   position: relative;
 
@@ -172,6 +142,7 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   }
 
   $xp-color: #74005a;
+  $level-up-color: #FFD700;
 
   > .field[name=level] {
     display: flex;
@@ -196,18 +167,28 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
       border-radius: 2rem;
       content: attr(value);
     }
+
+    &::after {
+      margin-left: -0.5rem;
+      background: $xp-color;
+      border-radius: 0 0.3rem 0.3rem 0;
+      height: 50%;
+      font: 1rem white;
+      padding-left: 1rem;
+    }
   }
 
   @for $lvl from 1 through 10 {
     @for $xp from 1 through $lvl+7 {
       > .field[name=xp][value='#{$xp}'] ~ .field[name=level][value='#{$lvl}']::after {
-        content: '';
-        margin-left: -0.5rem;
-        background: $xp-color;
-        border-radius: 0 0.3rem 0.3rem 0;
-        height: 50%;
-        width: math.div($xp, $lvl+7) * 100%;
+        content: '#{$xp}';
+        width: calc(#{math.div($xp, $lvl+7)*100}% - #{math.div($xp, $lvl+7)}rem);
       }
+    }
+
+    > .field[name=xp][value='#{$lvl+7}'] ~ .field[name=level][value='#{$lvl}'] {
+      &::before { border-color: $level-up-color !important; }
+      &::after { background: $level-up-color !important; }
     }
   }
 
