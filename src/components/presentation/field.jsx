@@ -3,7 +3,10 @@ import { useSwipeable } from 'react-swipeable'
 
 export default function Field (props) {
   const { handleEvent, className, name, value, children } = props
-  const swipeHandlers = useSwipeable({ onSwiped: e => handleEvent(props, e) })
+  const swipeHandlers = useSwipeable({
+    onSwiped: e => handleEvent(props, { ...e, action: 'swiped' }),
+    onSwiping: e => handleEvent(props, { ...e, action: 'swiping' })
+  })
 
   if (typeof value === 'object') {
     return <Field key={name} name={name} className='complex' handleEvent={handleEvent}>
@@ -11,6 +14,6 @@ export default function Field (props) {
     </Field>
   }
 
-  const eventHandling = { onClick: e => handleEvent(props, e), draggable: true }
+  const eventHandling = { onClick: e => handleEvent(props, e), onMouseUp: e => handleEvent(props, e), onMouseDown: e => handleEvent(props, e) }
   return <div name={name} value={value} {...swipeHandlers} {...eventHandling} className={className ? `${className} field` : 'field'}>{children}</div>
 }

@@ -4,6 +4,8 @@ const settings = {
   }
 }
 
+const RESOLUTION = 30
+
 const getHandlers = settings => {
   const handlers = {}
 
@@ -11,16 +13,28 @@ const getHandlers = settings => {
   handlers.description = { click: 'show description' }
 
   handlers.level = {
-    'swipe right': 'add 1 to xp',
-    'swipe left': 'remove 1 from xp',
+    'swiped right': 'add 1 to xp',
+    'swiped left': 'remove 1 from xp',
     'click': { 'is level up allowed': { 'yes': 'trigger Level Up', 'no': 'do nothing' } }
   }
 
 
   // -------------------- main stats --------------------
-  handlers.['max hp'] = {
-   'swipe up': 'add 1 to hp',
-   'swipe down': 'remove 1 from hp'
+  handlers['max hp'] = {
+   'swiping up': event => {
+    const prevent = handlers['max hp'].prevent
+    if (prevent && event.deltaY - prevent.deltaY > -RESOLUTION)  return 'do nothing'
+    handlers['max hp'].prevent = event
+    return { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } }
+   },
+   'swiping down': event => {
+      const prevent = handlers['max hp'].prevent
+      if (prevent && event.deltaY - prevent.deltaY < RESOLUTION)  return 'do nothing'
+      handlers['max hp'].prevent = event
+      return { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
+    },
+   'swiped up': () => { delete handlers['max hp'].prevent },
+   'swiped down': () => { delete handlers['max hp'].prevent }
   }
   handlers.damage = { 'swipe up': 'deal damage' }
 
@@ -29,9 +43,9 @@ const getHandlers = settings => {
   Object.entries(stats).forEach(([stat, debility]) => {
     const modifier = stat.substring(0, 3)
     handlers[modifier] = {
-      'swipe up': `add 1 to ${stat}`,
-      'swipe down': `remove 1 from ${stat}`,
-      'swipe right': `toggle ${debility}`
+      'swiped up': `add 1 to ${stat}`,
+      'swiped down': `remove 1 from ${stat}`,
+      'swiped right': `toggle ${debility}`
     }
 
     if (settings?.stats?.rollOnSwipe) {

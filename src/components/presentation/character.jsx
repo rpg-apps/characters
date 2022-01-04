@@ -20,9 +20,11 @@ export default class Character extends React.Component  {
   }
 
   async handleEvent ({ name, value }, event) {
-    const eventType = noCase(event._reactName?.substr(2) || `Swipe${event.dir}`)
+    const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
     if (this.state.handlers?.[name]?.[eventType]) {
-      await this.character.execute(this.state.handlers?.[name]?.[eventType], this)
+      const handler = this.state.handlers?.[name]?.[eventType]
+      const procedure = (handler instanceof Function) ? handler(event) : handler
+      await this.character.execute(procedure, this)
       this.forceUpdate()
       await this.character.save()
     }
