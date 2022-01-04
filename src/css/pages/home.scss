@@ -10,15 +10,12 @@ $footer-height: 5rem;
     height: calc(#{$page-height} - #{$footer-height});
 
     .character {
+      @extend %round;
+      @extend %inverted;
       margin: $large-gap;
       padding: $large-gap;
-      border-radius: $border-radius;
-      color: black;
-      background: white;
     }
   }
 
-  .footer {
-    height: $footer-height;
-  }
+  .footer { height: $footer-height; }
 }

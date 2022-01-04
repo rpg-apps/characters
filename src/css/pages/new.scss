@@ -8,8 +8,7 @@ $game-card-height: 8.8rem;
   justify-content: center;
 
   .pre-choice {
-    width: $page-width;
-    height: $page-height;
+    @extend %page-size;
 
     > .title {
       color: white;
@@ -24,9 +23,9 @@ $game-card-height: 8.8rem;
     }
 
     &.choose.game .field {
+      @extend %round;
       height: $game-card-height;
       margin: $large-gap;
-      border-radius: $border-radius;
     }
   }
 }

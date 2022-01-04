@@ -23,6 +23,16 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   height: $page-height;
 }
 
+%full-size {
+  width: $full;
+  height: $full;
+}
+
+%content-size {
+  height: fit-content;
+  width: fit-content;
+}
+
 %round {
   border-radius: $border-radius;
 }
@@ -36,3 +46,52 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   display: none;
 }
 
+%visible {
+  display: block !important;
+}
+
+%exact-background {
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+%game-badge::before {
+  @extend %round;
+  @extend %exact-background;
+  content: "";
+  position: absolute;
+  top: $small-gap;
+  right: $small-gap;
+  width: 1.5rem;
+  aspect-ratio: 1;
+}
+
+%stamp {
+  transform: rotate(-30deg) translate(-0.2rem, 1.2rem);
+  font: bold 0.7rem MedievalSharp;
+}
+
+%show-name {
+  &::before {
+    content: attr(name);
+  }
+}
+
+%show-value {
+  &::after {
+    content: attr(value);
+  }
+}
+
+%title-text {
+  font: bold 1.4rem MedievalSharp;
+  line-height: 1rem;
+}
+
+%meta-text {
+  font: italic 1rem MedievalSharp;
+}
+
+%field-text {
+  font: italic 1rem MedievalSharp;
+}

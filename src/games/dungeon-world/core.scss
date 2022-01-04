@@ -3,66 +3,56 @@
 @import "../../css/utils.scss";
 @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel&family=Metamorphous&display=swap');
 
-
+$stats-color: #101E33;
+$field-background: #172022;
+$collection-item-color: #202d31;
 
 .home.page .character.dungeon-world-core {
   position: relative;
+  @extend %game-badge;
 
-  &::before {
-    content: "";
-    position: absolute;
-    aspect-ratio: 1;
-    width: 1.5rem;
-    height: 1.5rem;
-    top: $small-gap;
-    right: $small-gap;
-    border-radius: $border-radius;
-    background-image: url('./images/symbol.jpg');
-    background-size: contain;
-  }
+  &::before { background-image: url('./images/symbol.jpg'); }
 
   display: grid;
-  grid-template: 0fr 0fr 1fr / 1fr 1fr;
-  grid-column-gap: $tiny-gap;
+  grid-template: 1fr 1fr / 0fr 0fr 1fr;
+  grid-column-gap: $small-gap;
   grid-template-areas:
     "name name name"
     "level race class";
 
+  > .field { @extend %invisible; }
+
   > .field[name=name] {
     grid-area: name;
-    font: 1.4rem MedievalSharp;
-    line-height: 1rem;
-    &::after { content: attr(value); }
+    @extend %visible, %title-text, %show-value;
   }
 
-  > .field[name=xp] { @extend %invisible; }
 
   > .field[name=level] {
     grid-area: level;
+    @extend %visible, %meta-text, %show-value;
     min-width: max-content;
-    font: italic 1rem MedievalSharp;
     &::before { content: 'lvl. '; }
-    &::after { content: attr(value); }
   }
 
   > .field[name=race] {
     grid-area: race;
-    font: italic 1rem MedievalSharp;
-    &::after { content: attr(value); }
+    @extend %visible, %meta-text, %show-value;
   }
 
-  > .field[name=playbook] > .field[name=name] {
-    grid-area: class;
-    font: italic 1rem MedievalSharp;
-    &::after { content: attr(value); }
+  > .field[name=playbook] {
+    @extend %visible;
+     > .field[name=name] {
+      grid-area: class;
+      @extend %meta-text, %show-value;
+    }
   }
 
-  .settings { display: none; }
+  .settings { @extend %invisible; }
 
   &.thief {
+    @extend %exact-background;
     background-image: url('./images/classes-icons/thief.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
     background-position: right;
     background-color: #3f2167;
     color: white;
@@ -71,34 +61,28 @@
 
 .new.page {
   .choose.game .field[value*='dungeon-world'] {
+    @extend %exact-background;
     background: url('./images/banner.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
  .dungeon-world.core .playbook .field {
+    @extend %round, %show-value, %title-text;
     height: 5rem;
-    margin: 1rem;
-    border-radius: 0.5rem;
+    margin: $large-gap;
     background: white;
 
-    &::before {
-      content: attr(value);
-      margin: 1rem;
-      font: bold 1.5rem MedievalSharp;
-    }
+    &::after { margin: $large-gap; }
   }
 }
 
 .character.page > .character.dungeon-world-core {
-  width: $page-width;
-  height: $page-height;
+  @extend %page-size;
 
   display: grid;
-  grid-template: 2.5rem repeat(12, 1fr) 2.5rem/repeat(3, 1fr) 5rem;
-  gap: 0.5rem;
-  padding-left: 0.5rem;
-  padding-bottom: 0.5rem;
+  grid-template: 2.5rem repeat(12, 1fr) 2.5rem/repeat(3, 1fr) 5.5rem;
+  gap: $small-gap;
+  padding-left: $small-gap;
+  padding-bottom: $small-gap;
   box-sizing: border-box;
   grid-template-areas:
     "name name name xp"
@@ -124,24 +108,22 @@
 
   > .field[name=name] {
     grid-area: name;
-    font: bold 1.4rem MedievalSharp;
-    margin-left: 1rem;
+    @extend %title-text, %show-value;
+    margin-left: $large-gap;
     line-height: 2.5rem;
     color: white;
-    &::after { content: attr(value); }
   }
 
   > .field[name=xp], > .field[name=level] { grid-area: xp }
 
   > .field[name=xp] {
-    margin-bottom: 0.5rem;
-    margin-top: 1rem;
-    margin-right: 0.5rem;
-    border-radius: 0.3rem;
+    @extend %round, %show-value;
+    margin-bottom: $small-gap;
+    margin-top: $large-gap;
+    margin-right: $small-gap;
     background: black;
 
     &:after {
-      content: attr(value);
       position: absolute;
       z-index: 1;
       padding-left: 1.8rem;
@@ -152,40 +134,38 @@
 
   $xp-color: #74005a;
   $level-up-color: #FFD700;
+  $level-circle-size: 2rem;
 
   > .field[name=level] {
+    @extend %show-value, %round;
     display: flex;
     justify-content: left;
     align-items: center;
-    margin-left: 0.5rem;
-    margin-top: 0.5rem;
+    margin-left: $small-gap;
+    margin-top: $small-gap;
     color: white;
-    font: bold 1.4rem Cinzel;
-    border-radius: 0 0.5rem 0.5rem 0;
 
     &::before {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-      margin-left: -1rem;
-      border: 2px solid $level-up-color;
-      background: $background-color;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 2rem;
-      content: attr(value);
-    }
-
-    &::after {
+      @extend %round;
       content: '';
       position: absolute;
       margin-left: -0.5rem;
-      width: calc(100% - 2rem);
+      width: calc(#{$full} - #{$level-circle-size});
       height: 50%;
-      border-radius: 0 0.3rem 0.3rem 0;
-      padding-left: 2rem;
+      padding-left: $level-circle-size;
       background: $level-up-color;
+    }
+
+    &::after {
+      @extend %centering;
+      z-index: 1;
+      margin-left: #{math.div($level-circle-size, -2)};
+      border: 2px solid $level-up-color;
+      background: $background-color;
+      width: $level-circle-size;
+      aspect-ratio: 1;
+      border-radius: $level-circle-size;
+      font: bold 1.4rem Cinzel;
     }
   }
 
@@ -216,23 +196,25 @@
   > .field[name=intelligence],
   > .field[name=wisdom],
   > .field[name=charisma] {
+    @extend %show-name, %show-value;
+    background: $stats-color;
     color: white;
     border-radius: 1rem 0 0 1rem;
+    $padding: 0.2rem;
 
     &::before {
       position: absolute;
-      top: 0.2rem;
-      right: 0.2rem;
-      content: attr(value);
+      bottom: $padding;
+      right: $padding;
+      text-align: center;
+      font: 0.6rem Cinzel;
+      width: $full;
     }
+
     &::after {
       position: absolute;
-      bottom: 0.2rem;
-      right: 0;
-      text-align: center;
-      font: 0.7rem Cinzel;
-      width: $full;
-      content: attr(name);
+      top: 0;
+      right: $padding;
     }
   }
 
@@ -242,13 +224,9 @@
   > .field[name=int],
   > .field[name=wis],
   > .field[name=cha] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @extend %centering, %show-value;
     color: white;
     font: 2.4rem Cinzel;
-
-    &::after { content: attr(value); }
   }
 
   > .field[name=weak],
@@ -257,73 +235,43 @@
   > .field[name=stunned],
   > .field[name=confused],
   > .field[name=scarred] {
-    height: fit-content;
-    width: fit-content;
-    transform: rotate(-30deg) translate(-0.2rem, 1.2rem);
-    font: bold 0.7rem MedievalSharp;
+    @extend %content-size, %stamp;
     color: white;
 
-    &[value='true']::after { content: attr(name); }
+    &[value='true'] { @extend %show-name; }
   }
-
-  > .field[name=strength]     { background: #44110A; }
-  > .field[name=dexterity]    { background: #072818; }
-  > .field[name=constitution] { background: #101E33; }
-  > .field[name=intelligence] { background: #1A0E2D; }
-  > .field[name=wisdom]       { background: #453A02; }
-  > .field[name=charisma]     { background: #462206; }
 
   // -------------------- information --------------------
 
   > .field[name=description] {
+    @extend %show-value;
     grid-area: description;
     font: bold 0.7rem MedievalSharp;
     color: white;
     text-align: justify;
-    padding: 0.5rem;
-    background: #172022;
+    padding: $small-gap;
+    background: $field-background;
     overflow-y: scroll;
-
-    &::after { content: attr(value); }
   }
 
   // -------------------- main stats --------------------
 
-  > .field[name=damage] {
-    grid-area: damage;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem;
-    font: bold 1.2rem MedievalSharp;
+  > .field[name=damage],
+  > .field[name=armor], 
+  > .field[name=hp],
+  > .field[name='max hp'] {
+    @extend %centering, %title-text, %show-value;
+    padding: $small-gap;
     color: white;
-
-    &::after { content: attr(value); }
   }
 
-  > .field[name=armor] {
-    grid-area: armor;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem;
-    font: bold 1.2rem MedievalSharp;
-    color: white;
-
-    &::after { content: attr(value); }
-  }
+  > .field[name=damage] { grid-area: damage; }
+  > .field[name=armor] { grid-area: armor; }
 
   > .field[name=hp],
   > .field[name='max hp'] {
     grid-area: hp;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.5rem;
-    font: bold 1.2rem MedievalSharp;
-    color: white;
-
-    &::after { content: attr(value); margin: 0.75rem; }
+    &::after { margin: 0.75rem; }
   }
 
   > .field[name=hp] {
@@ -338,17 +286,17 @@
 
   > .field[name=moves], > .field[name=gear] {
     overflow-x: scroll;
-    padding: 0.5rem;
-    background: #172022;
+    padding: $small-gap;
+    background: $field-background;
 
     display: flex;
-    gap: 0.5rem;
+    gap: $small-gap;
 
     > * {
+      @extend %round;
       aspect-ratio: 1;
       flex: 10 0 auto;
-      background: #202d31;
-      border-radius: 0.5rem;
+      background: $collection-item-color;
     }
   }
 
@@ -356,13 +304,14 @@
     grid-area: moves;
 
     .field[name=name] {
+      @extend %show-value;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       text-align: center;
       height: $full;
-      padding: 0.5rem;
+      padding: $small-gap;
       box-sizing: border-box;
       font: bold 0.7rem Cinzel;
 
@@ -370,13 +319,13 @@
         content: '';
         // TODO background-image: url('images/games/dungeon-world/moves/' attr(value) '.jpg')
       }
-      &::after { content: attr(value); }
     }
   }
   > .field[name=gear] {
     grid-area: gear;
 
     .field[name=name] {
+      @extend %show-value;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -391,23 +340,22 @@
         content: '';
         // TODO background-image: url('images/games/dungeon-world/gear/' attr(value) '.jpg')
       }
-      &::after { content: attr(value); }
     }
   }
 
   // -------------------- notes --------------------
 
-  > .field[name=notes] {
-    grid-area: notes;
-    font: bold 0.7rem MedievalSharp;
-    color: white;
-    text-align: justify;
-    padding: 0.5rem;
-    background: #172022;
-    overflow-y: scroll;
+  // > .field[name=notes] {
+  //   grid-area: notes;
+  //   font: bold 0.7rem MedievalSharp;
+  //   color: white;
+  //   text-align: justify;
+  //   padding: 0.5rem;
+  //   background: #172022;
+  //   overflow-y: scroll;
 
-    &::after { content: attr(value); }
-  }
+  //   &::after { content: attr(value); }
+  // }
 
   // -------------------- settings --------------------
 
@@ -419,5 +367,4 @@
     align-items: center;
     font-size: 1.5rem;
   }
-
 }
