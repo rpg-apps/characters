@@ -12,10 +12,10 @@ const getHandlers = settings => {
   // -------------------- description --------------------
   handlers.description = { click: 'show description' }
 
-  handlers.level = {
+  handlers.level = handlers.xp = {
     'swiped right': 'add 1 to xp',
-    'swiped left': 'remove 1 from xp',
-    'click': { 'is level up allowed': { 'yes': 'trigger Level Up', 'no': 'do nothing' } }
+    'swiped left': { 'is xp > 0': { 'yes': 'remove 1 from xp', 'no': 'do nothing' } },
+    click: { 'is level up allowed': { 'yes': 'trigger Level Up', 'no': 'do nothing' } }
   }
 
 
@@ -37,6 +37,8 @@ const getHandlers = settings => {
    'swiped down': () => { delete handlers['max hp'].prevent }
   }
   handlers.damage = { 'swipe up': 'deal damage' }
+
+  handlers.damage = { click: 'deal damage' }
 
   // -------------------- stats --------------------
   const stats = { strength: 'weak', dexterity: 'shakey', constitution: 'sick', intelligence: 'stunned', wisdom: 'confused', charisma: 'scarred' }

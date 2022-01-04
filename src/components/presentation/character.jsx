@@ -16,6 +16,7 @@ export default class Character extends React.Component  {
   }
 
   async componentDidMount () {
+    console.log(this.character)
     await this.refreshHandlers()
   }
 

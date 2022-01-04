@@ -139,6 +139,15 @@
     margin-right: 0.5rem;
     border-radius: 0.3rem;
     background: black;
+
+    &:after {
+      content: attr(value);
+      position: absolute;
+      z-index: 1;
+      padding-left: 1.8rem;
+      font: 0.9rem white Cinzel;
+      line-height: 1rem;
+    }
   }
 
   $xp-color: #74005a;
@@ -160,7 +169,7 @@
       align-items: center;
       z-index: 1;
       margin-left: -1rem;
-      border: 2px solid $xp-color;
+      border: 2px solid $level-up-color;
       background: $background-color;
       width: 2rem;
       height: 2rem;
@@ -169,26 +178,26 @@
     }
 
     &::after {
+      content: '';
+      position: absolute;
       margin-left: -0.5rem;
-      background: $xp-color;
-      border-radius: 0 0.3rem 0.3rem 0;
+      width: calc(100% - 2rem);
       height: 50%;
-      font: 1rem white;
-      padding-left: 1rem;
+      border-radius: 0 0.3rem 0.3rem 0;
+      padding-left: 2rem;
+      background: $level-up-color;
     }
   }
 
   @for $lvl from 1 through 10 {
-    @for $xp from 1 through $lvl+7 {
-      > .field[name=xp][value='#{$xp}'] ~ .field[name=level][value='#{$lvl}']::after {
-        content: '#{$xp}';
-        width: calc(#{math.div($xp, $lvl+7)*100}% - #{math.div($xp, $lvl+7)}rem);
+    @for $xp from 0 through $lvl+6 {
+      > .field[name=xp][value='#{$xp}'] ~ .field[name=level][value='#{$lvl}'] {
+        &::before { border-color: $xp-color !important; }
+        &::after {
+          background: $xp-color !important;
+          width: calc(#{math.div($xp, $lvl+7)*100}% - #{math.div($xp, $lvl+7)*2}rem);
+        }
       }
-    }
-
-    > .field[name=xp][value='#{$lvl+7}'] ~ .field[name=level][value='#{$lvl}'] {
-      &::before { border-color: $level-up-color !important; }
-      &::after { background: $level-up-color !important; }
     }
   }
 
