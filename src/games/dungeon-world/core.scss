@@ -87,18 +87,18 @@ $collection-item-color: #202d31;
   grid-template-areas:
     "name name name xp"
     "description description description strength"
-    "description description description strength"
-    "info info info dexterity"
-    "damage armor hp dexterity"
+    "playbook race alignment strength"
+    "playbook race alignment dexterity"
+    "bonds bonds bonds dexterity"
     "damage armor hp constitution"
-    "moves moves moves constitution"
+    "damage armor hp constitution"
     "moves moves moves intelligence"
     "moves moves moves intelligence"
-    "gear gear gear wisdom"
-    "gear gear gear wisdom"
+    "moves moves moves wisdom"
+    "load load load wisdom"
     "gear gear gear charisma"
-    "notes notes notes charisma"
-    "notes notes notes settings";
+    "gear gear gear charisma"
+    "gear gear gear settings";
 
   > .field {
     position: relative;
@@ -132,8 +132,10 @@ $collection-item-color: #202d31;
     }
   }
 
-  $xp-color: #74005a;
-  $level-up-color: #FFD700;
+  $xp-color: #207400;
+  $level-up-color: #e3a82e;
+  $level-up-gradient: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   $level-circle-size: 2rem;
 
   > .field[name=level] {
@@ -153,7 +155,7 @@ $collection-item-color: #202d31;
       width: calc(#{$full} - #{$level-circle-size});
       height: 50%;
       padding-left: $level-circle-size;
-      background: $level-up-color;
+      background: $level-up-gradient;
     }
 
     &::after {
@@ -169,14 +171,15 @@ $collection-item-color: #202d31;
     }
   }
 
-  @for $lvl from 1 through 10 {
+  @for $lvl from 1 through 20 {
     @for $xp from 0 through $lvl+6 {
+      > .field[name=xp][value='#{$xp}'] { color: white; }
       > .field[name=xp][value='#{$xp}'] ~ .field[name=level][value='#{$lvl}'] {
-        &::before { border-color: $xp-color !important; }
-        &::after {
+        &::before {
           background: $xp-color !important;
           width: calc(#{math.div($xp, $lvl+7)*100}% - #{math.div($xp, $lvl+7)*2}rem);
         }
+        &::after { border-color: $xp-color !important; }
       }
     }
   }
@@ -246,12 +249,72 @@ $collection-item-color: #202d31;
   > .field[name=description] {
     @extend %show-value;
     grid-area: description;
-    font: bold 0.7rem MedievalSharp;
+    font: bold 1rem MedievalSharp;
     color: white;
     text-align: justify;
-    padding: $small-gap;
-    background: $field-background;
-    overflow-y: scroll;
+    overflow: hidden;
+    line-height: 1em;
+    margin-top: -#{$large-gap};
+    padding-left: $large-gap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  > .field[name=look] {
+    @extend %show-value;
+    grid-area: description;
+    color: white;
+    font: 0.7rem Metamorphous;
+    padding-top: $small-gap;
+    padding-left: $large-gap;
+  }
+
+  > .field[name=playbook] {
+    grid-area: playbook;
+    padding: $large-gap;
+    background-color: $field-background;
+    > .field[name=name] {
+      @extend %show-value;
+      color: white;
+      font: 0.7rem Metamorphous;
+    }
+  }
+
+  > .field[name=race] {
+    @extend %show-value;
+    grid-area: race;
+    padding: $large-gap;
+    background-color: $field-background;
+    color: white;
+    font: 0.7rem Metamorphous;
+  }
+
+  > .field[name=alignment] {
+    @extend %show-value;
+    grid-area: alignment;
+    padding: $large-gap;
+    background-color: $field-background;
+    color: white;
+    font: 0.7rem Metamorphous;
+    padding: $large-gap;
+  }
+
+  > .field[name=bonds] {
+    grid-area: bonds;
+    background-color: $field-background;
+    color: white;
+    font-size: 0.7rem;
+    overflow: hidden scroll;
+
+    > * {
+      @extend %show-value, %round;
+      box-sizing: border-box;
+      width: calc(#{$full} - #{2*$small-gap});
+      margin: $small-gap;
+      padding: $small-gap;
+      background: $collection-item-color;
+    }
   }
 
   // -------------------- main stats --------------------

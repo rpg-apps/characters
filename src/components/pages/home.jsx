@@ -9,7 +9,6 @@ import Character from '../presentation/character'
 
 export default function Home (props) {
   const characters = useCharacters()
-  console.log(characters)
 
   return <div className='home page'>
     <div key='characters' className='characters'>
