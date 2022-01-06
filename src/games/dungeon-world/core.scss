@@ -52,7 +52,7 @@ $collection-item-color: #202d31;
 
   &.thief {
     @extend %exact-background;
-    background-image: url('./images/classes-icons/thief.jpg');
+    background-image: url('./images/classes-icons/thief.png');
     background-position: right;
     background-color: #3f2167;
     color: white;
@@ -101,6 +101,7 @@ $collection-item-color: #202d31;
     "gear gear gear settings";
 
   > .field {
+    @extend %invisible;
     position: relative;
   }
 
@@ -108,13 +109,16 @@ $collection-item-color: #202d31;
 
   > .field[name=name] {
     grid-area: name;
-    @extend %title-text, %show-value;
+    @extend %flex-visible, %title-text, %show-value;
     margin-left: $large-gap;
     line-height: 2.5rem;
     color: white;
   }
 
-  > .field[name=xp], > .field[name=level] { grid-area: xp }
+  > .field[name=xp], > .field[name=level] {
+    @extend %flex-visible;
+    grid-area: xp;
+  }
 
   > .field[name=xp] {
     @extend %round, %show-value;
@@ -199,7 +203,7 @@ $collection-item-color: #202d31;
   > .field[name=intelligence],
   > .field[name=wisdom],
   > .field[name=charisma] {
-    @extend %show-name, %show-value;
+    @extend %flex-visible, %show-name, %show-value;
     background: $stats-color;
     color: white;
     border-radius: 1rem 0 0 1rem;
@@ -227,7 +231,7 @@ $collection-item-color: #202d31;
   > .field[name=int],
   > .field[name=wis],
   > .field[name=cha] {
-    @extend %centering, %show-value;
+    @extend %flex-visible, %centering, %show-value;
     color: white;
     font: 2.4rem Cinzel;
   }
@@ -238,7 +242,7 @@ $collection-item-color: #202d31;
   > .field[name=stunned],
   > .field[name=confused],
   > .field[name=scarred] {
-    @extend %content-size, %stamp;
+    @extend %flex-visible, %content-size, %stamp;
     color: white;
 
     &[value='true'] { @extend %show-name; }
@@ -247,7 +251,7 @@ $collection-item-color: #202d31;
   // -------------------- information --------------------
 
   > .field[name=description] {
-    @extend %show-value;
+    @extend %flex-visible, %show-value;
     grid-area: description;
     font: bold 1rem MedievalSharp;
     color: white;
@@ -262,7 +266,7 @@ $collection-item-color: #202d31;
   }
 
   > .field[name=look] {
-    @extend %show-value;
+    @extend %flex-visible, %show-value;
     grid-area: description;
     color: white;
     font: 0.7rem Metamorphous;
@@ -271,36 +275,79 @@ $collection-item-color: #202d31;
   }
 
   > .field[name=playbook] {
+    @extend %flex-visible, %centering;
     grid-area: playbook;
-    padding: $large-gap;
-    background-color: $field-background;
     > .field[name=name] {
-      @extend %show-value;
+      @extend %show-value, %full-size, %centering;
+      flex-direction: column;
+      gap: $tiny-gap;
       color: white;
-      font: 0.7rem Metamorphous;
+      font: bold 1rem MedievalSharp;
+      text-transform: uppercase;
+
+      &::before {
+        content: '';
+        width: $full;
+        flex: 1;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      &[value=thief]::before {
+        background-image: url('./images/classes-icons/thief.png');
+      }
     }
   }
 
   > .field[name=race] {
-    @extend %show-value;
+    @extend %flex-visible, %show-value, %full-size, %centering;
     grid-area: race;
-    padding: $large-gap;
-    background-color: $field-background;
+    flex-direction: column;
+    gap: $tiny-gap;
     color: white;
-    font: 0.7rem Metamorphous;
+    font: bold 1rem MedievalSharp;
+    text-transform: uppercase;
+
+    &::before {
+      content: '';
+      width: $full;
+      flex: 1;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    &::before {
+      background-image: url('./images/classes-icons/thief.png');
+    }
   }
 
   > .field[name=alignment] {
-    @extend %show-value;
+    @extend %flex-visible, %show-value, %full-size, %centering;
     grid-area: alignment;
-    padding: $large-gap;
-    background-color: $field-background;
+    flex-direction: column;
+    gap: $tiny-gap;
     color: white;
-    font: 0.7rem Metamorphous;
-    padding: $large-gap;
+    font: bold 1rem MedievalSharp;
+    text-transform: uppercase;
+
+    &::before {
+      content: '';
+      width: $full;
+      flex: 1;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    &::before {
+      background-image: url('./images/classes-icons/thief.png');
+    }
   }
 
   > .field[name=bonds] {
+    @extend %grid-visible;
     grid-area: bonds;
     background-color: $field-background;
     color: white;
@@ -323,7 +370,7 @@ $collection-item-color: #202d31;
   > .field[name=armor], 
   > .field[name=hp],
   > .field[name='max hp'] {
-    @extend %centering, %title-text, %show-value;
+    @extend %flex-visible, %centering, %title-text, %show-value;
     padding: $small-gap;
     color: white;
   }
@@ -348,6 +395,7 @@ $collection-item-color: #202d31;
   // -------------------- collections --------------------
 
   > .field[name=moves], > .field[name=gear] {
+    @extend %flex-visible;
     overflow-x: scroll;
     padding: $small-gap;
     background: $field-background;
