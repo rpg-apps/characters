@@ -9,7 +9,7 @@ export default function Field (props) {
   })
 
   if (typeof value === 'object') {
-    return <Field key={name} name={name} className='complex' handleEvent={handleEvent}>
+    return <Field key={name} name={name} className={`complex ${className || ''}`} handleEvent={handleEvent}>
       {Object.entries(value).map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={handleEvent} />)}
     </Field>
   }

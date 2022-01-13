@@ -31,9 +31,7 @@ $playbook-card-height: 5rem;
   }
 
   &.choose.playbook .field {
-    @extend %round;
-    @extend %inverted;
-    @extend %show-value;
+    @extend %round, %inverted, %show-value;
     height: $playbook-card-height;
     margin: $large-gap;
   }
@@ -53,7 +51,7 @@ $playbook-card-height: 5rem;
       line-height: $title-height;
       height: $title-height;
     }
-    
+
     textarea {
       @extend %round;
       border: none;
@@ -69,6 +67,39 @@ $playbook-card-height: 5rem;
 
       &[type='text'] {
         width: $full;
+      }
+    }
+  }
+
+  .field.choice {
+    > .options {
+      width: $full;
+      height: calc(#{$page-height} - #{$title-height});
+      overflow-y: scroll;
+      display: flex;
+      flex-direction: column;
+      gap: $small-gap;
+
+      .options-collection {
+        display: flex;
+        gap: $small-gap;
+
+        > * { flex: 1; }
+      }
+
+      .field {
+        @extend %round;
+        @extend %inverted;
+        @extend %show-value;
+        padding: $small-gap;
+        background: inherit;
+      }
+
+      > .field, .options-collection > .field {
+        background: white;
+        &.selected {
+          background: cornflowerblue;
+        }
       }
     }
   }
@@ -138,10 +169,17 @@ $playbook-card-height: 5rem;
       flex-direction: column;
       gap: $small-gap;
 
+
       > .field {
+        @extend %centering, %show-value;
         background: white;
         aspect-ratio: 1;
+
+        &.selected { background: cornflowerblue; }
+        &.done { background: #2b4980; }
       }
     }
+
+    .target .field { @extend %show-name; }
   }
 }

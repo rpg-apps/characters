@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
+import { Redirect } from 'react-router'
 
 import '../../css/pages/new.scss'
 
@@ -11,6 +12,8 @@ import { SUPPORTED_RULEBOOKS } from '../../games'
 
 export default function New () {
   const rules = useRules()
+  const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
   const [builder, setBuilder] = useState()
   const [playbook, setPlaybook] = useState()
   const [choice, setChoice] = useState()
@@ -24,13 +27,30 @@ export default function New () {
     builder.start(playbook)
     setPlaybook(playbook)
     setChoice(builder.choice)
-    console.log(builder.choice)
   }
 
   const update = value => {
     builder.choose(value)
-    setChoice(builder.choice)
-    console.log(builder.choice)
+    if (builder.choice) {
+      setChoice(builder.choice)
+    } else {
+      setLoading(true)
+      finish()
+    }
+  }
+
+  const finish = async () => {
+    builder.finish()
+    await builder.afterFinish()
+    setDone(true)
+  }
+
+  if (loading) {
+    return <Loader className='new page' />
+  }
+
+  if (done) {
+    return <Redirect to="/" />
   }
 
   if (!builder) {
@@ -56,49 +76,95 @@ function Page ({ children, className='' }) { return <div className={`new page ${
 
 function FieldChoice ({ choice, builder, onChoice }) {
   const [value, setValue] = useState()
-  const options = builder.playbook
+  const options = builder.playbook.fields[choice.field]
 
   const submit = () => {
     onChoice(value)
     setValue('')
   }
 
+  if (Array.isArray(options[0])) {
+    const update = option => {
+      const group = options.find(g => g.includes(option))
+      const newValue = (Array.isArray(value) ? value : []).filter(item => !group.includes(item)).concat([option])
+      setValue(newValue)
+    }
+
+    return <div className={`field choice ${choice.name}`}>
+      <div className='title'>{choice.name}</div>
+      <div className='options'>
+        {options.map((optionsCollection, index) =>
+          <div key={index} className='options-collection'>
+            {optionsCollection.map((option, index) =>
+              <Field className={`option ${value.includes(option) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={option} handleEvent={() => update(option)}/>
+            )}
+          </div>
+        )}
+      </div>
+      <div className='button' onClick={submit}><FaArrowRight />next</div>
+    </div>
+  }
+
   return <div className={`field choice ${choice.name}`}>
     <div className='title'>{choice.name}</div>
-    {options.map(option => <Field className={value === option ? 'selected' : ''} {...option} onClick={() => setValue(option)}/>)}
+    <div className='options'>
+      {options.map((option, index) => <Field className={`option ${value === option ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={option} handleEvent={() => setValue(option)}/>)}
+    </div>
     <div className='button' onClick={submit}><FaArrowRight />next</div>
   </div>
 }
 
 function AssignmentChoice ({ builder, choice, onChoice }) {
   const [value, setValue] = useState({})
-  const [source, setSource] = useState([])
-  const [selection, setSelection] = useState()
+  const [selection, setSelection] = useState({})
 
-  useEffect(() => {
-    console.log(builder.playbook.fields[choice.source])
-    setSource(builder.playbook.fields[choice.source])
-  }, [builder.playbook.fields, choice.source])
+  const source = builder.playbook.fields[choice.source]
+  const target = choice.target
 
-  const select = sourceValue => {
-    setSelection(sourceValue)
+  const assign = newSelection => {
+    setValue({ ...value, [newSelection.target]: newSelection.source })
+    setSelection({})
   }
 
-  const assign = target => {
-    setValue({ ...value, [target]: selection })
-    setSelection()
+  const unassign = unassigned => {
+    let key
+    if (source.includes(unassigned)) key = target.find(targetKey => value[targetKey] === unassigned)
+    if (target.includes(unassigned)) key = unassigned
+
+    const newValue = value
+    delete value[key]
+    setValue(newValue)
+    setSelection({})
+  }
+
+  const select = selectionAddition => {
+    let addition = { }
+    if (source.includes(selectionAddition)) addition = { source: selectionAddition }
+    if (target.includes(selectionAddition)) addition = { target: selectionAddition }
+
+    const newSelection = { ...selection, ...addition }
+    if (newSelection.source && newSelection.target) assign(newSelection)
+    else                                            setSelection(newSelection)
+  }
+
+  const handle = item => {
+    if (Object.keys(value).includes(item) || Object.values(value).includes(item)) {
+      unassign(item)
+    } else {
+      select(item)
+    }
   }
 
   return <div className={`assignment choice ${choice.name}`}>
     <div className='title'>{choice.name}</div>
     <div className='selection'>
       <div className='source'>
-        {source.map(sourceValue => <Field className={`recommendation ${selection === sourceValue ? 'selected' : ''} ${Object.values(value).includes(sourceValue) ? 'done' : ''}`}
-          noSwipe={true} noDirect={true} key={sourceValue} value={sourceValue} handleEvent={() => select(sourceValue)}/>)}
+        {source.map((sourceValue, index) => <Field className={`recommendation ${selection.source === sourceValue ? 'selected' : ''} ${Object.values(value).includes(sourceValue) ? 'done' : ''}`}
+          noSwipe={true} noDirect={true} key={index} value={sourceValue} handleEvent={() => handle(sourceValue)}/>)}
       </div>
       <div className='target'>
-        {choice.target.map(target => <Field className={`recommendation ${Object.keys(value).includes(target) ? 'done' : ''}`}
-          noSwipe={true} noDirect={true} key={target} value={target} handleEvent={() => assign(target)}/>)}
+        {target.map((targetValue, index) => <Field className={`recommendation ${selection.target === targetValue ? 'selected' : ''} ${Object.keys(value).includes(targetValue) ? 'done' : ''}`}
+          noSwipe={true} noDirect={true} key={index} name={targetValue} value={value[targetValue]} handleEvent={() => handle(targetValue)} />)}
       </div>
     </div>
     <div className='button' onClick={() => onChoice(value)}><FaArrowRight />next</div>
@@ -154,10 +220,10 @@ function Recommendations ({ recommendations, val, setValue }) {
     return <div className='recommendations'>
       <div className='title'>recommendations</div>
       <div className='options'>
-        {recommendations.map(recommendationCollection =>
-          <div className='recommendations-collection'>
-            {recommendationCollection.map(recommendation =>
-              <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={recommendation} value={recommendation} handleEvent={update}/>
+        {recommendations.map((recommendationCollection, index) =>
+          <div key={index} className='recommendations-collection'>
+            {recommendationCollection.map((recommendation, index) =>
+              <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={recommendation} handleEvent={update}/>
             )}
           </div>
         )}
@@ -168,8 +234,8 @@ function Recommendations ({ recommendations, val, setValue }) {
   return <div className='recommendations'>
     <div className='title'>recommendations</div>
     <div className='options'>
-      {recommendations.map(recommendation =>
-        <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={recommendation} value={recommendation} handleEvent={() => setValue(recommendation)}/>
+      {recommendations.map((recommendation, index) =>
+        <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
       )}
     </div>
   </div>
@@ -178,12 +244,12 @@ function Recommendations ({ recommendations, val, setValue }) {
 function OptionsChoice ({ title, options, onChoice }) {
   if (options.length === 1) {
     onChoice(options[0])
-    return <Loader />
+    return ''
   }
   return [
-    <div className='title'>{title}</div>,
-    <div className='options'>
-      {options.map(option =><Field key={option} value={option} handleEvent={async () => await onChoice(option)}/>)}
+    <div key='title' className='title'>{title}</div>,
+    <div key='options' className='options'>
+      {options.map((option, index) => <Field key={index} value={option} handleEvent={async () => await onChoice(option)}/>)}
     </div>
   ]
 }

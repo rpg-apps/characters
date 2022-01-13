@@ -7,6 +7,10 @@ $stats-color: #101E33;
 $field-background: #172022;
 $collection-item-color: #202d31;
 
+.dungeon-world.core {
+  .field[name='trigger'], .field[name='procedure'] { @extend %invisible; }
+}
+
 .home.page .character.dungeon-world-core {
   position: relative;
   @extend %game-badge;
@@ -74,29 +78,26 @@ $collection-item-color: #202d31;
     &::after { margin: $large-gap; }
   }
 
-  &.dungeon-world {
+  &.dungeon-world.core {
     .choice.name .recommendations .options {
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
 
     .assignment.choice.stat {
-      .source {
-        align-items: flex-start;
-
+      .source, .target {
         > * {
-          @extend %round, %show-value, %title-text;
+          @extend %round;
           width: 5rem;
         }
       }
 
+      .source {
+        align-items: flex-start;
+      }
+
       .target {
         align-items: flex-end;
-
-        > * {
-          @extend %round, %show-value, %title-text;
-          width: 5rem;
-        }
       }
     }
   }
