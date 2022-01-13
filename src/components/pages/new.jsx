@@ -5,6 +5,7 @@ import { Redirect } from 'react-router'
 import '../../css/pages/new.scss'
 
 import { useRules } from '../contexts/rules-context'
+import { useCharacters } from '../contexts/characters-context'
 
 import Field from '../presentation/field'
 import Loader from '../presentation/loader'
@@ -12,6 +13,7 @@ import { SUPPORTED_RULEBOOKS } from '../../games'
 
 export default function New () {
   const rules = useRules()
+  const existingCharacters = useCharacters()
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const [builder, setBuilder] = useState()
@@ -42,15 +44,17 @@ export default function New () {
   const finish = async () => {
     builder.finish()
     await builder.afterFinish()
+    existingCharacters.push(builder.character)
+    builder.clear()
     setDone(true)
-  }
-
-  if (loading) {
-    return <Loader className='new page' />
   }
 
   if (done) {
     return <Redirect to="/" />
+  }
+
+  if (loading) {
+    return <Loader className='new page' />
   }
 
   if (!builder) {
