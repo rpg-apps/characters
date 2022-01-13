@@ -73,6 +73,33 @@ $collection-item-color: #202d31;
 
     &::after { margin: $large-gap; }
   }
+
+  &.dungeon-world {
+    .choice.name .recommendations .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .assignment.choice.stat {
+      .source {
+        align-items: flex-start;
+
+        > * {
+          @extend %round, %show-value, %title-text;
+          width: 5rem;
+        }
+      }
+
+      .target {
+        align-items: flex-end;
+
+        > * {
+          @extend %round, %show-value, %title-text;
+          width: 5rem;
+        }
+      }
+    }
+  }
 }
 
 .character.page > .character.dungeon-world-core {

@@ -14,6 +14,8 @@ export default function Field (props) {
     </Field>
   }
 
-  const eventHandling = { onClick: e => handleEvent(props, e), onMouseUp: e => handleEvent(props, e), onMouseDown: e => handleEvent(props, e) }
-  return <div name={name} value={value} {...swipeHandlers} {...eventHandling} className={className ? `${className} field` : 'field'}>{children}</div>
+  const eventHandling = { onClick: e => handleEvent(props, e) }
+  if (!props.noSwipe) { Object.assign(eventHandling, swipeHandlers) }
+  if (!props.noDirect) { Object.assign(eventHandling, { onMouseUp: e => handleEvent(props, e), onMouseDown: e => handleEvent(props, e) }) }
+  return <div name={name} value={value} {...eventHandling} className={className ? `${className} field` : 'field'}>{children}</div>
 }

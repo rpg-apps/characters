@@ -15,9 +15,10 @@ const getHandlers = settings => {
   handlers.level = handlers.xp = {
     'swiped right': 'add 1 to xp',
     'swiped left': { 'is xp > 0': { 'yes': 'remove 1 from xp', 'no': 'do nothing' } },
+    'swiped up': 'add 1 to level',
+    'swiped down': { 'is level > 0': { 'yes': 'remove 1 from level', 'no': 'do nothing' } },
     click: { 'is level up allowed': { 'yes': 'trigger Level Up', 'no': 'do nothing' } }
   }
-
 
   // -------------------- main stats --------------------
   handlers['max hp'] = {

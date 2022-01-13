@@ -1,14 +1,51 @@
+@use 'sass:math';
+
 @import "../utils.scss";
 
 $title-height: 3rem;
 $game-card-height: 8.8rem;
+$playbook-card-height: 5rem;
 
 .new.page {
+  @extend %page-size;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 
-  .pre-choice {
+  > .title {
+    color: white;
+    text-align: center;
+    line-height: $title-height;
+    height: $title-height;
+  }
+
+  > .options {
+    height: calc(#{$page-height} - #{$title-height});
+    overflow-y: scroll;
+  }
+
+  &.choose.game .field {
+    @extend %round;
+    height: $game-card-height;
+    margin: $large-gap;
+  }
+
+  &.choose.playbook .field {
+    @extend %round;
+    @extend %inverted;
+    @extend %show-value;
+    height: $playbook-card-height;
+    margin: $large-gap;
+  }
+
+  .choice {
     @extend %page-size;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $large-gap;
+    padding: $large-gap;
 
     > .title {
       color: white;
@@ -16,16 +53,95 @@ $game-card-height: 8.8rem;
       line-height: $title-height;
       height: $title-height;
     }
-
-    > .options {
-      height: calc(#{$page-height} - #{$title-height});
-      overflow-y: scroll;
+    
+    textarea {
+      @extend %round;
+      border: none;
+      padding: $small-gap;
+      width: $full !important;
+      flex: 1;
     }
 
-    &.choose.game .field {
+    input {
       @extend %round;
-      height: $game-card-height;
-      margin: $large-gap;
+      border: none;
+      padding: $small-gap;
+
+      &[type='text'] {
+        width: $full;
+      }
+    }
+  }
+
+  .type.choice .recommendations {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: calc(#{$full} + #{2*$large-gap});
+    height: 0;
+    gap: $small-gap;
+    padding: 0 $large-gap;
+    box-sizing: border-box;
+
+    .title {
+      width: $full;
+      color: white;
+    }
+
+    .options {
+      flex: 1;
+      overflow: scroll;
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      margin: 0 -1rem;
+      padding: 0 1rem;
+    }
+
+    .recommendations-collection {
+      display: flex;
+      gap: $small-gap;
+
+      > * { flex: 1; }
+    }
+
+    .field {
+      @extend %round;
+      @extend %inverted;
+      @extend %show-value;
+      padding: $small-gap;
+
+      &.selected {
+        background: cornflowerblue;
+      }
+    }
+  }
+
+  .button {
+    margin: 0 $large-gap;
+  }
+
+  .assignment.choice .selection {
+    display: flex;
+    justify-content: space-evenly;
+    flex: 1;
+    width: calc(#{$full} + #{2*$large-gap});
+    height: 0;
+    gap: $small-gap;
+    padding: 0 $large-gap;
+    box-sizing: border-box;
+
+    > * {
+      height: $full;
+      width: math.div($full, 2);
+      display: flex;
+      flex-direction: column;
+      gap: $small-gap;
+
+      > .field {
+        background: white;
+        aspect-ratio: 1;
+      }
     }
   }
 }
