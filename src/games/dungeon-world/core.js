@@ -1,8 +1,40 @@
 const settings = {
+  description: {
+    editableName:        { type: 'boolean', text: 'click on the name to edit it' },
+    editableDescription: { type: 'boolean', text: 'click on the description to edit it' },
+    viewableDescription: { type: 'boolean', text: 'click on the description to see it' },
+    editableLook:        { type: 'boolean', text: 'click on the look to edit it' },
+    viewableLook:        { type: 'boolean', text: 'click on the look to see it' },
+    viewableClass:       { type: 'boolean', text: 'click on class to see it' },
+    viewableRace:        { type: 'boolean', text: 'click on race to see it' },
+    editableRace:        { type: 'boolean', text: 'swipe down on race to edit it' },
+    runnableRace:        { type: 'boolean', text: 'swipe up on race to run the race move' },
+    viewableAlignment:   { type: 'boolean', text: 'click on alignment to see it' },
+    viewableBonds:       { type: 'boolean', text: 'click on bonds to edit them' }
+  },
+  xp: {
+    editableLevel: { type: 'boolean', text: 'swipe up or down on XP to change levels' },
+    editableXP:    { type: 'boolean', text: 'swipe right or left on XP to add or reduce XP' },
+    quickLevelUp:  { type: 'boolean', text: 'click on XP to Level Up when you can' }
+  },
   stats: {
-    rollOnSwipe: { text: 'swipe left on stat to roll it', type: 'boolean', defaultValue: true }
+    rollable: { type: 'boolean', text: 'swipe left on stat to roll it' },
+    editable: { type: 'boolean', text: 'swipe up or down on stat to change it' }
+  },
+  status: {
+    rollable:       { type: 'boolean', text: 'click on damage to roll it' },
+    editableDamage: { type: 'boolean', text: 'swipe up on damage to edit it' },
+    editableHP:     { type: 'boolean', text: 'swipe up and down on HP to edit it' },
   }
 }
+
+const PLANS = [{
+  name: 'Manual',
+  description: 'Like a character sheet, only on the computer',
+  settings: {
+    xp: { editableLevel: true, editableXP: true }
+  }
+}]
 
 const RESOLUTION = 30
 

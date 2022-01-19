@@ -14,9 +14,11 @@ export function WithCharacters ({ children }) {
   const [characterJsons, setCharacterJsons] = useState(false)
   const [characters, setCharacters] = useState(false)
 
-  useEffect(() => {
-    (async () => setCharacterJsons(await user.callFunction('getCharacters'))) ()
-  }, [user])
+  const load = async () => {
+    setCharacterJsons(await user.callFunction('getCharacters'))
+  }
+
+  useEffect(() => { load() }, [user])
 
   useEffect(() => {
     (async () => {
@@ -26,7 +28,16 @@ export function WithCharacters ({ children }) {
         const character = await (await rules.get(json.rulebooks)).characters.load(json)
         character.id = json._id
         character.save = async () => await user.callFunction('updateCharacter', { id: character.id.toString(), character: character.toJson() })
+        character.delete = async () => {
+          await user.callFunction('deleteCharacter', { id: character.id.toString() })
+          await load()
+        }
         chars.push(character)
+      }
+      chars.create = async character => {
+        const id = (await user.callFunction('createCharacter', { character })).insertedId
+        await load()
+        return id
       }
       setCharacters(chars)
     }) ()

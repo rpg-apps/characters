@@ -8,6 +8,7 @@ $footer-height: 5rem;
 
   .characters {
     height: calc(#{$page-height} - #{$footer-height});
+    overflow: scroll;
 
     .character {
       @extend %round;

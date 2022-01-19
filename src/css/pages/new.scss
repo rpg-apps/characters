@@ -52,8 +52,13 @@ $playbook-card-height: 5rem;
       height: $title-height;
     }
 
+    .input {
+      width: $full !important;
+    }
+
     textarea {
       @extend %round;
+      box-sizing: border-box;
       border: none;
       padding: $small-gap;
       width: $full !important;

@@ -1,5 +1,6 @@
-import React, { useState, useContext, createContext } from 'react'
+import React, { useContext, createContext } from 'react'
 import load from '@rpg-apps/rpg-js'
+import Promise from 'bluebird'
 
 import { useAuth } from './auth-context'
 
@@ -9,16 +10,15 @@ export const useRules = () => useContext(RulesContext)
 
 export function WithRules ({ children }) {
   const { user } = useAuth()
-  const [cache, setCache] = useState({})
+  const cache = {}
 
-  const set = async (rulebooks, rules) => await setCache({ ...cache, [key(rulebooks)]: rules })
+  const set = (rulebooks, rules) => { cache[key(rulebooks)] = rules }
 
-  const get = async rulebooks => {
+  const get = rulebooks => {
     if (!cache[key(rulebooks)]) {
-      const rules = await load(rulebooks)
-      rules.characters.builder.afterFinish = async () => await user.callFunction('createCharacter', { character: rules.characters.builder.character.toJson() })
-      await set(rulebooks, rules)
-      return rules
+      const promise = Promise.resolve().then(() => load(rulebooks))
+      set(rulebooks, promise)
+      return promise
     }
     return cache[key(rulebooks)]
   }
