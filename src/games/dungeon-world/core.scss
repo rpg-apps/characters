@@ -1,7 +1,8 @@
 @use 'sass:math';
 
 @import "../../css/utils.scss";
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel&family=Metamorphous&display=swap');
+@import url(//db.onlinewebfonts.com/c/6bd1a3591c8b61e9715642ccae7e9418?family=Newcomen+Black);
+@import url(//db.onlinewebfonts.com/c/fe9c236a1c142788cb16ec5238c7833e?family=Minion+Pro);
 
 $stats-color: #101E33;
 $field-background: #172022;
@@ -45,11 +46,8 @@ $collection-item-color: #202d31;
   }
 
   > .field[name=playbook] {
-    @extend %visible;
-     > .field[name=name] {
-      grid-area: class;
-      @extend %meta-text, %show-value;
-    }
+    @extend %visible, %meta-text, %show-value;
+    grid-area: class;
   }
 
   .settings { @extend %invisible; }
@@ -159,7 +157,6 @@ $collection-item-color: #202d31;
       position: absolute;
       z-index: 1;
       padding-left: 1.8rem;
-      font: 0.9rem white Cinzel;
       line-height: 1rem;
     }
   }
@@ -199,7 +196,6 @@ $collection-item-color: #202d31;
       width: $level-circle-size;
       aspect-ratio: 1;
       border-radius: $level-circle-size;
-      font: bold 1.4rem Cinzel;
     }
   }
 
@@ -233,16 +229,16 @@ $collection-item-color: #202d31;
   > .field[name=charisma] {
     @extend %flex-visible, %show-name, %show-value;
     background: $stats-color;
+    font: 0.7rem 'Minion Pro';
     color: white;
     border-radius: 1rem 0 0 1rem;
     $padding: 0.2rem;
 
     &::before {
       position: absolute;
+      text-transform: uppercase;
       bottom: $padding;
-      right: $padding;
       text-align: center;
-      font: 0.6rem Cinzel;
       width: $full;
     }
 
@@ -260,8 +256,8 @@ $collection-item-color: #202d31;
   > .field[name=wis],
   > .field[name=cha] {
     @extend %flex-visible, %centering, %show-value;
+    font: 3rem 'Minion Pro';
     color: white;
-    font: 2.4rem Cinzel;
   }
 
   > .field[name=weak],
@@ -271,7 +267,6 @@ $collection-item-color: #202d31;
   > .field[name=confused],
   > .field[name=scarred] {
     @extend %flex-visible, %content-size, %stamp;
-    color: white;
 
     &[value='true'] { @extend %show-name; }
   }
@@ -279,25 +274,20 @@ $collection-item-color: #202d31;
   // -------------------- information --------------------
 
   > .field[name=description] {
-    @extend %flex-visible, %show-value;
+    @extend %flex-visible, %show-value, %oneline;
     grid-area: description;
-    font: bold 1rem MedievalSharp;
     color: white;
     text-align: justify;
-    overflow: hidden;
     line-height: 1em;
     margin-top: -#{$large-gap};
     padding-left: $large-gap;
-    text-overflow: ellipsis;
     display: inline-block;
-    white-space: nowrap;
   }
 
   > .field[name=look] {
-    @extend %flex-visible, %show-value;
+    @extend %flex-visible, %show-value, %oneline;
     grid-area: description;
     color: white;
-    font: 0.7rem Metamorphous;
     padding-top: $small-gap;
     padding-left: $large-gap;
   }
@@ -310,7 +300,6 @@ $collection-item-color: #202d31;
       flex-direction: column;
       gap: $tiny-gap;
       color: white;
-      font: bold 1rem MedievalSharp;
       text-transform: uppercase;
 
       &::before {
@@ -334,7 +323,6 @@ $collection-item-color: #202d31;
     flex-direction: column;
     gap: $tiny-gap;
     color: white;
-    font: bold 1rem MedievalSharp;
     text-transform: uppercase;
 
     &::before {
@@ -357,7 +345,6 @@ $collection-item-color: #202d31;
     flex-direction: column;
     gap: $tiny-gap;
     color: white;
-    font: bold 1rem MedievalSharp;
     text-transform: uppercase;
 
     &::before {
@@ -375,21 +362,10 @@ $collection-item-color: #202d31;
   }
 
   > .field[name=bonds] {
-    @extend %grid-visible;
-    grid-area: bonds;
-    background-color: $field-background;
+    @extend %grid-visible, %field-text;
     color: white;
-    font-size: 0.7rem;
-    overflow: hidden scroll;
-
-    > * {
-      @extend %show-value, %round;
-      box-sizing: border-box;
-      width: calc(#{$full} - #{2*$small-gap});
-      margin: $small-gap;
-      padding: $small-gap;
-      background: $collection-item-color;
-    }
+    grid-area: bonds;
+    &::after { content: 'bonds'; }
   }
 
   // -------------------- main stats --------------------
@@ -452,7 +428,6 @@ $collection-item-color: #202d31;
       height: $full;
       padding: $small-gap;
       box-sizing: border-box;
-      font: bold 0.7rem Cinzel;
 
       &::before {
         content: '';
@@ -473,7 +448,6 @@ $collection-item-color: #202d31;
       height: $full;
       padding: 0.5rem;
       box-sizing: border-box;
-      font: bold 0.7rem Cinzel;
 
       &::before {
         content: '';
@@ -481,20 +455,6 @@ $collection-item-color: #202d31;
       }
     }
   }
-
-  // -------------------- notes --------------------
-
-  // > .field[name=notes] {
-  //   grid-area: notes;
-  //   font: bold 0.7rem MedievalSharp;
-  //   color: white;
-  //   text-align: justify;
-  //   padding: 0.5rem;
-  //   background: #172022;
-  //   overflow-y: scroll;
-
-  //   &::after { content: attr(value); }
-  // }
 
   // -------------------- settings --------------------
 
@@ -504,6 +464,6 @@ $collection-item-color: #202d31;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
+    -size: 1.5rem;
   }
 }

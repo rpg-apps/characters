@@ -6,7 +6,7 @@ export default function Character ({ character, children, handleEvent=()=>{} }) 
   const fields = () => {
     return []
       .concat(Object.entries(character.fields))
-      .concat([['playbook', Object.assign({ name: character.playbook.name }, character.playbook.fields)]])
+      .concat([['playbook', character.playbook.name]])
       .concat([['notes', character.notes]])
   }
 

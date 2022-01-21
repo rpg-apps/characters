@@ -1,0 +1,54 @@
+import React, { useState } from 'react'
+
+import Field from '../../../presentation/field'
+import Input from '../../../presentation/input'
+import ChoiceSubmit from '../choice-submit'
+
+export default function TypeChoice ({ builder, choice, onChoice, control }) {
+  return [
+    <Input.Controlled type={choice.type} control={control}/>,
+    <Recommendations recommendations={builder.playbook.fields[choice.recommendations]} control={control} />
+  ]
+}
+
+function Recommendations ({ recommendations, control }) {
+  const [val, setValue] = control
+  if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) return ''
+
+  if (Array.isArray(recommendations[0])) {
+    const update = ({ value }) => {
+      const group = recommendations.find(g => g.includes(value))
+      const newValue = group.filter(item => val.includes(item)).reduce((result, item) => {
+        return result.replace(item, '')
+      }, val)
+        .replace(/^(,\s*)*/, '')
+        .replace(/(,\s*)*$/, '')
+        .replace(/,\s*(,\s*)+/, ', ')
+      setValue(newValue.length > 0 ? `${newValue}, ${value}` : value)
+    }
+
+    return <div className='recommendations'>
+      <div className='title'>recommendations</div>
+      <div className='options'>
+        {recommendations.map((recommendationCollection, index) =>
+          <div key={index} className='recommendations-collection'>
+            {recommendationCollection.map((recommendation, index) =>
+              <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={recommendation} handleEvent={update}/>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  }
+
+  return <div className='recommendations'>
+    <div className='title'>recommendations</div>
+    <div className='options'>
+      {recommendations.map((recommendation, index) =>
+        <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
+      )}
+    </div>
+  </div>
+}
+
+TypeChoice.initialValue = ''

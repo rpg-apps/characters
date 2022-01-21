@@ -73,11 +73,6 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   aspect-ratio: 1;
 }
 
-%stamp {
-  transform: rotate(-30deg) translate(-0.2rem, 1.2rem);
-  font: bold 0.7rem MedievalSharp;
-}
-
 %show-name {
   &::before {
     content: attr(name);
@@ -101,4 +96,24 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
 
 %field-text {
   font: italic 1rem;
+}
+
+%oneline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block !important;
+}
+
+%stamp {
+  transform: rotate(-30deg);
+  color: #555;
+  font-weight: 700;
+  // border: 0.25rem solid #555;
+  display: inline-block;
+  padding: 0.25rem 1rem 0.25rem 0;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  font-family: 'Courier';
+  color: #9f0000;
 }

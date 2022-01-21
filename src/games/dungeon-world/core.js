@@ -54,20 +54,8 @@ const getHandlers = settings => {
 
   // -------------------- main stats --------------------
   handlers['max hp'] = {
-   'swiping up': event => {
-    const prevent = handlers['max hp'].prevent
-    if (prevent && event.deltaY - prevent.deltaY > -RESOLUTION)  return 'do nothing'
-    handlers['max hp'].prevent = event
-    return { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } }
-   },
-   'swiping down': event => {
-      const prevent = handlers['max hp'].prevent
-      if (prevent && event.deltaY - prevent.deltaY < RESOLUTION)  return 'do nothing'
-      handlers['max hp'].prevent = event
-      return { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
-    },
-   'swiped up': () => { delete handlers['max hp'].prevent },
-   'swiped down': () => { delete handlers['max hp'].prevent }
+   'swiped up': { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } },
+   'swiped down': { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
   }
   handlers.damage = { 'swipe up': 'deal damage' }
 
