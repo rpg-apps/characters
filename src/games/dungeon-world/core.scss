@@ -8,6 +8,8 @@ $stats-color: #101E33;
 $field-background: #172022;
 $collection-item-color: #202d31;
 
+$moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Realities', 'Spout Lore', 'Defend', 'Defy Danger';
+
 .dungeon-world.core {
   .field[name='trigger'], .field[name='procedure'] { @extend %invisible; }
 }
@@ -431,7 +433,17 @@ $collection-item-color: #202d31;
 
       &::before {
         content: '';
-        // TODO background-image: url('images/games/dungeon-world/moves/' attr(value) '.jpg')
+        width: $full;
+        height: $full;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      @each $move in $moves {
+        &[value='#{$move}']::before {
+          background-image: url('./images/moves/#{$move}.png');
+        }
       }
     }
   }

@@ -13,8 +13,14 @@ export default function Field (props) {
     return <div className='bad field' name={name}></div>
   }
 
+  if (Array.isArray(value)) {
+    <Field key={name} name={name} className={`complex ${className || ''}`} handleEvent={handleEvent}>
+      {value.map((item, index) => <Field key={index} name={index} value={item} handleEvent={handleEvent} />)}
+    </Field>
+  }
+
   if (typeof value === 'object') {
-    return <Field key={name} name={name} className={`complex ${className || ''}`} handleEvent={handleEvent}>
+    return <Field key={name} name={name} value={'array'} className={`complex ${className || ''}`} handleEvent={handleEvent}>
       {Object.entries(value).map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={handleEvent} />)}
     </Field>
   }
