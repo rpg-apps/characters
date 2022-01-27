@@ -4,6 +4,8 @@ import Loader from '../presentation/loader'
 import { useAuth } from './auth-context'
 import { useRules } from './rules-context'
 
+import { PLANS, adaptersForCharacters } from '../../games'
+
 const CharactersContext = createContext()
 
 export const useCharacters = () => useContext(CharactersContext)
@@ -26,6 +28,9 @@ export function WithCharacters ({ children }) {
       const chars = []
       for (const json of characterJsons) {
         const character = await (await rules.get(json.rulebooks)).characters.load(json)
+        character.settings = json.settings
+        character.adapters = adaptersForCharacters(character)
+        character.plans = PLANS.map(plan => ({ ...plan, settings: character.adapters.reduce((planSettings, adapter) => ({ ...planSettings, ...adapter[plan.name] }), { }) }))
         character.id = json._id
         character.save = async () => await user.callFunction('updateCharacter', { id: character.id.toString(), character: character.toJson() })
         character.delete = async () => {

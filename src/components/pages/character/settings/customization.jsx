@@ -14,3 +14,10 @@ export default function Customization ({ settings, value, onChange }) {
     </div>)}
   </div>)
 }
+
+Customization.Button = function CustomizationButton ({ selected, onClick }) {
+  return <div className={`${selected ? 'selected' : ''} custom`} onClick={onClick}>
+    <div className='name'>Custom</div>
+    <div className='description'>Create your own custom settings.</div>
+  </div>
+}

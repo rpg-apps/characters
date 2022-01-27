@@ -7,7 +7,7 @@ const settings = {
     viewableLook:        { type: 'boolean', text: 'click on the look to see it' },
     viewableClass:       { type: 'boolean', text: 'click on class to see it' },
     viewableRace:        { type: 'boolean', text: 'click on race to see it' },
-    editableRace:        { type: 'boolean', text: 'swipe down on race to edit it' },
+    editableRace:        { type: 'boolean', text: 'click on race to edit it' },
     runnableRace:        { type: 'boolean', text: 'swipe up on race to run the race move' },
     viewableAlignment:   { type: 'boolean', text: 'click on alignment to see it' },
     viewableBonds:       { type: 'boolean', text: 'click on bonds to edit them' }
@@ -22,19 +22,40 @@ const settings = {
     editable: { type: 'boolean', text: 'swipe up or down on stat to change it' }
   },
   status: {
-    rollable:       { type: 'boolean', text: 'click on damage to roll it' },
+    rollableDamage: { type: 'boolean', text: 'click on damage to roll it' },
     editableDamage: { type: 'boolean', text: 'swipe up on damage to edit it' },
     editableHP:     { type: 'boolean', text: 'swipe up and down on HP to edit it' },
+  },
+  collection: {
+    executableMoves: { type: 'boolean', text: 'allow ' }
   }
 }
 
-const PLANS = [{
-  name: 'Manual',
-  description: 'Like a character sheet, only on the computer',
-  settings: {
-    xp: { editableLevel: true, editableXP: true }
-  }
-}]
+const manual = {
+  description: { editableName: true,
+                 editableDescription: true, viewableDescription: false,
+                 editableLook: true, viewableLook: false,
+                 viewableClass: false,
+                 editableRace: true, viewableRace: false, runnableRace: true,
+                 viewableAlignment: true, viewableBonds: true },
+  xp: { editableLevel: true, editableXP: true, quickLevelUp: false },
+  stats: { rollable: false, editable: true },
+  status: { rollableDamage: false, editableDamage: true, editableHP: true },
+  collection: { executableMoves: false }
+}
+
+const automatic = {
+  description: { editableName: true,
+                 editableDescription: true, viewableDescription: false,
+                 editableLook: true, viewableLook: false,
+                 viewableClass: false,
+                 editableRace: true, viewableRace: false, runnableRace: true,
+                 viewableAlignment: true, viewableBonds: true },
+  xp: { editableLevel: true, editableXP: true, quickLevelUp: false },
+  stats: { rollable: false, editable: true },
+  status: { rollableDamage: false, editableDamage: true, editableHP: true },
+  collection: { executableMoves: false }
+}
 
 const RESOLUTION = 30
 
@@ -42,7 +63,42 @@ const getHandlers = settings => {
   const handlers = {}
 
   // -------------------- description --------------------
-  handlers.description = { click: 'show description' }
+
+  if (settings.description?.editableName) {
+    handlers.name = { click: 'edit name' }
+  }
+
+  if (settings.description?.editableDescription) {
+    handlers.description = { click: 'edit description' }
+  } else if (settings.description?.viewableDescription) {
+    handlers.description = { click: 'show description' }
+  }
+
+  if (settings.description?.editableLook) {
+    handlers.look = { click: 'edit look' }
+  } else if (settings.description?.viewableLook) {
+    handlers.look = { click: 'show look' }
+  }
+
+  if (settings.description?.viewableClass) {
+    handlers.playbook = { click: 'show playbook' }
+  }
+
+  if (settings.description?.editableRace) {
+    handlers.race = { click: 'edit race' }
+  } else if (settings.description?.viewableRace) {
+    handlers.race = { click: 'show race' }
+  } else if (settings.description?.runnableRace) {
+    handlers.race = { click: 'trigger race.move' }
+  }
+
+  if (settings.description?.viewableAlignment) {
+    handlers.alignment = { click: 'show alignment' }
+  }
+
+  if (settings.description?.viewableBonds) {
+    handlers.bonds = { click: 'show bonds' }
+  }
 
   handlers.level = handlers.xp = {
     'swiped right': 'add 1 to xp',
@@ -53,7 +109,7 @@ const getHandlers = settings => {
   }
 
   // -------------------- main stats --------------------
-  handlers['max hp'] = {
+  handlers.hp = handlers['max hp'] = {
    'swiped up': { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } },
    'swiped down': { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
   }
@@ -71,7 +127,7 @@ const getHandlers = settings => {
       'swiped right': `toggle ${debility}`
     }
 
-    if (settings?.stats?.rollOnSwipe) {
+    if (settings.stats?.rollOnSwipe) {
       handlers[modifier]['swiped left'] = `show roll+${modifier}`
     }
   })
@@ -79,6 +135,6 @@ const getHandlers = settings => {
   return handlers
 }
 
-const all = { settings, getHandlers }
+const all = { settings, manual, automatic, getHandlers }
 
 export default all

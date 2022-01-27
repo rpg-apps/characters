@@ -13,9 +13,9 @@ export default function DangerZone ({ character }) {
     history.push('/')
   }
 
-  return <div className='dangerous group'>
-    <div className='group-title'>danger zone</div>
-    <Input type='text' text={`Type the ${approvalText} name and press the button to delete it.`} onChange={setApprovalInput}/>
+  return <div className='danger-zone'>
+    <div className='group-title'>Danger Zone</div>
+    <Input type='text' text={`Type ${approvalText} and press the button to delete it.`} onChange={setApprovalInput}/>
     <div className={`button ${approvalInput !== approvalText ? 'disabled' : ''}`} onClick={submitDelete}>Delete</div>
   </div>
 }

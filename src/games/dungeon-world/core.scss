@@ -382,20 +382,39 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   }
 
   > .field[name=damage] { grid-area: damage; }
-  > .field[name=armor] { grid-area: armor; }
+  > .field[name=armor] {
+    grid-area: armor;
+    color: black;
+    background-image: url('./images/armor.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+      font: bold 1.5rem 'Minion Pro';
+    line-height: 1.5rem;
+  }
 
   > .field[name=hp],
   > .field[name='max hp'] {
     grid-area: hp;
-    &::after { margin: 0.75rem; }
+    color: black !important;
+    &::after {
+      z-index: 1;
+      font: bold 1.5rem 'Minion Pro';
+    }
   }
 
   > .field[name=hp] {
     justify-content: left;
+    &::after { margin: 0.75rem 0.75rem 0.75rem 0.35rem; }
   }
 
   > .field[name='max hp'] {
+    background-image: url('./images/hp.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     justify-content: right;
+    &::after { margin: 0.75rem 0.35rem 0.75rem 0.75rem; }
   }
 
   // -------------------- collections --------------------
@@ -430,6 +449,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       height: $full;
       padding: $small-gap;
       box-sizing: border-box;
+      color: #e9e9e9;
 
       &::before {
         content: '';
@@ -460,6 +480,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       height: $full;
       padding: 0.5rem;
       box-sizing: border-box;
+      color: #e9e9e9;
 
       &::before {
         content: '';
