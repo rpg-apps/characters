@@ -48,7 +48,6 @@ export default function CharacterPage ({ match }) {
 
   const edit = fieldName => {
     const field = character.playbook.rules.characterFields.find(characterField => characterField.name === fieldName)
-    console.log('editing', field)
   }
 
   return <div className='character page'>

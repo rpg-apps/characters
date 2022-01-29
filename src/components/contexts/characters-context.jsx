@@ -40,9 +40,11 @@ export function WithCharacters ({ children }) {
         chars.push(character)
       }
       chars.create = async character => {
-        const id = (await user.callFunction('createCharacter', { character })).insertedId
-        await load()
-        return id
+        console.log(character)
+        return chars[0].id
+        // const id = (await user.callFunction('createCharacter', { character })).insertedId
+        // await load()
+        // return id
       }
       setCharacters(chars)
     }) ()

@@ -2,14 +2,11 @@ import React, { useContext, createContext } from 'react'
 import load from '@rpg-apps/rpg-js'
 import Promise from 'bluebird'
 
-import { useAuth } from './auth-context'
-
 const RulesContext = createContext()
 
 export const useRules = () => useContext(RulesContext)
 
 export function WithRules ({ children }) {
-  const { user } = useAuth()
   const cache = {}
 
   const set = (rulebooks, rules) => { cache[key(rulebooks)] = rules }

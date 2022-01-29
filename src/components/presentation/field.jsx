@@ -9,7 +9,6 @@ export default function Field (props) {
   })
 
   if(value === undefined || ((typeof value === 'number') && isNaN(value))) {
-    console.warn(`bad value for field ${name}: ${value}`)
     return <div className='bad field' name={name}></div>
   }
 

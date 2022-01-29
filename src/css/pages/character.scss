@@ -73,10 +73,5 @@ $plan-height: 4rem;
       width: calc(100% - 1rem);
       box-sizing: border-box;
     }
-
-    .button.disabled {
-      pointer-events: none;
-      opacity: 0.5;
-    }
   }
 }

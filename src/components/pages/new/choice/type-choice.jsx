@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import Field from '../../../presentation/field'
 import Input from '../../../presentation/input'
-import ChoiceSubmit from '../choice-submit'
 
 export default function TypeChoice ({ builder, choice, onChoice, control }) {
-  return [
-    <Input.Controlled type={choice.type} control={control}/>,
+  return <div className='input'>
+    <Input.Controlled type={choice.type} control={control}/>
     <Recommendations recommendations={builder.playbook.fields[choice.recommendations]} control={control} />
-  ]
+  </div>
 }
 
 function Recommendations ({ recommendations, control }) {

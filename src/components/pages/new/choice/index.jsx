@@ -21,6 +21,6 @@ export default function Choice ({ choice, builder, onChoice }) {
   return <div className={`${choice.name} ${noCase(choice.constructor.name)}`}>
     <div className='title'>{choice.name}</div>
     <ChoiceComponent choice={choice} builder={builder} control={[value, setValue]} />
-    <ChoiceSubmit builder={builder} onClick={submit} />
+    <ChoiceSubmit enabled={Boolean(value)} builder={builder} onClick={submit} />
   </div>
 }

@@ -49,7 +49,7 @@ export default function AssignmentChoice ({ builder, choice, onChoice, control }
     </div>
     <div className='target'>
       {target.map((targetValue, index) => <Field className={`recommendation ${selection.target === targetValue ? 'selected' : ''} ${Object.keys(value).includes(targetValue) ? 'done' : ''}`}
-        noSwipe={true} noDirect={true} key={index} name={targetValue} value={value[targetValue]} handleEvent={() => handle(targetValue)} />)}
+        noSwipe={true} noDirect={true} key={index} name={targetValue} value={value[targetValue] || ''} handleEvent={() => handle(targetValue)} />)}
     </div>
   </div>
 }

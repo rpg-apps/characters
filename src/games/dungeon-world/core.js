@@ -57,8 +57,6 @@ const automatic = {
   collection: { executableMoves: false }
 }
 
-const RESOLUTION = 30
-
 const getHandlers = settings => {
   const handlers = {}
 
