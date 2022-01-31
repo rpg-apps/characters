@@ -34,7 +34,6 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     @extend %visible, %title-text, %show-value;
   }
 
-
   > .field[name=level] {
     grid-area: level;
     @extend %visible, %meta-text, %show-value;
@@ -260,6 +259,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     @extend %flex-visible, %centering, %show-value;
     font: 3rem 'Minion Pro';
     color: white;
+    z-index: 1;
   }
 
   > .field[name=weak],

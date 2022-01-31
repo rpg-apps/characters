@@ -40,7 +40,7 @@ export default function New () {
 
   const finish = async () => {
     await builder.finish()
-    const id = await characters.create(builder.character.toJson())
+    const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
     builder.clear()
     history.push(`/character/${id}`)
   }

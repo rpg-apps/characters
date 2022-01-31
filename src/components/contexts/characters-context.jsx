@@ -32,7 +32,7 @@ export function WithCharacters ({ children }) {
         character.adapters = adaptersForCharacters(character)
         character.plans = PLANS.map(plan => ({ ...plan, settings: character.adapters.reduce((planSettings, adapter) => ({ ...planSettings, ...adapter[plan.name] }), { }) }))
         character.id = json._id
-        character.save = async () => await user.callFunction('updateCharacter', { id: character.id.toString(), character: character.toJson() })
+        character.save = async () => await user.callFunction('updateCharacter', { id: character.id.toString(), character: Object.assign(character.toJson(), { settings: character.settings }) })
         character.delete = async () => {
           await user.callFunction('deleteCharacter', { id: character.id.toString() })
           await load()
@@ -40,11 +40,9 @@ export function WithCharacters ({ children }) {
         chars.push(character)
       }
       chars.create = async character => {
-        console.log(character)
-        return chars[0].id
-        // const id = (await user.callFunction('createCharacter', { character })).insertedId
-        // await load()
-        // return id
+        const id = (await user.callFunction('createCharacter', { character })).insertedId
+        await load()
+        return id
       }
       setCharacters(chars)
     }) ()

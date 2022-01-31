@@ -18,5 +18,11 @@ $footer-height: 5rem;
     }
   }
 
-  .footer { height: $footer-height; }
+  .footer {
+    height: $footer-height;
+
+    .button {
+      height: 2rem;
+    }
+  }
 }
