@@ -9,6 +9,11 @@ export default function Character ({ character, children, handleEvent=()=>{} }) 
       .concat(Object.entries(character.playbookFields))
       .concat([['playbook', character.playbook.name]])
       .concat([['notes', character.notes]])
+      .sort(([key1], [key2]) => {
+        if (key1 < key2) return -1
+        if (key1 > key2) return 1
+        return 0
+      })
   }
 
   return <div className={`character ${character.playbook.name} ${character.rulebooks.map(rb => rb.replace(' ', '-')).join(' ')}`}>

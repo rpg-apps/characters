@@ -1,14 +1,21 @@
 @use 'sass:math';
 
 @import "../../css/utils.scss";
-@import url(//db.onlinewebfonts.com/c/6bd1a3591c8b61e9715642ccae7e9418?family=Newcomen+Black);
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Poiret+One&display=swap');
 @import url(//db.onlinewebfonts.com/c/fe9c236a1c142788cb16ec5238c7833e?family=Minion+Pro);
 
 $stats-color: #101E33;
 $field-background: #172022;
 $collection-item-color: #202d31;
 
-$moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Realities', 'Spout Lore', 'Defend', 'Defy Danger';
+$xp-color: #207400;
+$level-up-color: #e3a82e;
+$level-up-gradient: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+              radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+$level-circle-size: 2rem;
+
+$moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Realities', 'Spout Lore', 'Defend', 'Defy Danger',
+        'Bolster', 'Carouse', 'End of Session', 'Encumbrance', 'Last Breath', 'Make Camp', 'Take Watch', 'Supply', 'Outstanding Warrants', 'Undertake a Perilous Journey', 'Recruit', 'Recover', 'Level Up';
 
 .dungeon-world.core {
   .field[name='trigger'], .field[name='procedure'] { @extend %invisible; }
@@ -142,34 +149,13 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     color: white;
   }
 
-  > .field[name=xp], > .field[name=level] {
+  > .field[name=xp], > .field[name=level], > .field[name='level up allowed'] {
     @extend %flex-visible;
     grid-area: xp;
   }
 
   > .field[name=xp] {
     @extend %round, %show-value;
-    margin-bottom: $small-gap;
-    margin-top: $large-gap;
-    margin-right: $small-gap;
-    background: black;
-
-    &:after {
-      position: absolute;
-      z-index: 1;
-      padding-left: 1.8rem;
-      line-height: 1rem;
-    }
-  }
-
-  $xp-color: #207400;
-  $level-up-color: #e3a82e;
-  $level-up-gradient: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-                radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  $level-circle-size: 2rem;
-
-  > .field[name=level] {
-    @extend %show-value, %round;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -185,14 +171,32 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       width: calc(#{$full} - #{$level-circle-size});
       height: 50%;
       padding-left: $level-circle-size;
-      background: $level-up-gradient;
+      background: $xp-color;
     }
+
+    &:after {
+      position: absolute;
+      z-index: 1;
+      padding-left: 1.8rem;
+      line-height: 1rem;
+    }
+  }
+
+  > .field[name=level] {
+    @extend %show-value, %round;
+    margin-bottom: $small-gap;
+    margin-top: $large-gap;
+    margin-right: $small-gap;
+    background: black;
+    color: white;
 
     &::after {
       @extend %centering;
       z-index: 1;
+      height: 200%;
+      margin-top: -12.5%;
       margin-left: #{math.div($level-circle-size, -2)};
-      border: 2px solid $level-up-color;
+      border: 2px solid $xp-color;
       background: $background-color;
       width: $level-circle-size;
       aspect-ratio: 1;
@@ -202,14 +206,42 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
 
   @for $lvl from 1 through 20 {
     @for $xp from 0 through $lvl+6 {
-      > .field[name=xp][value='#{$xp}'] { color: white; }
-      > .field[name=xp][value='#{$xp}'] ~ .field[name=level][value='#{$lvl}'] {
-        &::before {
-          background: $xp-color !important;
-          width: calc(#{math.div($xp, $lvl+7)*100}% - #{math.div($xp, $lvl+7)*2}rem);
-        }
-        &::after { border-color: $xp-color !important; }
+      > .field[name=level][value='#{$lvl}'] ~ .field[name=xp][value='#{$xp}']::before {
+        width: calc(#{math.div($xp, $lvl+7)*100}% - #{math.div($xp, $lvl+7)*2}rem);
       }
+    }
+  }
+
+  > .field[name='level up allowed'][value=true] {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-left: $small-gap;
+    margin-top: $small-gap;
+    color: white;
+
+    &::before {
+      @extend %round;
+      content: '';
+      position: absolute;
+      margin-left: -0.5rem;
+      width: calc(#{$full} - #{$level-circle-size});
+      height: 50%;
+      padding-left: $level-circle-size;
+      box-shadow: #8c7600 0px 0px 3px 2px;
+    }
+
+    &::after {
+      content: '';
+      z-index: 1;
+      height: $full;
+      margin-left: calc(#{math.div($level-circle-size, -2)} - 0.5rem);
+      border: 2px solid $xp-color;
+      background: none;
+      width: $level-circle-size;
+      aspect-ratio: 1;
+      border-radius: $level-circle-size;
+      box-shadow: #8c7600 0px 0px 3px 2px;
     }
   }
 
@@ -230,12 +262,13 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   > .field[name=charisma] {
     @extend %flex-visible, %show-name, %show-value;
     background: $stats-color;
-    font: 0.7rem 'Minion Pro';
     color: white;
     border-radius: 1rem 0 0 1rem;
     $padding: 0.2rem;
 
     &::before {
+      font: 0.6rem 'Poiret One';
+      letter-spacing: 0.05rem;
       position: absolute;
       text-transform: uppercase;
       bottom: $padding;
@@ -244,6 +277,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     }
 
     &::after {
+      font: 1rem 'Minion Pro';
       position: absolute;
       top: 0;
       right: $padding;
@@ -464,6 +498,15 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
         &[value='#{$move}']::before {
           background-image: url('./images/moves/#{$move}.png');
         }
+      }
+
+      &::after {
+        font: 0.6rem 'Cinzel Decorative';
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 100%;
+        text-align: center;
       }
     }
   }

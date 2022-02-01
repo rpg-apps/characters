@@ -8,6 +8,7 @@ import CharacterSettings from './settings'
 import { useCharacters } from '../../contexts/characters-context'
 import useForceUpdate from '../../contexts/force-update'
 import Character from '../../presentation/character'
+import Loader from '../../presentation/loader'
 
 Modal.setAppElement('#root')
 
@@ -17,7 +18,15 @@ export default function CharacterPage ({ match }) {
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
-  useEffect(() => refreshHandlers(), [])
+  useEffect(() => {
+    if (character) {
+      refreshHandlers()
+    }
+  }, [])
+
+  if (!character) {
+    return <Loader />
+  }
 
   const handleEvent = async ({ name, value }, event) => {
     const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
