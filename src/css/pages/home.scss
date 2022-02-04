@@ -7,8 +7,8 @@ $footer-height: 5rem;
   flex-direction: column;
 
   .characters {
+    @extend %scrolly;
     height: calc(#{$page-height} - #{$footer-height});
-    overflow: scroll;
 
     .character {
       @extend %round;

@@ -1,21 +1,38 @@
 @use 'sass:math';
+@use 'sass:map';
+@use 'sass:string';
 
 @import "../../css/utils.scss";
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Poiret+One&display=swap');
 @import url(//db.onlinewebfonts.com/c/fe9c236a1c142788cb16ec5238c7833e?family=Minion+Pro);
 
-$stats-color: #101E33;
-$field-background: #172022;
-$collection-item-color: #202d31;
+$secondary-background: #003708;
+$primary-color: lighten($secondary-background, 10%);
 
-$xp-color: #207400;
-$level-up-color: #e3a82e;
-$level-up-gradient: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-              radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+$stats-color: $secondary-background;
+$field-background: darken($background-color, 10%);
+$collection-item-color: $secondary-background;
+
+$xp-color: $primary-color;
 $level-circle-size: 2rem;
+
+%number { font-family: 'Minion Pro'; }
+%title  { font-family: 'Cinzel Decorative'; }
+%meta   { font-family: 'Cinzel Decorative'; }
+
+$dice: 'd4', 'd6', 'd8', 'd10', 'd12';
+
+$stats: ('short': 'str', 'long': 'strength', 'debility': 'weak'),
+        ('short': 'dex', 'long': 'dexterity', 'debility': 'shakey'),
+        ('short': 'con', 'long': 'constitution', 'debility': 'sick'),
+        ('short': 'int', 'long': 'intelligence', 'debility': 'stunned'),
+        ('short': 'wis', 'long': 'wisdom', 'debility': 'confused'),
+        ('short': 'cha', 'long': 'charisma', 'debility': 'scarred');
 
 $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Realities', 'Spout Lore', 'Defend', 'Defy Danger',
         'Bolster', 'Carouse', 'End of Session', 'Encumbrance', 'Last Breath', 'Make Camp', 'Take Watch', 'Supply', 'Outstanding Warrants', 'Undertake a Perilous Journey', 'Recruit', 'Recover', 'Level Up';
+
+$equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bundle of Arrows', 'Elven Arrows', 'Club', 'Shillelagh', 'Staff', 'Dagger', 'Shiv', 'Knife', 'Throwing Dagger', 'Short Sword', 'Axe', 'Warhammer', 'Mace', 'Spear', 'Long Sword', 'Battle Axe', 'Flail', 'Halberd', 'Rapier', 'Dueling Rapier', 'Leather Armor', 'Chainmail', 'Scale Mail', 'Plate armor', 'Shield', 'Adventuring Gear', 'Bandages', 'Poultices and Herbs', 'Healing Potion', 'Keg of Dwarven Stout', 'Bag of Books', 'Antitoxin', 'Dungeon Rations', 'Personal Feast', 'Dwarven Hardtack', 'Elven Bread', 'Halfling Pipeleaf', 'Oil of Tagit', 'Bloodweed', 'Goldenroot', 'Serpent’s Tears';
 
 .dungeon-world.core {
   .field[name='trigger'], .field[name='procedure'] { @extend %invisible; }
@@ -38,23 +55,23 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
 
   > .field[name=name] {
     grid-area: name;
-    @extend %visible, %title-text, %show-value;
+    @extend %visible, %title, %show-value;
   }
 
   > .field[name=level] {
     grid-area: level;
-    @extend %visible, %meta-text, %show-value;
+    @extend %visible, %meta, %show-value;
     min-width: max-content;
     &::before { content: 'lvl. '; }
   }
 
   > .field[name=race] {
     grid-area: race;
-    @extend %visible, %meta-text, %show-value;
+    @extend %visible, %meta, %show-value;
   }
 
   > .field[name=playbook] {
-    @extend %visible, %meta-text, %show-value;
+    @extend %visible, %meta, %show-value;
     grid-area: class;
   }
 
@@ -76,7 +93,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   }
 
  .dungeon-world.core .playbook .field {
-    @extend %round, %show-value, %title-text;
+    @extend %round, %show-value, %title;
     height: 5rem;
     margin: $large-gap;
     background: white;
@@ -113,17 +130,16 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   @extend %page-size;
 
   display: grid;
-  grid-template: 2.5rem repeat(12, 1fr) 2.5rem/repeat(3, 1fr) 5.5rem;
+  grid-template: 2.5rem repeat(12, 1fr) 2.5rem / repeat(3, 1fr) 5.5rem;
   gap: $small-gap;
   padding-left: $small-gap;
   padding-bottom: $small-gap;
-  box-sizing: border-box;
   grid-template-areas:
     "name name name xp"
     "description description description strength"
     "playbook race alignment strength"
     "playbook race alignment dexterity"
-    "bonds bonds bonds dexterity"
+    "bonds holds modifiers dexterity"
     "damage armor hp constitution"
     "damage armor hp constitution"
     "moves moves moves intelligence"
@@ -143,7 +159,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
 
   > .field[name=name] {
     grid-area: name;
-    @extend %flex-visible, %title-text, %show-value;
+    @extend %flex-visible, %title, %show-value;
     margin-left: $large-gap;
     line-height: 2.5rem;
     color: white;
@@ -191,7 +207,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     color: white;
 
     &::after {
-      @extend %centering;
+      @extend %centering, %square;
       z-index: 1;
       height: 200%;
       margin-top: -12.5%;
@@ -199,7 +215,6 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       border: 2px solid $xp-color;
       background: $background-color;
       width: $level-circle-size;
-      aspect-ratio: 1;
       border-radius: $level-circle-size;
     }
   }
@@ -232,6 +247,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     }
 
     &::after {
+      @extend %square;
       content: '';
       z-index: 1;
       height: $full;
@@ -239,7 +255,6 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       border: 2px solid $xp-color;
       background: none;
       width: $level-circle-size;
-      aspect-ratio: 1;
       border-radius: $level-circle-size;
       box-shadow: #8c7600 0px 0px 3px 2px;
     }
@@ -247,64 +262,50 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
 
   // -------------------- stats --------------------
 
-  > .field[name=strength],      > .field[name=str], > .field[name=weak]     { grid-area: strength; }
-  > .field[name=dexterity],     > .field[name=dex], > .field[name=shakey]   { grid-area: dexterity; }
-  > .field[name=constitution],  > .field[name=con], > .field[name=sick]     { grid-area: constitution; }
-  > .field[name=intelligence],  > .field[name=int], > .field[name=stunned]  { grid-area: intelligence; }
-  > .field[name=wisdom],        > .field[name=wis], > .field[name=confused] { grid-area: wisdom; }
-  > .field[name=charisma],      > .field[name=cha], > .field[name=scarred]  { grid-area: charisma; }
+  @each $stat in $stats {
+    $short:     map.get($stat, 'short');
+    $long:      map.get($stat, 'long');
+    $debility:  map.get($stat, 'debility');
 
-  > .field[name=strength],
-  > .field[name=dexterity],
-  > .field[name=constitution],
-  > .field[name=intelligence],
-  > .field[name=wisdom],
-  > .field[name=charisma] {
-    @extend %flex-visible, %show-name, %show-value;
-    background: $stats-color;
-    color: white;
-    border-radius: 1rem 0 0 1rem;
-    $padding: 0.2rem;
+    > .field[name=#{$short}], > .field[name=#{$long}], > .field[name=#{$debility}] { grid-area: string.unquote($long); }
 
-    &::before {
-      font: 0.6rem 'Poiret One';
-      letter-spacing: 0.05rem;
-      position: absolute;
-      text-transform: uppercase;
-      bottom: $padding;
-      text-align: center;
-      width: $full;
+    > .field[name=#{$long}] {
+      @extend %flex-visible, %show-name, %show-value;
+      background: $stats-color;
+      color: white;
+      border-radius: 1rem 0 0 1rem;
+      $padding: 0.2rem;
+
+      &::before {
+        @extend %title;
+        font-size: 0.6rem;
+        position: absolute;
+        text-transform: uppercase;
+        bottom: $padding;
+        text-align: center;
+        width: $full;
+      }
+
+      &::after {
+        @extend %number;
+        font-size: 1rem;
+        position: absolute;
+        top: 0;
+        right: $padding;
+      }
     }
 
-    &::after {
-      font: 1rem 'Minion Pro';
-      position: absolute;
-      top: 0;
-      right: $padding;
+    > .field[name=#{$short}] {
+      @extend %flex-visible, %centering, %show-value, %number;
+      font-size: 3rem;
+      color: white;
+      z-index: 1;
     }
-  }
 
-  > .field[name=str],
-  > .field[name=dex],
-  > .field[name=con],
-  > .field[name=int],
-  > .field[name=wis],
-  > .field[name=cha] {
-    @extend %flex-visible, %centering, %show-value;
-    font: 3rem 'Minion Pro';
-    color: white;
-    z-index: 1;
-  }
-
-  > .field[name=weak],
-  > .field[name=shakey],
-  > .field[name=sick],
-  > .field[name=stunned],
-  > .field[name=confused],
-  > .field[name=scarred] {
-    @extend %flex-visible, %content-size, %stamp;
-
-    &[value='true'] { @extend %show-name; }
+    > .field[name=#{$debility}] {
+      @extend %flex-visible, %content-size, %stamp;
+      &[value='true'] { @extend %show-name; }
+    }
   }
 
   // -------------------- information --------------------
@@ -354,7 +355,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   }
 
   > .field[name=race] {
-    @extend %flex-visible, %show-value, %full-size, %centering;
+    @extend %flex-visible, %show-value, %full-size, %centering, %title;
     grid-area: race;
     flex-direction: column;
     gap: $tiny-gap;
@@ -376,7 +377,7 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   }
 
   > .field[name=alignment] {
-    @extend %flex-visible, %show-value, %full-size, %centering;
+    @extend %flex-visible, %show-value, %full-size, %centering, %title, %oneline;
     grid-area: alignment;
     flex-direction: column;
     gap: $tiny-gap;
@@ -390,18 +391,37 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-    }
-
-    &::before {
       background-image: url('./images/classes-icons/thief.png');
     }
   }
 
-  > .field[name=bonds] {
-    @extend %grid-visible, %field-text;
+  %collection-button {
+    @extend %centering, %round, %inverted, %flex-visible, %title;
+    background: $secondary-background;
     color: white;
+    padding: $small-gap;
+    > .field[name=length] {
+      @extend %show-value, %number;
+      margin-right: 0.5rem;
+    }
+  }
+
+  > .field[name=bonds] {
+    @extend %collection-button;
     grid-area: bonds;
     &::after { content: 'bonds'; }
+  }
+
+  > .field[name=holds] {
+    @extend %collection-button;
+    grid-area: holds;
+    &::after { content: 'holds'; }
+  }
+
+  > .field[name=modifiers] {
+    @extend %collection-button;
+    grid-area: modifiers;
+    &::after { content: 'mods'; }
   }
 
   // -------------------- main stats --------------------
@@ -410,21 +430,33 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
   > .field[name=armor], 
   > .field[name=hp],
   > .field[name='max hp'] {
-    @extend %flex-visible, %centering, %title-text, %show-value;
+    @extend %flex-visible, %centering, %number, %show-value;
     padding: $small-gap;
     color: white;
+
+    &::after { @extend %number; }
   }
 
-  > .field[name=damage] { grid-area: damage; }
+  > .field[name=damage] {
+    grid-area: damage;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+
+    @each $die in $dice {
+      &[value=#{$die}] {
+        @extend %exact-background;
+        background-image: url('./images/dice/#{$die}.png');
+        margin: 0.7rem;
+      }
+    }
+  }
+
   > .field[name=armor] {
+    @extend %exact-background;
     grid-area: armor;
+    font-size: 2rem;
     color: black;
     background-image: url('./images/armor.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-      font: bold 1.5rem 'Minion Pro';
-    line-height: 1.5rem;
   }
 
   > .field[name=hp],
@@ -432,46 +464,38 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
     grid-area: hp;
     color: black !important;
     &::after {
+      font-size: 2rem;
       z-index: 1;
-      font: bold 1.5rem 'Minion Pro';
+      text-align: center;
+      width: 50%;
     }
   }
 
   > .field[name=hp] {
-    justify-content: left;
-    &::after { margin: 0.75rem 0.75rem 0.75rem 0.35rem; }
+    justify-content: right;
   }
 
   > .field[name='max hp'] {
+    @extend %exact-background;
+    justify-content: left;
     background-image: url('./images/hp.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    justify-content: right;
-    &::after { margin: 0.75rem 0.35rem 0.75rem 0.75rem; }
   }
 
   // -------------------- collections --------------------
 
   > .field[name=moves], > .field[name=gear] {
-    @extend %flex-visible;
-    overflow-x: scroll;
+    @extend %flex-visible, %scrollx;
     padding: $small-gap;
     background: $field-background;
-
-    display: flex;
     gap: $small-gap;
 
     > * {
-      @extend %round;
-      aspect-ratio: 1;
+      @extend %square, %round;
       flex: 10 0 auto;
       background: $collection-item-color;
-    }
-  }
 
-  > .field[name=moves] {
-    grid-area: moves;
+      &[name=length] { display: none; }
+    }
 
     .field[name=name] {
       @extend %show-value;
@@ -482,8 +506,6 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
       text-align: center;
       height: $full;
       padding: $small-gap;
-      box-sizing: border-box;
-      color: #e9e9e9;
 
       &::before {
         content: '';
@@ -494,40 +516,38 @@ $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Reali
         background-position: center;
       }
 
-      @each $move in $moves {
+      &::after {
+        @extend %title;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: $full;
+        text-align: center;
+        color: white;
+      }
+    }
+  }
+
+  > .field[name=moves] {
+    grid-area: moves;
+    @each $move in $moves {
+      .field[name=name] {
         &[value='#{$move}']::before {
           background-image: url('./images/moves/#{$move}.png');
         }
       }
-
-      &::after {
-        font: 0.6rem 'Cinzel Decorative';
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        width: 100%;
-        text-align: center;
-      }
     }
   }
+
   > .field[name=gear] {
     grid-area: gear;
 
-    .field[name=name] {
-      @extend %show-value;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      height: $full;
-      padding: 0.5rem;
-      box-sizing: border-box;
-      color: #e9e9e9;
-
-      &::before {
-        content: '';
-        // TODO background-image: url('images/games/dungeon-world/gear/' attr(value) '.jpg')
+    @each $gear in $equipment {
+      .field[name=name] {
+        &[value='#{$gear}']::before {
+          background-image: url('./images/equipment/#{$gear}.png');
+        }
       }
     }
   }

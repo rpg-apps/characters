@@ -6,6 +6,9 @@ $title-height: 3rem;
 $game-card-height: 8.8rem;
 $playbook-card-height: 5rem;
 
+$selection-color: cornflowerblue;
+$done-color: #2b4980;
+
 .new.page {
   @extend %page-size;
   display: flex;
@@ -20,8 +23,8 @@ $playbook-card-height: 5rem;
   }
 
   > .options {
+    @extend %scrolly;
     height: calc(#{$page-height} - #{$title-height});
-    overflow-y: scroll;
   }
 
   &.choose.game .field {
@@ -38,7 +41,6 @@ $playbook-card-height: 5rem;
 
   .choice {
     @extend %page-size;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -64,7 +66,6 @@ $playbook-card-height: 5rem;
 
     textarea {
       @extend %round;
-      box-sizing: border-box;
       border: none;
       padding: $small-gap;
       width: $full !important;
@@ -84,9 +85,9 @@ $playbook-card-height: 5rem;
 
   .field.choice {
     > .options {
+      @extend %scrolly;
       width: $full;
       height: calc(#{$page-height} - #{$title-height});
-      overflow-y: scroll;
       display: flex;
       flex-direction: column;
       gap: $small-gap;
@@ -109,7 +110,7 @@ $playbook-card-height: 5rem;
       > .field, .options-collection > .field {
         background: white;
         &.selected {
-          background: cornflowerblue;
+          background: $selection-color;
         }
       }
     }
@@ -122,7 +123,6 @@ $playbook-card-height: 5rem;
     width: $full;
     height: 0;
     gap: $small-gap;
-    box-sizing: border-box;
 
     .title {
       width: $full;
@@ -131,8 +131,8 @@ $playbook-card-height: 5rem;
     }
 
     .options {
+      @extend %scrolly;
       flex: 1;
-      overflow: scroll;
       display: flex;
       gap: $large-gap;
       flex-direction: column;
@@ -153,7 +153,7 @@ $playbook-card-height: 5rem;
       padding: $small-gap;
 
       &.selected {
-        background: cornflowerblue;
+        background: $selection-color;
       }
     }
   }
@@ -170,7 +170,6 @@ $playbook-card-height: 5rem;
     height: 0;
     gap: $small-gap;
     padding: 0 $large-gap;
-    box-sizing: border-box;
 
     > * {
       height: $full;
@@ -181,12 +180,11 @@ $playbook-card-height: 5rem;
 
 
       > .field {
-        @extend %centering, %show-value;
+        @extend %centering, %square, %show-value;
         background: white;
-        aspect-ratio: 1;
 
-        &.selected { background: cornflowerblue; }
-        &.done { background: #2b4980; }
+        &.selected { background: $selection-color; }
+        &.done { background: $done-color; }
       }
     }
 

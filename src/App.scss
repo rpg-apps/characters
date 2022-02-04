@@ -1,5 +1,9 @@
 @import "./css/utils.scss";
 
+* {
+  box-sizing: border-box;
+}
+
 #root > * {
   @extend %page-size;
   background: $background-color;
@@ -10,9 +14,7 @@
 }
 
 .button {
-  @extend %centering;
-  @extend %round;
-  @extend %inverted;
+  @extend %centering, %round, %inverted;
   margin: $large-gap;
   padding: $small-gap $large-gap;
 

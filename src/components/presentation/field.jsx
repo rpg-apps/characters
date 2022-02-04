@@ -13,7 +13,8 @@ export default function Field (props) {
   }
 
   if (Array.isArray(value)) {
-    <Field key={name} name={name} className={`complex ${className || ''}`} handleEvent={handleEvent}>
+    return <Field key={name} name={name} value='array' className={`array ${className || ''}`} handleEvent={handleEvent}>
+      <Field name='length' value={value.length} handleEvent={handleEvent} />
       {value.map((item, index) => <Field key={index} name={index} value={item} handleEvent={handleEvent} />)}
     </Field>
   }

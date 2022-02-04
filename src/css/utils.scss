@@ -37,6 +37,10 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   border-radius: $border-radius;
 }
 
+%square {
+  aspect-ratio: 1;
+}
+
 %inverted {
   background: white;
   color: black;
@@ -60,17 +64,17 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
 
 %exact-background {
   background-size: contain;
+  background-position: center;
   background-repeat: no-repeat;
 }
 
 %game-badge::before {
-  @extend %round, %exact-background;
-  content: "";
+  @extend %square, %round, %exact-background;
+  content: '';
   position: absolute;
   top: $small-gap;
   right: $small-gap;
   width: 1.5rem;
-  aspect-ratio: 1;
 }
 
 %show-name {
@@ -85,24 +89,10 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   }
 }
 
-%title-text {
-  font: bold 1.4rem;
-  line-height: 1rem;
-}
-
-%meta-text {
-  font: italic 1rem;
-}
-
-%field-text {
-  font: italic 1rem;
-}
-
 %oneline {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: block !important;
 }
 
 %stamp {
@@ -117,6 +107,9 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
   font-family: 'Courier';
   color: #9f0000;
 }
+
+%scrollx { overflow-x: scroll; }
+%scrolly { overflow-y: scroll; }
 
 .button.disabled {
   pointer-events: none;
