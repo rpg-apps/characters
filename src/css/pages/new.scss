@@ -6,8 +6,8 @@ $title-height: 3rem;
 $game-card-height: 8.8rem;
 $playbook-card-height: 5rem;
 
-$selection-color: cornflowerblue;
-$done-color: #2b4980;
+$selection-color: $primary-color;
+$done-color: darken($primary-color, 10%);
 
 .new.page {
   @extend %page-size;
@@ -16,8 +16,9 @@ $done-color: #2b4980;
   justify-content: center;
 
   > .title {
-    color: white;
+    color: $primary-color;
     text-align: center;
+    font: 2rem 'Cinzel Decorative';
     line-height: $title-height;
     height: $title-height;
   }
@@ -48,8 +49,9 @@ $done-color: #2b4980;
     padding: $large-gap;
 
     > .title {
-      color: white;
+      color: $primary-color;
       text-align: center;
+      font: 2rem 'Cinzel Decorative';
       line-height: $title-height;
       height: $title-height;
     }
@@ -126,8 +128,10 @@ $done-color: #2b4980;
 
     .title {
       width: $full;
-      color: white;
-      height: 2rem;
+      font: 1rem 'Cinzel Decorative';
+      color: $primary-color;
+      height: 1rem;
+      margin: $small-gap 0;
     }
 
     .options {

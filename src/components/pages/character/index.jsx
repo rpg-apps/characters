@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
 import { noCase } from 'change-case'
+import { FaArrowLeft, FaScroll } from 'react-icons/fa'
 
 import '../../../css/pages/character.scss'
 
@@ -13,6 +15,7 @@ import Loader from '../../presentation/loader'
 Modal.setAppElement('#root')
 
 export default function CharacterPage ({ match }) {
+  const [focusing, setFocusing] = useState(false)
   const [focus, setFocus] = useState(false)
   const [handlers, setHandlers] = useState({})
   const forceUpdate = useForceUpdate()
@@ -45,6 +48,7 @@ export default function CharacterPage ({ match }) {
 
   const output = text => {
     setFocus(text)
+    setFocusing(true)
   }
 
   const input = (text, type = 'string') => {
@@ -62,7 +66,9 @@ export default function CharacterPage ({ match }) {
   return <div className='character page'>
     <Character character={character} handleEvent={handleEvent}>
       <CharacterSettings onChange={() => refreshHandlers()} character={character} />
-      <Modal isOpen={Boolean(focus)} onRequestClose={() => setFocus(false)}>{focus}</Modal>
+      <Link className='back link' to='/'><FaArrowLeft /></Link>
+      <div className='notes' onClick={() => output(character.notes)}><FaScroll /></div>
+      <Modal isOpen={focusing} onRequestClose={() => setFocusing(false)}>{focus}</Modal>
     </Character>
   </div>
 }

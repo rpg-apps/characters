@@ -1,9 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaSignOutAlt } from 'react-icons/fa'
+
+import { useAuth } from '../../contexts/auth-context'
 
 export default function Footer () {
+  const { logOut } = useAuth()
+
   return <div className='footer'>
-    <Link className='button' to='/new'><FaPlus /> Create</Link>
+    <Link className='primary button' to='/new'><FaPlus /> Create</Link>
+    <Link className='link' onClick={logOut}><FaSignOutAlt /> logout</Link>
   </div>
 }

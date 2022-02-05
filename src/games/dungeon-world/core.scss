@@ -3,22 +3,16 @@
 @use 'sass:string';
 
 @import "../../css/utils.scss";
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Poiret+One&display=swap');
-@import url(//db.onlinewebfonts.com/c/fe9c236a1c142788cb16ec5238c7833e?family=Minion+Pro);
 
-$secondary-background: #003708;
-$primary-color: lighten($secondary-background, 10%);
-
-$stats-color: $secondary-background;
-$field-background: darken($background-color, 10%);
-$collection-item-color: $secondary-background;
+$stats-color: $secondary-background-color;
+$collection-item-color: $secondary-background-color;
 
 $xp-color: $primary-color;
 $level-circle-size: 2rem;
 
 %number { font-family: 'Minion Pro'; }
 %title  { font-family: 'Cinzel Decorative'; }
-%meta   { font-family: 'Cinzel Decorative'; }
+%meta   { font: bold 0.7rem 'Cinzel Decorative'; }
 
 $dice: 'd4', 'd6', 'd8', 'd10', 'd12';
 
@@ -32,7 +26,7 @@ $stats: ('short': 'str', 'long': 'strength', 'debility': 'weak'),
 $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Realities', 'Spout Lore', 'Defend', 'Defy Danger',
         'Bolster', 'Carouse', 'End of Session', 'Encumbrance', 'Last Breath', 'Make Camp', 'Take Watch', 'Supply', 'Outstanding Warrants', 'Undertake a Perilous Journey', 'Recruit', 'Recover', 'Level Up';
 
-$equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bundle of Arrows', 'Elven Arrows', 'Club', 'Shillelagh', 'Staff', 'Dagger', 'Shiv', 'Knife', 'Throwing Dagger', 'Short Sword', 'Axe', 'Warhammer', 'Mace', 'Spear', 'Long Sword', 'Battle Axe', 'Flail', 'Halberd', 'Rapier', 'Dueling Rapier', 'Leather Armor', 'Chainmail', 'Scale Mail', 'Plate armor', 'Shield', 'Adventuring Gear', 'Bandages', 'Poultices and Herbs', 'Healing Potion', 'Keg of Dwarven Stout', 'Bag of Books', 'Antitoxin', 'Dungeon Rations', 'Personal Feast', 'Dwarven Hardtack', 'Elven Bread', 'Halfling Pipeleaf', 'Oil of Tagit', 'Bloodweed', 'Goldenroot', 'Serpent’s Tears';
+$equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bundle of Arrows', 'Elven Arrows', 'Club', 'Shillelagh', 'Staff', 'Dagger', 'Shiv', 'Knife', 'Throwing Dagger', 'Short Sword', 'Axe', 'Warhammer', 'Mace', 'Spear', 'Long Sword', 'Battle Axe', 'Flail', 'Halberd', 'Rapier', 'Dueling Rapier', 'Leather Armor', 'Chainmail', 'Scale Mail', 'Plate armor', 'Shield', 'Adventuring Gear', 'Bandages', 'Poultices and Herbs', 'Healing Potion', 'Keg of Dwarven Stout', 'Bag of Books', 'Antitoxin', 'Dungeon Rations', 'Personal Feast', 'Dwarven Hardtack', 'Elven Bread', 'Halfling Pipeleaf', 'Oil of Tagit', 'Bloodweed', 'Goldenroot', 'Serpent’s Tears', 'Some token of where you’ve traveled or where you’re from';
 
 .dungeon-world.core {
   .field[name='trigger'], .field[name='procedure'] { @extend %invisible; }
@@ -163,6 +157,13 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
     margin-left: $large-gap;
     line-height: 2.5rem;
     color: white;
+  }
+
+  .back {
+    grid-area: name;
+    width: min-content;
+    margin-top: 0.5rem;
+    margin-left: -0.25rem;
   }
 
   > .field[name=xp], > .field[name=level], > .field[name='level up allowed'] {
@@ -397,7 +398,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
 
   %collection-button {
     @extend %centering, %round, %inverted, %flex-visible, %title;
-    background: $secondary-background;
+    background: $secondary-background-color;
     color: white;
     padding: $small-gap;
     > .field[name=length] {
@@ -486,7 +487,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   > .field[name=moves], > .field[name=gear] {
     @extend %flex-visible, %scrollx;
     padding: $small-gap;
-    background: $field-background;
+    background: $box-background;
     gap: $small-gap;
 
     > * {
@@ -557,9 +558,18 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   .settings {
     grid-area: settings;
     color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    -size: 1.5rem;
+    float: right;
+    margin-left: $large-gap;
+    font-size: 1.5rem;
+    width: min-content;
+  }
+
+  .notes {
+    grid-area: settings;
+    color: white;
+    float: left;
+    margin-left: calc(2.25rem + #{$large-gap});
+    font-size: 1.5rem;
+    width: min-content;
   }
 }

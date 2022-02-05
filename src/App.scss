@@ -18,8 +18,78 @@
   margin: $large-gap;
   padding: $small-gap $large-gap;
 
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &.primary {
+    background: $primary-color;
+    font-family: 'Cinzel Decorative';
+    color: white;
+  }
+
   svg {
     margin-right: $small-gap;
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: white;
+}
+
+.primary:not(.button) {
+  color: $primary-color;
+}
+
+.auth {
+  display: flex;
+  flex-direction: column;
+  padding: $large-gap;
+  gap: $large-gap;
+  form {
+    height: 50%;
+    color: white;
+    padding: $small-gap;
+
+    .title {
+      font: 2rem 'Cinzel Decorative';
+      color: $primary-color;
+    }
+
+    label {
+      font: 0.7rem 'Cinzel Decorative';
+      margin-top: $small-gap;
+      display: flex;
+      flex-direction: column;
+
+      input {
+        @extend %round;
+        font-family: 'Cinzel Decorative';
+        padding: $small-gap;
+        outline: none;
+        border: none;
+      }
+    }
+
+    .button {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    &:first-child {
+      position: relative;
+
+      &::after {
+        content: 'OR';
+        position: absolute;
+        font: 2rem 'Cinzel Decorative';
+        bottom: -0.5rem;
+        width: calc(#{$full} - #{2*$large-gap});
+        text-align: center;
+      }
+    }
   }
 }
 

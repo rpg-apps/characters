@@ -1,5 +1,8 @@
 /* This file includes the basic variables, extendable classes and elements that can be reused throughout the games css and the app */
 
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Poiret+One&display=swap');
+@import url(//db.onlinewebfonts.com/c/fe9c236a1c142788cb16ec5238c7833e?family=Minion+Pro);
+
 $page-height: 100vh;
 $page-width: 100vw;
 $full: 100%;
@@ -10,6 +13,9 @@ $tiny-gap: 0.2rem;
 $border-radius: $small-gap;
 
 $background-color: #151515;
+$secondary-background-color: #003708;
+$box-background: darken($background-color, 10%);
+$primary-color: lighten($secondary-background-color, 10%);
 $modal-background-color: rgba(0, 0, 0, 0.75);
 
 %centering {
@@ -110,8 +116,3 @@ $modal-background-color: rgba(0, 0, 0, 0.75);
 
 %scrollx { overflow-x: scroll; }
 %scrolly { overflow-y: scroll; }
-
-.button.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}

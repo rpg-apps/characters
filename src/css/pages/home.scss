@@ -1,6 +1,6 @@
 @import "../utils.scss";
 
-$footer-height: 5rem;
+$footer-height: 6rem;
 
 .home.page {
   display: flex;
@@ -16,6 +16,17 @@ $footer-height: 5rem;
       margin: $large-gap;
       padding: $large-gap;
     }
+
+    &.empty {
+      @extend %centering;
+      flex-direction: column;
+      padding: 1*$large-gap 3*$large-gap 5*$large-gap 3*$large-gap;
+      color: white;
+      text-align: center;
+
+      > :first-child { font: 2rem 'Cinzel Decorative'; }
+      > :last-child  { font: 1rem 'Cinzel Decorative'; }
+    }
   }
 
   .footer {
@@ -23,6 +34,15 @@ $footer-height: 5rem;
 
     .button {
       height: 2rem;
+      font: 1rem 'Cinzel Decorative';
+      margin-bottom: $small-gap;
+    }
+
+    .link {
+      float: right;
+      font: 1rem 'Cinzel Decorative';
+      margin-right: $large-gap;
+      > svg { vertical-align: middle; }
     }
   }
 }

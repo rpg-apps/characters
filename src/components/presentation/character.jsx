@@ -7,7 +7,7 @@ export default function Character ({ character, children, handleEvent=()=>{} }) 
     return []
       .concat(Object.entries(character.fields))
       .concat(Object.entries(character.playbookFields))
-      .concat([['playbook', character.playbook.name], ['notes', character.notes], ['modifiers', character.modifiers]])
+      .concat([['playbook', character.playbook.name], ['modifiers', character.modifiers]])
       .sort(([key1], [key2]) => {
         if (key1 < key2) return -1
         if (key1 > key2) return 1
