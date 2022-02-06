@@ -9,6 +9,6 @@ export default function Footer () {
 
   return <div className='footer'>
     <Link className='primary button' to='/new'><FaPlus /> Create</Link>
-    <Link className='link' onClick={logOut}><FaSignOutAlt /> logout</Link>
+    <div className='link' onClick={logOut}><FaSignOutAlt /> logout</div>
   </div>
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
 import { noCase } from 'change-case'
@@ -21,18 +21,9 @@ export default function CharacterPage ({ match }) {
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
-  useEffect(() => {
-    if (character) {
-      refreshHandlers()
-    }
-  }, [])
-
-  if (!character) {
-    return <Loader />
-  }
-
   const handleEvent = async ({ name, value }, event) => {
     const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
+    console.log(eventType, name, handlers?.[name]?.[eventType])
     if (handlers?.[name]?.[eventType]) {
       const handler = handlers?.[name]?.[eventType]
      const procedure = (handler instanceof Function) ? handler(event) : handler
@@ -42,9 +33,9 @@ export default function CharacterPage ({ match }) {
     }
   }
 
-  const refreshHandlers = () => {
+  const refreshHandlers = useCallback(() => {
     setHandlers(character.adapters.reduce((results, adapter) => ({ ...results, ...adapter.getHandlers(character.calculatedSettings || {}) }), {}))
-  }
+  }, [character])
 
   const output = text => {
     setFocus(text)
@@ -61,6 +52,17 @@ export default function CharacterPage ({ match }) {
 
   const edit = fieldName => {
     const field = character.playbook.rules.characterFields.find(characterField => characterField.name === fieldName)
+    console.log(`editing ${fieldName}`)
+  }
+
+  useEffect(() => {
+    if (character) {
+      refreshHandlers()
+    }
+  }, [character, refreshHandlers])
+
+  if (!character) {
+    return <Loader />
   }
 
   return <div className='character page'>

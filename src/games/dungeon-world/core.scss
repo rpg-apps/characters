@@ -330,70 +330,30 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
     padding-left: $large-gap;
   }
 
-  > .field[name=playbook] {
-    @extend %flex-visible, %centering;
-    grid-area: playbook;
-    > .field[name=name] {
-      @extend %show-value, %full-size, %centering;
-      flex-direction: column;
-      gap: $tiny-gap;
-      color: white;
-      text-transform: uppercase;
+  > .field[name=playbook], > .field[name=race], > .field[name=alignment] {
+    @extend %flex-visible, %show-value, %full-size, %centering, %title, %oneline;
+    flex-direction: column;
+    gap: $tiny-gap;
+    color: white;
+    text-transform: uppercase;
 
-      &::before {
-        content: '';
-        width: $full;
-        flex: 1;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-
-      &[value=thief]::before {
-        background-image: url('./images/classes-icons/thief.png');
-      }
+    &::before {
+      content: '';
+      width: $full;
+      flex: 1;
     }
+  }
+
+  > .field[name=playbook] {
+    grid-area: playbook;
   }
 
   > .field[name=race] {
-    @extend %flex-visible, %show-value, %full-size, %centering, %title;
     grid-area: race;
-    flex-direction: column;
-    gap: $tiny-gap;
-    color: white;
-    text-transform: uppercase;
-
-    &::before {
-      content: '';
-      width: $full;
-      flex: 1;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-
-    &::before {
-      background-image: url('./images/classes-icons/thief.png');
-    }
   }
 
   > .field[name=alignment] {
-    @extend %flex-visible, %show-value, %full-size, %centering, %title, %oneline;
     grid-area: alignment;
-    flex-direction: column;
-    gap: $tiny-gap;
-    color: white;
-    text-transform: uppercase;
-
-    &::before {
-      content: '';
-      width: $full;
-      flex: 1;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-image: url('./images/classes-icons/thief.png');
-    }
   }
 
   %collection-button {
@@ -427,7 +387,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
 
   // -------------------- main stats --------------------
 
-  > .field[name=damage],
+  > .field[name=damage-formula],
   > .field[name=armor], 
   > .field[name=hp],
   > .field[name='max hp'] {
@@ -438,7 +398,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
     &::after { @extend %number; }
   }
 
-  > .field[name=damage] {
+  > .field[name=damage-formula] {
     grid-area: damage;
     font-size: 1.5rem;
     text-transform: uppercase;

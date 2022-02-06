@@ -18,9 +18,8 @@ export default function CharacterSettings ({ character, onChange }) {
   const settings = character.adapters.reduce((results, adapter) => ({ ...results, ...adapter.settings }), { })
 
   const set = async settings => {
-    character.settings = settings
     await character.save()
-    character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
+    character.setSettings(settings)
     onChange()
     forceUpdate()
   }

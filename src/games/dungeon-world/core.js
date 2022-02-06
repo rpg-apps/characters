@@ -39,7 +39,7 @@ const manual = {
                  editableRace: true, viewableRace: false, runnableRace: true,
                  viewableAlignment: true, viewableBonds: true },
   xp: { editableLevel: true, editableXP: true, quickLevelUp: false },
-  stats: { rollable: false, editable: true },
+  stats: { rollable: true, editable: true },
   status: { rollableDamage: false, editableDamage: true, editableHP: true },
   collection: { executableMoves: false }
 }
@@ -52,7 +52,7 @@ const automatic = {
                  editableRace: true, viewableRace: false, runnableRace: true,
                  viewableAlignment: true, viewableBonds: true },
   xp: { editableLevel: true, editableXP: true, quickLevelUp: false },
-  stats: { rollable: false, editable: true },
+  stats: { rollable: true, editable: false },
   status: { rollableDamage: false, editableDamage: true, editableHP: true },
   collection: { executableMoves: false }
 }
@@ -61,7 +61,6 @@ const getHandlers = settings => {
   const handlers = {}
 
   // -------------------- description --------------------
-
   if (settings.description?.editableName) {
     handlers.name = { click: 'edit name' }
   }
@@ -111,9 +110,7 @@ const getHandlers = settings => {
    'swiped up': { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } },
    'swiped down': { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
   }
-  handlers.damage = { 'swipe up': 'deal damage' }
-
-  handlers.damage = { click: 'deal damage' }
+  handlers['damage-formula'] = { click: 'deal damage' }
 
   // -------------------- stats --------------------
   const stats = { strength: 'weak', dexterity: 'shakey', constitution: 'sick', intelligence: 'stunned', wisdom: 'confused', charisma: 'scarred' }
@@ -125,7 +122,7 @@ const getHandlers = settings => {
       'swiped right': `toggle ${debility}`
     }
 
-    if (settings.stats?.rollOnSwipe) {
+    if (settings.stats?.rollable) {
       handlers[modifier]['swiped left'] = `show roll+${modifier}`
     }
   })

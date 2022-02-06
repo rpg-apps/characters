@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, createContext } from 'react'
+import React, { useState, useEffect, useCallback, useContext, createContext } from 'react'
 import Loader from '../presentation/loader'
 
 import { useAuth } from './auth-context'
@@ -16,11 +16,11 @@ export function WithCharacters ({ children }) {
   const [characterJsons, setCharacterJsons] = useState(false)
   const [characters, setCharacters] = useState(false)
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setCharacterJsons(await user.callFunction('getCharacters'))
-  }
+  }, [user])
 
-  useEffect(() => { load() }, [user])
+  useEffect(() => { load() }, [user, load])
 
   useEffect(() => {
     (async () => {
@@ -37,6 +37,11 @@ export function WithCharacters ({ children }) {
           await user.callFunction('deleteCharacter', { id: character.id.toString() })
           await load()
         }
+        character.setSettings = settings => {
+          character.settings = settings
+          character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
+        }
+        character.setSettings(character.settings)
         chars.push(character)
       }
       chars.create = async character => {
@@ -46,7 +51,7 @@ export function WithCharacters ({ children }) {
       }
       setCharacters(chars)
     }) ()
-  }, [user, rules, characterJsons])
+  }, [user, rules, characterJsons, load])
 
   if (!characters) return <Loader className='home page' />
 
