@@ -10,6 +10,27 @@ $footer-height: 6rem;
     @extend %scrolly;
     height: calc(#{$page-height} - #{$footer-height});
 
+    .dead {
+      position: relative;
+
+      &::before {
+        content: 'Click to revive';
+        font: 2rem 'Cinzel Decorative';
+        z-index: 1;
+        color: white;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      > * { opacity: 0.5; }
+    }
+
     .character {
       @extend %round;
       @extend %inverted;
@@ -38,11 +59,17 @@ $footer-height: 6rem;
       margin-bottom: $small-gap;
     }
 
-    .link {
-      float: right;
-      font: 1rem 'Cinzel Decorative';
-      margin-right: $large-gap;
-      > svg { vertical-align: middle; }
+    .links {
+      display: flex;
+      padding: 0 $large-gap;
+      justify-content: space-between;
+
+      .link {
+        float: right;
+        font: 1rem 'Cinzel Decorative';
+        > svg { vertical-align: middle; }
+      }
     }
+
   }
 }

@@ -28,7 +28,7 @@ export default function CharacterSettings ({ character, onChange }) {
 
   return <div className='settings'>
     <FaRegSun onClick={toggle} />
-    <Modal isOpen={showing} onRequestClose={toggle}>
+    <Modal className='settings' isOpen={showing} onRequestClose={toggle}>
       {character.plans.map(plan => <Plan selected={character.settings === plan.name} key={plan.name} name={plan.name} description={plan.description} onClick={async () => await set(plan.name)} />)}
       <Customization.Button selected={custom} onClick={async () => await set({})}/>
       {custom ? <Customization settings={settings} value={character.settings} onChange={onChange} /> : '' }

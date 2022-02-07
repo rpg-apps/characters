@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import './App.scss'
 
 import Home from './components/pages/home'
+import Graveyard from './components/pages/home/graveyard'
 import New from './components/pages/new'
 import Character from './components/pages/character'
 
@@ -20,6 +21,7 @@ function App() {
       <Switch>
         <Route path='/character/:id' component={Character}/>
         <Route path='/new' component={New}/>
+        <Route path='/graveyard' component={Graveyard}/>
         <Route path='/' component={Home}/>
       </Switch>
     </Router>

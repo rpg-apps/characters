@@ -8,11 +8,17 @@ import Footer from './footer'
 import Character from '../../presentation/character'
 
 export default function Home (props) {
-  const characters = useCharacters()
+  const characters = useCharacters().filter(character => character.alive)
 
-  const content = characters.length ? characters.map((character, index) => <Link key={index} to={`/character/${character.id}`}>
-    <Character character={character}/>
-  </Link>) : <div className='empty characters'><div className='primary'>No one is here</div><div>Maybe create a character instead of staring at an empty page?</div></div>
+  const content = characters.length ?
+    characters.map((character, index) => <Link key={index} to={`/character/${character.id}`}>
+      <Character character={character}/>
+    </Link>)
+    :
+    <div className='empty characters'>
+      <div className='primary'>No one is here</div>
+      <div>Maybe create a character instead of staring at an empty page?</div>
+    </div>
 
   return <div className='home page'>
     <div className='characters'>

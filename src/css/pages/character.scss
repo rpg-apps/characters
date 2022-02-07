@@ -2,75 +2,82 @@
 
 $plan-height: 4rem;
 
-.ReactModalPortal > * > * {
-  @extend %round;
-  inset: 20px !important;
+.ReactModalPortal > * {
+  @extend %centering;
+  padding: $large-gap;
 
-  .plan, .custom {
-    @extend %round;
-    height: $plan-height;
-    margin-bottom: $small-gap;
-    border-radius: $border-radius;
-    background: lighten($modal-background-color, 15%);
-    display: grid;
-    grid-template: 1rem 1fr / 4rem 1fr;
-    gap: $small-gap;
-    grid-template-areas:
-      "image name"
-      "image description";
+  > * { height: fit-content; }
 
-    &.selected { box-shadow: #8c7600 0px 0px 3px 2px; }
+  .settings {
+    padding: $large-gap;
+    outline: none;
 
-    &::before {
-      content: '';
-      border-top-left-radius: $border-radius;
-      border-bottom-left-radius: $border-radius;
-      grid-area: image;
-      width: $plan-height;
+    .plan, .custom {
+      @extend %round;
       height: $plan-height;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: right;
+      margin-bottom: $small-gap;
+      border-radius: $border-radius;
+      background: lighten($modal-background-color, 15%);
+      display: grid;
+      grid-template: 1rem 1fr / 4rem 1fr;
+      gap: $small-gap;
+      grid-template-areas:
+        "image name"
+        "image description";
+
+      &.selected { box-shadow: #8c7600 0px 0px 3px 2px; }
+
+      &::before {
+        content: '';
+        border-top-left-radius: $border-radius;
+        border-bottom-left-radius: $border-radius;
+        grid-area: image;
+        width: $plan-height;
+        height: $plan-height;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: right;
+      }
+
+      &.manual::before    { background-image: url('../../images/manual.jpg'); }
+      &.automatic::before { background-image: url('../../images/automatic.jpg'); }
+      &.custom::before    {
+        background-image: url('../../images/custom.jpg');
+        background-size: 150%;
+        background-position: center;
+      }
+
+      .name {
+        grid-area: name;
+        font-size: 1.2rem;
+      }
+
+      .description {
+        grid-area: description;
+        font-size: 0.7rem;
+        margin-right: $small-gap;
+      }
     }
 
-    &.manual::before    { background-image: url('../../images/manual.jpg'); }
-    &.automatic::before { background-image: url('../../images/automatic.jpg'); }
-    &.custom::before    {
-      background-image: url('../../images/custom.jpg');
-      background-size: 150%;
-      background-position: center;
-    }
-
-    .name {
-      grid-area: name;
+    .group-title {
       font-size: 1.2rem;
     }
 
-    .description {
-      grid-area: description;
-      font-size: 0.7rem;
-      margin-right: $small-gap;
-    }
-  }
+    .danger-zone {
+      @extend %round;
+      padding: $small-gap;
+      border: 1px solid #960000;
+      background: #9600007a;
 
-  .group-title {
-    font-size: 1.2rem;
-  }
+      label { font-size: 0.7rem; }
 
-  .danger-zone {
-    @extend %round;
-    padding: $small-gap;
-    border: 1px solid #960000;
-    background: #9600007a;
-
-    label { font-size: 0.7rem; }
-
-    input[type="text"] {
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      border: none;
-      margin: 0.5rem;
-      width: calc(100% - 1rem);
+      input[type="text"] {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        margin: 0.5rem;
+        width: calc(100% - 1rem);
+      }
     }
   }
 }

@@ -11,19 +11,18 @@ import { useCharacters } from '../../contexts/characters-context'
 import useForceUpdate from '../../contexts/force-update'
 import Character from '../../presentation/character'
 import Loader from '../../presentation/loader'
+import Input from '../../presentation/input'
 
 Modal.setAppElement('#root')
 
 export default function CharacterPage ({ match }) {
-  const [focusing, setFocusing] = useState(false)
-  const [focus, setFocus] = useState(false)
   const [handlers, setHandlers] = useState({})
+  const [modal, setModal] = useState({ status: false })
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
   const handleEvent = async ({ name, value }, event) => {
     const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
-    console.log(eventType, name, handlers?.[name]?.[eventType])
     if (handlers?.[name]?.[eventType]) {
       const handler = handlers?.[name]?.[eventType]
      const procedure = (handler instanceof Function) ? handler(event) : handler
@@ -37,22 +36,55 @@ export default function CharacterPage ({ match }) {
     setHandlers(character.adapters.reduce((results, adapter) => ({ ...results, ...adapter.getHandlers(character.calculatedSettings || {}) }), {}))
   }, [character])
 
+
   const output = text => {
-    setFocus(text)
-    setFocusing(true)
+    setModal({ status: 'output' })
   }
 
-  const input = (text, type = 'string') => {
-
-  }
-
-  const choose = (text, options, count = 1) => {
+  const input = async (text, type = 'string') => {
 
   }
 
-  const edit = fieldName => {
-    const field = character.playbook.rules.characterFields.find(characterField => characterField.name === fieldName)
-    console.log(`editing ${fieldName}`)
+  const choose = async (text, options, count = 1) => {
+
+  }
+
+  const edit = async fieldName => {
+    // TODO smart type detection and composite field editing, including array add/remove
+    await _edit({
+      title: fieldName,
+      type: 'text',
+      get: async () => await character.get(fieldName, { ui: this }),
+      set: async value => await character.set(fieldName, value)
+    })
+  }
+
+  const editNotes = async () => {
+    await _edit({
+      title: 'notes',
+      type: 'long text',
+      get: async () => character.notes,
+      set: value => { character.notes = value }
+    })
+  }
+
+  const _edit = async ({ title, type, get, set }) => {
+    const onChange = async value => {
+      await set(value)
+      setModal({ status: 'edit', title, content, value })
+    }
+    const save = async () => {
+      await character.save()
+      setModal({ status: false })
+    }
+    const value = await get()
+    const content = () => {
+      return [
+        <Input type={type} value={modal.value || value} onChange={onChange} />,
+        <div className='primary button' onClick={save}>done</div>
+      ]
+    }
+    onChange(value)
   }
 
   useEffect(() => {
@@ -69,8 +101,13 @@ export default function CharacterPage ({ match }) {
     <Character character={character} handleEvent={handleEvent}>
       <CharacterSettings onChange={() => refreshHandlers()} character={character} />
       <Link className='back link' to='/'><FaArrowLeft /></Link>
-      <div className='notes' onClick={() => output(character.notes)}><FaScroll /></div>
-      <Modal isOpen={focusing} onRequestClose={() => setFocusing(false)}>{focus}</Modal>
+      <div className='notes' onClick={() => editNotes()}><FaScroll /></div>
+      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: false })}>
+        <div className={modal.status}>
+          <div className='title'>{modal.title}</div>
+          {modal.content ? modal.content() : ''}
+        </div>
+      </Modal>
     </Character>
   </div>
 }

@@ -13,9 +13,17 @@ export default function DangerZone ({ character }) {
     history.push('/')
   }
 
+  const kill = async () => {
+    await character.die()
+    await character.save()
+    history.push('/')
+  }
+
   return <div className='danger-zone'>
     <div className='group-title'>Danger Zone</div>
-    <Input type='text' text={`Type ${approvalText} and press the button to delete it.`} onChange={setApprovalInput}/>
+    <label>A dead character would not show in the homescreen, but you can see it in the graveyard and revive it.</label>
+    <div className='button' onClick={kill}>Kill this character</div>
+    <Input type='text' text={`Type ${approvalText} and press the button to delete this character. This operation is irreversible.`} onChange={setApprovalInput}/>
     <div className={`button ${approvalInput !== approvalText ? 'disabled' : ''}`} onClick={submitDelete}>Delete</div>
   </div>
 }
