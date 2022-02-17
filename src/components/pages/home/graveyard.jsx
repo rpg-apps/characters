@@ -1,5 +1,7 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router'
+import { FaArrowLeft } from 'react-icons/fa'
 
 import '../../../css/pages/home.scss'
 
@@ -29,6 +31,6 @@ export default function Graveyard (props) {
     <div className='characters'>
       {content}
     </div>
-    <Footer graveyard={true} />
+    <Footer graveyardLink={<Link className='link' to='/'><FaArrowLeft /> Back</Link>} />
   </div>
 }

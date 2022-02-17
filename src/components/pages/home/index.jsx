@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { FaBookDead } from 'react-icons/fa'
 
 import '../../../css/pages/home.scss'
 
@@ -24,6 +25,6 @@ export default function Home (props) {
     <div className='characters'>
       {content}
     </div>
-    <Footer />
+    <Footer graveyardLink={<Link className='link' to='/graveyard'><FaBookDead /> Graveyard</Link>} />
   </div>
 }

@@ -2,10 +2,15 @@ import React, { useState, useEffect, useContext, createContext } from 'react'
 import { useHistory } from 'react-router'
 import * as Realm from 'realm-web'
 
+import Form from '../presentation/form'
+
 const AuthContext = createContext()
 
 export const useAuth = () => useContext(AuthContext)
 
+// TODO validations
+// TODO google login
+// TODO reset password
 export function WithAuth ({ appId, children }) {
   const [app, setApp] = useState(new Realm.App(appId))
   const [currentUser, setCurrentUser] = useState(app.currentUser);
@@ -27,63 +32,18 @@ export function WithAuth ({ appId, children }) {
     await app.emailPasswordAuth.registerUser({ email, password })
     await logIn(Realm.Credentials.emailPassword(email, password))
     history.push('/new')
+  }
 
+  async function loginWithEmailAndPassword ({ email, password }) {
+    return await logIn(Realm.Credentials.emailPassword(email, password))
   }
 
   if (!currentUser) {
     return <div className='auth'>
-      <Login logIn={logIn} signup={signup} />
-      <Signup signup={signup} />
+      <Form id='login' title='Login' submitClass='primary' submit={loginWithEmailAndPassword} fields={['email', { name: 'password', type: 'password' }]} />
+      <Form id='signup' title='Signup' submitClass='primary' submit={({ email, password, confirmation }) => signup(email, password)} fields={['email', { name: 'password', type: 'password' }, { name: 'confirmation', title: 'Confirm password', type: 'password' }]} />
     </div>
   }
 
   return <AuthContext.Provider value={{ ...app, user: currentUser, logOut }}>{children}</AuthContext.Provider>
-}
-
-// TODO validations
-// TODO google login
-// TODO reset password
-function Login ({ logIn }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
-  async function loginWithEmailAndPassword () {
-    return await logIn(Realm.Credentials.emailPassword(email, password))
-  }
-
-  return <form>
-    <div className='title'>Login</div>
-    <label>
-      Email:
-      <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
-    </label>
-    <label>
-      Password:
-      <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
-    </label>
-    <div className='primary button' onClick={loginWithEmailAndPassword}>Login</div>
-  </form>
-}
-
-function Signup ({ signup }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmation, setConfirmation] = useState('')
-
-  return <form>
-    <div className='title'>Signup</div>
-    <label>
-      Email:
-      <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
-    </label>
-    <label>
-      Password:
-      <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
-    </label>
-    <label>
-      Confirm password:
-      <input type='password' value={confirmation} onChange={e => setConfirmation(e.target.value)} />
-    </label>
-    <div className='primary button' onClick={() => signup(email, password)}>Signup</div>
-  </form>
 }
