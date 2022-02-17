@@ -23,6 +23,8 @@ $stats: ('short': 'str', 'long': 'strength', 'debility': 'weak'),
         ('short': 'wis', 'long': 'wisdom', 'debility': 'confused'),
         ('short': 'cha', 'long': 'charisma', 'debility': 'scarred');
 
+$alignments: 'chaotic', 'evil', 'good', 'lawful', 'neutral';
+
 $moves: 'Hack and Slash', 'Volley', 'Parley', 'Aid or Interfere', 'Discern Realities', 'Spout Lore', 'Defend', 'Defy Danger',
         'Bolster', 'Carouse', 'End of Session', 'Encumbrance', 'Last Breath', 'Make Camp', 'Take Watch', 'Supply', 'Outstanding Warrants', 'Undertake a Perilous Journey', 'Recruit', 'Recover', 'Level Up';
 
@@ -354,6 +356,13 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
 
   > .field[name=alignment] {
     grid-area: alignment;
+
+    @each $alignment in $alignments {
+      &[value='#{$alignment}']::before {
+        @extend %exact-background;
+        background-image: url('./images/alignment/#{$alignment}.png');
+      }
+    }
   }
 
   %collection-button {
@@ -469,12 +478,10 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
       padding: $small-gap;
 
       &::before {
+        @extend %exact-background;
         content: '';
         width: $full;
         height: $full;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
       }
 
       &::after {

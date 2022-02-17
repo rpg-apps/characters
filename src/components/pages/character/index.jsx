@@ -25,7 +25,8 @@ export default function CharacterPage ({ match }) {
     const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
     if (handlers?.[name]?.[eventType]) {
       const handler = handlers?.[name]?.[eventType]
-     const procedure = (handler instanceof Function) ? handler(event) : handler
+      const procedure = (handler instanceof Function) ? handler(event) : handler
+      console.log(procedure)
       await character.execute(procedure, { output, input, choose, edit })
       forceUpdate()
       await character.save()
@@ -38,6 +39,7 @@ export default function CharacterPage ({ match }) {
 
 
   const output = text => {
+    console.log(text)
     setModal({ status: 'output' })
   }
 
