@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-logical-assignment-operators": "^7.14.5",
-    "@rpg-apps/rpg-js": "0.1.5",
+    "@rpg-apps/rpg-js": "0.1.6",
     "bluebird": "^3.7.2",
     "change-case": "^4.1.2",
     "customize-cra": "^1.0.0",
