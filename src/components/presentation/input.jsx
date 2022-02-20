@@ -55,7 +55,7 @@ function ArrayInput ({ text, value, itemType, onChange }) {
     <label>{text}</label>
     <div className='items'>
       {value.map((item, index) => <div className='item'>
-        <Input value={item}, type={itemType} onChange={itemChange(index)} text=''/>
+        <Input value={item} type={itemType} onChange={itemChange(index)} text=''/>
         <div className='delete' onClick={itemDelete(index)} />
       </div>)}
       <div className='add' onClick={itemAdd} />
