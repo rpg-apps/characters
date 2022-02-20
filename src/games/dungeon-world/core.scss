@@ -357,12 +357,12 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   > .field[name=alignment] {
     grid-area: alignment;
 
-    @each $alignment in $alignments {
-      &[value='#{$alignment}']::before {
-        @extend %exact-background;
-        background-image: url('./images/alignment/#{$alignment}.png');
-      }
-    }
+    // @each $alignment in $alignments {
+    //   &[value='#{$alignment}']::before {
+    //     @extend %exact-background;
+    //     background-image: url('./images/alignment/#{$alignment}.png');
+    //   }
+    // }
   }
 
   %collection-button {
@@ -511,13 +511,13 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   > .field[name=gear] {
     grid-area: gear;
 
-    @each $gear in $equipment {
-      .field[name=name] {
-        &[value='#{$gear}']::before {
-          background-image: url('./images/equipment/#{$gear}.png');
-        }
-      }
-    }
+    // @each $gear in $equipment {
+    //   .field[name=name] {
+    //     &[value='#{$gear}']::before {
+    //       background-image: url('./images/equipment/#{$gear}.png');
+    //     }
+    //   }
+    // }
   }
 
   // -------------------- settings --------------------
