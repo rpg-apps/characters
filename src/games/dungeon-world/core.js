@@ -112,6 +112,10 @@ const getHandlers = settings => {
   }
   handlers['damage-formula'] = { click: 'deal damage' }
 
+  handlers['moves\\.\\d+\\.name'] = {
+    click: (e, moveName) => `trigger ${moveName}`
+  }
+
   // -------------------- stats --------------------
   const stats = { strength: 'weak', dexterity: 'shakey', constitution: 'sick', intelligence: 'stunned', wisdom: 'confused', charisma: 'scarred' }
   Object.entries(stats).forEach(([stat, debility]) => {

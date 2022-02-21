@@ -23,9 +23,9 @@ export default function CharacterPage ({ match }) {
 
   const handleEvent = async ({ name, value }, event) => {
     const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
-    if (handlers?.[name]?.[eventType]) {
-      const handler = handlers?.[name]?.[eventType]
-      const procedure = (handler instanceof Function) ? handler(event) : handler
+    const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
+    if (handler) {
+      const procedure = (handler instanceof Function) ? handler(event, value) : handler
       console.log(procedure)
       await character.execute(procedure, { output, input, choose, edit })
       forceUpdate()
