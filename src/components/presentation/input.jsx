@@ -1,13 +1,15 @@
 import React from 'react'
 
 export default function Input ({ text, value, type, onChange }) {
-  if (type.endsWith(' array')) {
-    const itemType = type.substring(0, type.length - ' array'.length)
-    return <ArrayInput {...{ text, value, itemType, onChange }} />
-  }
+  console.log('type', type)
 
   if (type.constructor !== String) {
     return <ComplexInput {...{ text, value, type, onChange }} />
+  }
+
+  if (type.endsWith(' array')) {
+    const itemType = type.substring(0, type.length - ' array'.length)
+    return <ArrayInput {...{ text, value, itemType, onChange }} />
   }
 
   const InputType = InputTypes[type]

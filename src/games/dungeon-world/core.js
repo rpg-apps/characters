@@ -62,17 +62,17 @@ const getHandlers = settings => {
 
   // -------------------- description --------------------
   if (settings.description?.editableName) {
-    handlers.name = { click: 'edit name' }
+    handlers.name = { click: 'edit name as text' }
   }
 
   if (settings.description?.editableDescription) {
-    handlers.description = { click: 'edit description' }
+    handlers.description = { click: 'edit description as long text' }
   } else if (settings.description?.viewableDescription) {
     handlers.description = { click: 'show description' }
   }
 
   if (settings.description?.editableLook) {
-    handlers.look = { click: 'edit look' }
+    handlers.look = { click: 'edit look as long text' }
   } else if (settings.description?.viewableLook) {
     handlers.look = { click: 'show look' }
   }
@@ -82,7 +82,7 @@ const getHandlers = settings => {
   }
 
   if (settings.description?.editableRace) {
-    handlers.race = { click: 'edit race' }
+    handlers.race = { click: 'edit race as race' }
   } else if (settings.description?.viewableRace) {
     handlers.race = { click: 'show race' }
   } else if (settings.description?.runnableRace) {
@@ -94,7 +94,7 @@ const getHandlers = settings => {
   }
 
   if (settings.description?.viewableBonds) {
-    handlers.bonds = { click: 'show bonds' }
+    handlers.bonds = { click: 'edit bonds as bond array' }
   }
 
   handlers.level = handlers.xp = {
@@ -114,6 +114,8 @@ const getHandlers = settings => {
 
   if (settings.collection.executableMoves) {
     handlers['moves\\.\\d+\\.name'] = { click: (e, moveName) => `trigger ${moveName}` }
+  } else {
+    handlers['moves\\.\\d+\\.name'] = { click: (e, moveName) => `edit moves as move array` }
   }
 
 

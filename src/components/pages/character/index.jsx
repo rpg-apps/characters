@@ -17,7 +17,7 @@ Modal.setAppElement('#root')
 
 export default function CharacterPage ({ match }) {
   const [handlers, setHandlers] = useState({})
-  const [modal, setModal] = useState({ status: false })
+  const [modal, setModal] = useState({ status: '' })
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
@@ -27,7 +27,12 @@ export default function CharacterPage ({ match }) {
     if (handler) {
       const procedure = (handler instanceof Function) ? handler(event, value) : handler
       console.log(procedure)
-      await character.execute(procedure, { output, input, choose, edit })
+      if (procedure.startsWith('edit')) {
+        const [fieldName, type] = procedure.replace('edit ', '').split(' as ').map(x => x.trim())
+        edit(fieldName, type)
+      } else {
+        await character.execute(procedure, { output, input, choose, edit })
+      }
       forceUpdate()
       await character.save()
     }
@@ -53,11 +58,12 @@ export default function CharacterPage ({ match }) {
     // TODO add choice with options
   }
 
-  const edit = async fieldName => {
+  const edit = async (fieldName, type) => {
+    console.log([].concat(character.playbook.rules.characterFields).concat(character.playbook.rules.playbookFields).find(field => field.name === fieldName))
     await _prompt({
       status: 'edit',
+      type,
       title: fieldName,
-      type: 'text',
       get: async () => await character.get(fieldName, { ui: this }),
       set: async value => await character.set(fieldName, value)
     })
@@ -74,7 +80,6 @@ export default function CharacterPage ({ match }) {
   }
 
   const _prompt = async ({ status, title, type, get, set }) => {
-    const calculatedType = character.playbook.rules.types.find(t => t.name && t.fieldTypes)?.fieldTypes || type
     const onChange = async value => {
       await set(value)
       setModal({ status, title, content, value })
@@ -84,9 +89,11 @@ export default function CharacterPage ({ match }) {
       setModal({ status: false })
     }
     const value = await get()
+    const calculatedType = character.playbook.rules.types.find(t => (t.name == type) && t.fieldTypes)?.fieldTypes
+    // TODO continue here: add recursive iterations over the inner fields, pulling the types out of them.
     const content = () => [
-      <Input type={calculatedType} value={modal.value || value} onChange={onChange} />,
-      <div className='primary button' onClick={save}>done</div>
+      <Input key='input' type={calculatedType || type} value={modal.value || value} onChange={onChange} />,
+      <div key='submit' className='primary button' onClick={save}>done</div>
     ]
     onChange(value)
   }
@@ -106,7 +113,7 @@ export default function CharacterPage ({ match }) {
       <CharacterSettings onChange={() => refreshHandlers()} character={character} />
       <Link className='back link' to='/'><FaArrowLeft /></Link>
       <div className='notes' onClick={() => editNotes()}><FaScroll /></div>
-      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: false })}>
+      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: '' })}>
         <div className={modal.status}>
           <div className='title'>{modal.title}</div>
           {modal.content ? modal.content() : ''}
