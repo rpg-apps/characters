@@ -467,7 +467,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
       &[name=length] { display: none; }
     }
 
-    .field[name=name] {
+    .field[name$=name] {
       @extend %show-value;
       display: flex;
       flex-direction: column;
@@ -500,7 +500,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   > .field[name=moves] {
     grid-area: moves;
     @each $move in $moves {
-      .field[name=name] {
+      .field[name$=name] {
         &[value='#{$move}']::before {
           background-image: url('./images/moves/#{$move}.png');
         }

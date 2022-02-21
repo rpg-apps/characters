@@ -74,7 +74,7 @@ export default function CharacterPage ({ match }) {
   }
 
   const _prompt = async ({ status, title, type, get, set }) => {
-    calculatedType = character.playbook.rules.types.find(t => t.name && t.fieldTypes)?.fieldTypes || type
+    const calculatedType = character.playbook.rules.types.find(t => t.name && t.fieldTypes)?.fieldTypes || type
     const onChange = async value => {
       await set(value)
       setModal({ status, title, content, value })

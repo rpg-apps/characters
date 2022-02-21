@@ -130,6 +130,4 @@ const getHandlers = settings => {
   return handlers
 }
 
-const all = { settings, manual, automatic, getHandlers }
-
-export default all
+export default { settings, manual, automatic, getHandlers }

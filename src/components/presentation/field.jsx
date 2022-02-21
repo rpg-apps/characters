@@ -15,13 +15,13 @@ export default function Field (props) {
   if (Array.isArray(value)) {
     return <Field key={name} name={name} value='array' className={`array ${className || ''}`} handleEvent={handleEvent}>
       <Field name='length' value={value.length} handleEvent={handleEvent} />
-      {value.map((item, index) => <Field key={index} name={index} value={item} handleEvent={handleEvent} />)}
+      {value.map((item, index) => <Field key={index} name={`${name}.${index}`} value={item} handleEvent={handleEvent} />)}
     </Field>
   }
 
   if (typeof value === 'object') {
     return <Field key={name} name={name} value={'array'} className={`complex ${className || ''}`} handleEvent={handleEvent}>
-      {Object.entries(value).map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={handleEvent} />)}
+      {Object.entries(value).map(([key, value]) => <Field key={key} name={`${name}.${key}`} value={value} handleEvent={handleEvent} />)}
     </Field>
   }
 
