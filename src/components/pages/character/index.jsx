@@ -43,17 +43,19 @@ export default function CharacterPage ({ match }) {
     setModal({ status: 'output' })
   }
 
-  const input = async (text, type = 'string') => {
-
+  const input = async (title, type = 'text') => {
+    return new Promise(resolve => {
+      _prompt({ status: 'input', title, type, get: () => '', set: value => resolve(value) })
+    })
   }
 
-  const choose = async (text, options, count = 1) => {
-
+  const choose = async (title, options, count = 1) => {
+    // TODO add choice with options
   }
 
   const edit = async fieldName => {
-    // TODO smart type detection and composite field editing, including array add/remove
-    await _edit({
+    await _prompt({
+      status: 'edit',
       title: fieldName,
       type: 'text',
       get: async () => await character.get(fieldName, { ui: this }),
@@ -62,7 +64,8 @@ export default function CharacterPage ({ match }) {
   }
 
   const editNotes = async () => {
-    await _edit({
+    await _prompt({
+      status: 'edit',
       title: 'notes',
       type: 'long text',
       get: async () => character.notes,
@@ -70,22 +73,21 @@ export default function CharacterPage ({ match }) {
     })
   }
 
-  const _edit = async ({ title, type, get, set }) => {
+  const _prompt = async ({ status, title, type, get, set }) => {
+    calculatedType = character.playbook.rules.types.find(t => t.name && t.fieldTypes)?.fieldTypes || type
     const onChange = async value => {
       await set(value)
-      setModal({ status: 'edit', title, content, value })
+      setModal({ status, title, content, value })
     }
     const save = async () => {
       await character.save()
       setModal({ status: false })
     }
     const value = await get()
-    const content = () => {
-      return [
-        <Input type={type} value={modal.value || value} onChange={onChange} />,
-        <div className='primary button' onClick={save}>done</div>
-      ]
-    }
+    const content = () => [
+      <Input type={calculatedType} value={modal.value || value} onChange={onChange} />,
+      <div className='primary button' onClick={save}>done</div>
+    ]
     onChange(value)
   }
 
