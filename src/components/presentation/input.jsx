@@ -6,6 +6,10 @@ export default function Input ({ text, value, type, onChange }) {
     return <ArrayInput {...{ text, value, itemType, onChange }} />
   }
 
+  if (type.constructor !== String) {
+    return <ComplexInput {...{ text, value, type, onChange }} />
+  }
+
   const InputType = InputTypes[type]
   return <InputType text={text} value={value} onChange={onChange} />
 }
@@ -32,6 +36,15 @@ function LongTextInput ({ text, value, onChange }) {
   return <div className='text input'>
     <label>{text}</label>
     <textarea value={value} onChange={e => onChange(e.target.value)} />
+  </div>
+}
+
+function ComplexInput ({ text, value, type, onChange }) {
+  return <div className='complex input'>
+    <label>{text}</label>
+    {Object.entries(type).map(([fieldName, fieldType]) =>
+      <Input type={fieldType} text={fieldName} value={value[fieldName]} onChange={val => onChange({ ...value, [fieldName]: val })} />
+    )}
   </div>
 }
 
