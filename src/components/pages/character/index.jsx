@@ -26,8 +26,7 @@ export default function CharacterPage ({ match }) {
     const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
     if (handler) {
       const procedure = (handler instanceof Function) ? handler(event, value) : handler
-      console.log(procedure)
-      if (procedure.startsWith('edit')) {
+      if (procedure.constructor === String && procedure.startsWith('edit')) {
         const [fieldName, type] = procedure.replace('edit ', '').split(' as ').map(x => x.trim())
         edit(fieldName, type)
       } else {
@@ -44,7 +43,6 @@ export default function CharacterPage ({ match }) {
 
 
   const output = text => {
-    console.log(text)
     setModal({ status: 'output' })
   }
 
@@ -59,7 +57,6 @@ export default function CharacterPage ({ match }) {
   }
 
   const edit = async (fieldName, type) => {
-    console.log([].concat(character.playbook.rules.characterFields).concat(character.playbook.rules.playbookFields).find(field => field.name === fieldName))
     await _prompt({
       status: 'edit',
       type,
@@ -94,7 +91,7 @@ export default function CharacterPage ({ match }) {
         const itemType = type.substring(0, type.length - ' array'.length)
         return [findType(itemType)]
       }
-      const complexTypeSubtypes = character.playbook.rules.types.find(t => (t.name == type) && t.fieldTypes)?.fieldTypes
+      const complexTypeSubtypes = character.playbook.rules.types.find(t => (t.name === type) && t.fieldTypes)?.fieldTypes
       if (!complexTypeSubtypes) return type
       return Object.entries(complexTypeSubtypes)
         .reduce((all, [key, subtype]) => ({ ...all, [key]: findType(subtype.name || subtype) }), {})
@@ -122,7 +119,7 @@ export default function CharacterPage ({ match }) {
       <CharacterSettings onChange={() => refreshHandlers()} character={character} />
       <Link className='back link' to='/'><FaArrowLeft /></Link>
       <div className='notes' onClick={() => editNotes()}><FaScroll /></div>
-      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: '' })}>
+      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: '' })} className={Character.classes(character)}>
         <div className={modal.status}>
           <div className='title'>{modal.title}</div>
           {modal.content ? modal.content() : ''}

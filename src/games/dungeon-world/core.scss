@@ -539,4 +539,65 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
     font-size: 1.5rem;
     width: min-content;
   }
+
+
+  // -------------------- modals --------------------
+}
+
+
+.dungeon-world-core > .edit, .dungeon-world-core > .input {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(#{$page-height} - 2*#{$large-gap});
+  width: calc(#{$page-width} - 4*#{$large-gap});
+  padding: $large-gap;
+
+  > .title {
+    @extend %title;
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  > .input {
+    max-height: calc(100vh - 10rem);
+  }
+
+  .input {
+    &:not(.complex, .array) {
+      display: flex;
+      justify-content: space-between;
+
+      label {
+        @extend %meta;
+      }
+
+      input {
+        @extend %title;
+        background: none;
+        border:none;
+        color: white;
+        outline: none;
+        &:focus {
+          border-bottom: white 1px solid;
+        }
+      }
+    }
+
+    &.array {
+      overflow: scroll;
+      .item {
+        position: relative;
+        padding: $small-gap;
+        border: solid black 1px;
+        margin-bottom: $small-gap;
+
+        .delete {
+          position: absolute;
+          color: darkred;
+          top: $small-gap;
+          right: $small-gap;
+        }
+      }
+    }
+  }
 }

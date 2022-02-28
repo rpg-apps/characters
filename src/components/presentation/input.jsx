@@ -40,7 +40,6 @@ function LongTextInput ({ text, value, onChange }) {
 }
 
 function ComplexInput ({ text, value, type, onChange }) {
-  console.log(text, value)
   return <div className='complex input'>
     <label>{text}</label>
     {Object.entries(type).filter(([fieldName, fieldType]) => !IgnoredTypes.includes(fieldType)).map(([fieldName, fieldType]) =>
@@ -78,7 +77,7 @@ function ArrayInput ({ text, value, itemType, onChange }) {
   return <div className='array input'>
     <label>{text}</label>
     <div className='items'>
-      {value.map((item, index) => <div className='item'>
+      {value.map((item, index) => <div key={index} className='item'>
         <Input value={item} type={itemType} onChange={itemChange(index)} text=''/>
         <div className='delete' onClick={itemDelete(index)}><FaTrash /></div>
       </div>)}

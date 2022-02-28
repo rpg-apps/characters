@@ -1,4 +1,4 @@
-const settings = {
+export const settings = {
   description: {
     editableName:        { type: 'boolean', text: 'click on the name to edit it' },
     editableDescription: { type: 'boolean', text: 'click on the description to edit it' },
@@ -31,7 +31,7 @@ const settings = {
   }
 }
 
-const manual = {
+export const manual = {
   description: { editableName: true,
                  editableDescription: true, viewableDescription: false,
                  editableLook: true, viewableLook: false,
@@ -44,7 +44,7 @@ const manual = {
   collection: { executableMoves: false }
 }
 
-const automatic = {
+export const automatic = {
   description: { editableName: true,
                  editableDescription: true, viewableDescription: false,
                  editableLook: true, viewableLook: false,
@@ -57,7 +57,7 @@ const automatic = {
   collection: { executableMoves: false }
 }
 
-const getHandlers = settings => {
+export const getHandlers = settings => {
   const handlers = {}
 
   // -------------------- description --------------------
@@ -136,5 +136,3 @@ const getHandlers = settings => {
 
   return handlers
 }
-
-export default { settings, manual, automatic, getHandlers }
