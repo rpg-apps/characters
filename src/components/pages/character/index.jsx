@@ -81,10 +81,10 @@ export default function CharacterPage ({ match }) {
 
   const _prompt = async ({ status, title, type, get, set }) => {
     const onChange = async value => {
-      await set(value)
       setModal({ status, title, content, value })
     }
     const save = async () => {
+      await set(value)
       await character.save()
       setModal({ status: false })
     }

@@ -1,14 +1,13 @@
 import React from 'react'
+import { FaPlus, FaTrash } from 'react-icons/fa'
 
 export default function Input ({ text='', value='', type, onChange=()=>{} }) {
-  console.log('type', type)
+  if (Array.isArray(type)) {
+    return <ArrayInput {...{ text, value, itemType: type[0], onChange }} />
+  }
 
   if (type.constructor !== String) {
     return <ComplexInput {...{ text, value, type, onChange }} />
-  }
-
-  if (Array.isArray(type)) {
-    return <ArrayInput {...{ text, value, itemType: type[0], onChange }} />
   }
 
   const InputType = InputTypes[type]
@@ -62,8 +61,18 @@ function ArrayInput ({ text, value, itemType, onChange }) {
   }
 
   const itemAdd = () => {
-    // TODO add item generation based on type
+    value.push(generateValue(itemType))
     return onChange(value)
+  }
+
+  const generateValue = type => {
+    if (Array.isArray(type)) {
+      return []
+    } else if (type.constructor !== String) {
+      return Object.entries(itemType).reduce((result, [subfield, subtype]) => ({ ...result, [subfield]: generateValue(subtype) }), { })
+    } else {
+      return Defaults[type]
+    }
   }
 
   return <div className='array input'>
@@ -71,9 +80,9 @@ function ArrayInput ({ text, value, itemType, onChange }) {
     <div className='items'>
       {value.map((item, index) => <div className='item'>
         <Input value={item} type={itemType} onChange={itemChange(index)} text=''/>
-        <div className='delete' onClick={itemDelete(index)} />
+        <div className='delete' onClick={itemDelete(index)}><FaTrash /></div>
       </div>)}
-      <div className='add' onClick={itemAdd} />
+      <div className='add' onClick={itemAdd}><FaPlus /> add</div>
     </div>
   </div>
 }
@@ -84,4 +93,10 @@ const InputTypes = {
   boolean: BooleanInput,
   text: TextInput,
   'long text': LongTextInput
+}
+
+const Defaults = {
+  boolean: false,
+  text: '',
+  'long text': ''
 }
