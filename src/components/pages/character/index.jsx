@@ -89,8 +89,17 @@ export default function CharacterPage ({ match }) {
       setModal({ status: false })
     }
     const value = await get()
-    const calculatedType = character.playbook.rules.types.find(t => (t.name == type) && t.fieldTypes)?.fieldTypes
-    // TODO continue here: add recursive iterations over the inner fields, pulling the types out of them.
+    const findType = type => {
+      if (type.endsWith(' array')) {
+        const itemType = type.substring(0, type.length - ' array'.length)
+        return [findType(itemType)]
+      }
+      const complexTypeSubtypes = character.playbook.rules.types.find(t => (t.name == type) && t.fieldTypes)?.fieldTypes
+      if (!complexTypeSubtypes) return type
+      return Object.entries(complexTypeSubtypes)
+        .reduce((all, [key, subtype]) => ({ ...all, [key]: findType(subtype.name || subtype) }), {})
+    }
+    const calculatedType = findType(type)
     const content = () => [
       <Input key='input' type={calculatedType || type} value={modal.value || value} onChange={onChange} />,
       <div key='submit' className='primary button' onClick={save}>done</div>

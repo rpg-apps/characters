@@ -1,15 +1,14 @@
 import React from 'react'
 
-export default function Input ({ text, value, type, onChange }) {
+export default function Input ({ text='', value='', type, onChange=()=>{} }) {
   console.log('type', type)
 
   if (type.constructor !== String) {
     return <ComplexInput {...{ text, value, type, onChange }} />
   }
 
-  if (type.endsWith(' array')) {
-    const itemType = type.substring(0, type.length - ' array'.length)
-    return <ArrayInput {...{ text, value, itemType, onChange }} />
+  if (Array.isArray(type)) {
+    return <ArrayInput {...{ text, value, itemType: type[0], onChange }} />
   }
 
   const InputType = InputTypes[type]
@@ -42,10 +41,11 @@ function LongTextInput ({ text, value, onChange }) {
 }
 
 function ComplexInput ({ text, value, type, onChange }) {
+  console.log(text, value)
   return <div className='complex input'>
     <label>{text}</label>
-    {Object.entries(type).map(([fieldName, fieldType]) =>
-      <Input type={fieldType} text={fieldName} value={value[fieldName]} onChange={val => onChange({ ...value, [fieldName]: val })} />
+    {Object.entries(type).filter(([fieldName, fieldType]) => !IgnoredTypes.includes(fieldType)).map(([fieldName, fieldType]) =>
+      <Input key={fieldName} type={fieldType} text={fieldName} value={value[fieldName]} onChange={val => onChange({ ...value, [fieldName]: val })} />
     )}
   </div>
 }
@@ -78,6 +78,7 @@ function ArrayInput ({ text, value, itemType, onChange }) {
   </div>
 }
 
+const IgnoredTypes = ['procedure']
 
 const InputTypes = {
   boolean: BooleanInput,
