@@ -118,6 +118,7 @@ export const getHandlers = settings => {
     handlers['moves\\.\\d+\\.name'] = { click: (e, moveName) => `edit moves as move array` }
   }
 
+  handlers['gear\\.\\d+\\.name'] = { click: (e, moveName) => `edit gear as equipment array` }
 
   // -------------------- stats --------------------
   const stats = { strength: 'weak', dexterity: 'shakey', constitution: 'sick', intelligence: 'stunned', wisdom: 'confused', charisma: 'scarred' }

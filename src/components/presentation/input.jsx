@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaPlus, FaTrash } from 'react-icons/fa'
+import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa'
 
 export default function Input ({ text='', value='', type, onChange=()=>{} }) {
   if (Array.isArray(type)) {
@@ -11,6 +11,10 @@ export default function Input ({ text='', value='', type, onChange=()=>{} }) {
   }
 
   const InputType = InputTypes[type]
+  if (!InputType) {
+    console.warn('unknown input type', type)
+    return <div className='error input'/>
+  }
   return <InputType text={text} value={value} onChange={onChange} />
 }
 
@@ -36,6 +40,15 @@ function LongTextInput ({ text, value, onChange }) {
   return <div className='text input'>
     <label>{text}</label>
     <textarea value={value} onChange={e => onChange(e.target.value)} />
+  </div>
+}
+
+function NumberInput ({ text, value, onChange }) {
+  return <div className='number input'>
+    <label>{text}</label>
+    <div className='reduce' onClick={() => onChange(value - 1)}><FaMinus /></div>
+    <input type='number' value={value} onChange={e => onChange(e.target.value)} />
+    <div className='add' onClick={() => onChange(value + 1)}><FaPlus /></div>
   </div>
 }
 
@@ -91,7 +104,8 @@ const IgnoredTypes = ['procedure']
 const InputTypes = {
   boolean: BooleanInput,
   text: TextInput,
-  'long text': LongTextInput
+  'long text': LongTextInput,
+  number: NumberInput
 }
 
 const Defaults = {
