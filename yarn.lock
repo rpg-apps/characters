@@ -1647,10 +1647,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rpg-apps/rpg-js@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@rpg-apps/rpg-js/-/rpg-js-0.1.6.tgz#0d9464282417e98e38c9a4b6e3d413785682d51a"
-  integrity sha512-AXgWpYSt1SNJrOPvubHDwhhqZCeDEk1EhfLNh6WfgW4/GHn6pHrGvYuhSZnH9AOiBW6SbrFK4pykC7oo95f/EQ==
+"@rpg-apps/rpg-js@0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@rpg-apps/rpg-js/-/rpg-js-0.1.7.tgz#6d34463754d1b4edee450fe0568ed95388ff14ba"
+  integrity sha512-tAjEpRvHG0JT1jl5HYmMt1z6bhk5B4wbR+ixzWjBd5UHpVbIBG1e+TMDmLQBfotCi3hsDea0ghpRpv6T1gbB+g==
   dependencies:
     axios "^0.21.4"
     change-case "^4.1.2"
