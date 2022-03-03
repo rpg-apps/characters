@@ -17,17 +17,21 @@ Modal.setAppElement('#root')
 
 export default function CharacterPage ({ match }) {
   const [handlers, setHandlers] = useState({})
-  const [modal, setModal] = useState({ status: false })
+  const [modal, setModal] = useState({ status: '' })
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
   const handleEvent = async ({ name, value }, event) => {
     const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
-    if (handlers?.[name]?.[eventType]) {
-      const handler = handlers?.[name]?.[eventType]
-      const procedure = (handler instanceof Function) ? handler(event) : handler
-      console.log(procedure)
-      await character.execute(procedure, { output, input, choose, edit })
+    const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
+    if (handler) {
+      const procedure = (handler instanceof Function) ? handler(event, value) : handler
+      if (procedure.constructor === String && procedure.startsWith('edit')) {
+        const [fieldName, type] = procedure.replace('edit ', '').split(' as ').map(x => x.trim())
+        edit(fieldName, type)
+      } else {
+        await character.execute(procedure, { output, input, choose, edit })
+      }
       forceUpdate()
       await character.save()
     }
@@ -39,30 +43,32 @@ export default function CharacterPage ({ match }) {
 
 
   const output = text => {
-    console.log(text)
     setModal({ status: 'output' })
   }
 
-  const input = async (text, type = 'string') => {
-
+  const input = async (title, type = 'text') => {
+    return new Promise(resolve => {
+      _prompt({ status: 'input', title, type, get: () => '', set: value => resolve(value) })
+    })
   }
 
-  const choose = async (text, options, count = 1) => {
-
+  const choose = async (title, options, count = 1) => {
+    // TODO add choice with options
   }
 
-  const edit = async fieldName => {
-    // TODO smart type detection and composite field editing, including array add/remove
-    await _edit({
+  const edit = async (fieldName, type) => {
+    await _prompt({
+      status: 'edit',
+      type,
       title: fieldName,
-      type: 'text',
       get: async () => await character.get(fieldName, { ui: this }),
       set: async value => await character.set(fieldName, value)
     })
   }
 
   const editNotes = async () => {
-    await _edit({
+    await _prompt({
+      status: 'edit',
       title: 'notes',
       type: 'long text',
       get: async () => character.notes,
@@ -70,22 +76,31 @@ export default function CharacterPage ({ match }) {
     })
   }
 
-  const _edit = async ({ title, type, get, set }) => {
+  const _prompt = async ({ status, title, type, get, set }) => {
     const onChange = async value => {
-      await set(value)
-      setModal({ status: 'edit', title, content, value })
+      setModal({ status, title, content, value })
     }
     const save = async () => {
+      await set(value)
       await character.save()
       setModal({ status: false })
     }
     const value = await get()
-    const content = () => {
-      return [
-        <Input type={type} value={modal.value || value} onChange={onChange} />,
-        <div className='primary button' onClick={save}>done</div>
-      ]
+    const findType = type => {
+      if (type.endsWith(' array')) {
+        const itemType = type.substring(0, type.length - ' array'.length)
+        return [findType(itemType)]
+      }
+      const complexTypeSubtypes = character.playbook.rules.types.find(t => (t.name === type) && t.fieldTypes)?.fieldTypes
+      if (!complexTypeSubtypes) return type
+      return Object.entries(complexTypeSubtypes)
+        .reduce((all, [key, subtype]) => ({ ...all, [key]: findType(subtype.name || subtype) }), {})
     }
+    const calculatedType = findType(type)
+    const content = () => [
+      <Input key='input' type={calculatedType || type} value={modal.value || value} onChange={onChange} />,
+      <div key='submit' className='primary button' onClick={save}>done</div>
+    ]
     onChange(value)
   }
 
@@ -104,7 +119,7 @@ export default function CharacterPage ({ match }) {
       <CharacterSettings onChange={() => refreshHandlers()} character={character} />
       <Link className='back link' to='/'><FaArrowLeft /></Link>
       <div className='notes' onClick={() => editNotes()}><FaScroll /></div>
-      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: false })}>
+      <Modal isOpen={Boolean(modal.status)} onRequestClose={() => setModal({ status: '' })} className={Character.classes(character)}>
         <div className={modal.status}>
           <div className='title'>{modal.title}</div>
           {modal.content ? modal.content() : ''}
