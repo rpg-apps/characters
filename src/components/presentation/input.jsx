@@ -43,6 +43,13 @@ function LongTextInput ({ text, value, onChange }) {
   </div>
 }
 
+function PasswordInput ({ text, value, onChange }) {
+  return <div className='text input'>
+    <label>{text}</label>
+    <input type='password' value={value} onChange={e => onChange(e.target.value)} />
+  </div>
+}
+
 function NumberInput ({ text, value, onChange }) {
   return <div className='number input'>
     <label>{text}</label>
@@ -104,6 +111,7 @@ const IgnoredTypes = ['procedure']
 const InputTypes = {
   boolean: BooleanInput,
   text: TextInput,
+  password: PasswordInput,
   'long text': LongTextInput,
   number: NumberInput
 }
