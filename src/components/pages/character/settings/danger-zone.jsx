@@ -23,7 +23,7 @@ export default function DangerZone ({ character }) {
     <div className='group-title'>Danger Zone</div>
     <label>A dead character would not show in the homescreen, but you can see it in the graveyard and revive it.</label>
     <div className='button' onClick={kill}>Kill this character</div>
-    <Input type='text' text={`Type ${approvalText} and press the button to delete this character. This operation is irreversible.`} onChange={setApprovalInput}/>
+    <Input.Controlled type='text' text={`Type ${approvalText} and press the button to delete this character. This operation is irreversible.`} control={[approvalInput, setApprovalInput]}/>
     <div className={`button ${approvalInput !== approvalText ? 'disabled' : ''}`} onClick={submitDelete}>Delete</div>
   </div>
 }

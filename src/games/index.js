@@ -1,4 +1,4 @@
-import DWCore from './dungeon-world/core'
+import * as DWCore from './dungeon-world/core'
 
 export const adapters = {
   'dungeon-world': { core: DWCore }

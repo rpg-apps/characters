@@ -15,8 +15,10 @@ export default function Character ({ character, children, handleEvent=()=>{} }) 
       })
   }
 
-  return <div className={`character ${character.playbook.name} ${character.rulebooks.map(rb => rb.replace(' ', '-')).join(' ')}`}>
+  return <div className={`character ${Character.classes(character)}`}>
     {fields().map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={handleEvent} />)}
     {children}
   </div>
 }
+
+Character.classes = character => `${character.playbook.name} ${character.rulebooks.map(rb => rb.replace(' ', '-')).join(' ')}`
