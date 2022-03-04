@@ -4,15 +4,15 @@ export const adapters = {
   'dungeon-world': { core: DWCore }
 }
 
-export function adaptersForCharacters (character) {
+export function adaptersForCharacter (character) {
   return character.rulebooks.map(rulebook => {
     const [game, rules] = rulebook.split(' ')
     return adapters[game][rules]
   })
 }
 
-export function plansForCharacters (character) {
-  const adapters = adaptersForCharacters(character)
+export function plansForCharacter (character) {
+  const adapters = adaptersForCharacter(character)
 
   return PLANS.map(plan => {
     const settings = adapters.reduce((settings, adapter) => ({ ...settings, ...adapter[plan.name] }), { })

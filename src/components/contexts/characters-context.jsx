@@ -3,8 +3,7 @@ import Loader from '../presentation/loader'
 
 import { useAuth } from './auth-context'
 import { useRules } from './rules-context'
-
-import { PLANS, adaptersForCharacters } from '../../games'
+import { adaptersForCharacter, plansForCharacter } from '../../games'
 
 const CharactersContext = createContext()
 
@@ -16,42 +15,47 @@ export function WithCharacters ({ children }) {
   const [characterJsons, setCharacterJsons] = useState(false)
   const [characters, setCharacters] = useState(false)
 
-  const load = useCallback(async () => {
-    setCharacterJsons(await user.callFunction('getCharacters'))
-  }, [user])
-
+  const load = useCallback(async () => { setCharacterJsons(await user.callFunction('getCharacters')) }, [user])
   useEffect(() => { load() }, [user, load])
 
-  useEffect(() => {
-    (async () => {
-      if (!characterJsons)  return
-      const chars = []
-      for (const json of characterJsons) {
-        const character = await (await rules.get(json.rulebooks)).characters.load(json)
-        character.settings = json.settings
-        character.adapters = adaptersForCharacters(character)
-        character.plans = PLANS.map(plan => ({ ...plan, settings: character.adapters.reduce((planSettings, adapter) => ({ ...planSettings, ...adapter[plan.name] }), { }) }))
-        character.id = json._id
-        character.save = async () => await user.callFunction('updateCharacter', { id: character.id.toString(), character: Object.assign(character.toJson(), { settings: character.settings }) })
-        character.delete = async () => {
-          await user.callFunction('deleteCharacter', { id: character.id.toString() })
-          await load()
-        }
-        character.setSettings = settings => {
-          character.settings = settings
-          character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
-        }
-        character.setSettings(character.settings)
-        chars.push(character)
-      }
-      chars.create = async character => {
-        const id = (await user.callFunction('createCharacter', { character })).insertedId
+  const parseCharacter = useCallback(async rawCharacter => {
+    const character = await (await rules.get(rawCharacter.rulebooks)).characters.load(rawCharacter)
+    Object.assign(character, {
+      id: rawCharacter._id, adapters: adaptersForCharacter(character), plans: plansForCharacter(character),
+      save: async () => await user.callFunction('updateCharacter', {
+        id: character.id.toString(),
+        character: Object.assign(character.toJson(), { settings: character.settings })
+      }),
+      delete: async () => {
+        await user.callFunction('deleteCharacter', { id: character.id.toString() })
         await load()
-        return id
-      }
-      setCharacters(chars)
-    }) ()
-  }, [user, rules, characterJsons, load])
+      },
+      setSettings: settings => {
+        character.settings = settings
+        character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
+      },
+    })
+    character.setSettings(rawCharacter.settings)
+    return character
+  }, [user,rules, load])
+
+  const parseCharacters = useCallback(async rawCharacters => {
+    const chars = []
+    for (const rawCharacter of rawCharacters) {
+      chars.push(await parseCharacter(rawCharacter))
+    }
+    chars.create = async character => {
+      const id = (await user.callFunction('createCharacter', { character })).insertedId
+      await load()
+      return id
+    }
+    return chars
+  }, [user, load, parseCharacter])
+
+  useEffect(() => { (async () => {
+    if (!characterJsons)  return
+    setCharacters(await parseCharacters(characterJsons))
+  })() }, [user, rules, characterJsons, parseCharacters])
 
   if (!characters) return <Loader className='home page' />
 

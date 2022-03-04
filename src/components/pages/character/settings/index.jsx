@@ -6,7 +6,7 @@ import Customization from './customization'
 import DangerZone from './danger-zone'
 import Plan from './plan'
 
-import useForceUpdate from '../../../contexts/force-update'
+import { useForceUpdate } from '../../../hooks/force-update'
 
 Modal.setAppElement('#root')
 

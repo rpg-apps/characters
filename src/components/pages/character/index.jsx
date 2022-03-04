@@ -8,7 +8,7 @@ import '../../../css/pages/character.scss'
 
 import CharacterSettings from './settings'
 import { useCharacters } from '../../contexts/characters-context'
-import useForceUpdate from '../../contexts/force-update'
+import { useForceUpdate } from '../../hooks/force-update'
 import Character from '../../presentation/character'
 import Loader from '../../presentation/loader'
 import Input from '../../presentation/input'
@@ -53,7 +53,7 @@ export default function CharacterPage ({ match }) {
   }
 
   const choose = async (title, options, count = 1) => {
-    // TODO add choice with options
+    // TODO issue #23: https://github.com/rpg-apps/characters/issues/23
   }
 
   const edit = async (fieldName, type) => {
