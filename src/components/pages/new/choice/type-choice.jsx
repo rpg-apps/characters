@@ -32,7 +32,7 @@ function Recommendations ({ recommendations, control }) {
         {recommendations.map((recommendationCollection, index) =>
           <div key={index} className='recommendations-collection'>
             {recommendationCollection.map((recommendation, index) =>
-              <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={recommendation} handleEvent={update}/>
+              <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} key={index} value={recommendation} handleEvent={update}/>
             )}
           </div>
         )}
@@ -44,7 +44,7 @@ function Recommendations ({ recommendations, control }) {
     <div className='title'>recommendations</div>
     <div className='options'>
       {recommendations.map((recommendation, index) =>
-        <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
+        <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
       )}
     </div>
   </div>

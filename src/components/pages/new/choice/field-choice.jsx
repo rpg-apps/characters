@@ -18,7 +18,7 @@ function Options ({ options, control }) {
       {options.map((optionsCollection, index) =>
         <div key={index} className='options-collection'>
           {optionsCollection.map((option, index) =>
-            <Field className={`option ${value.includes(option) ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={option} handleEvent={() => update(option)}/>
+            <Field className={`option ${value.includes(option) ? 'selected' : ''}`} key={index} value={option} handleEvent={() => update(option)}/>
           )}
         </div>
       )}
@@ -26,7 +26,7 @@ function Options ({ options, control }) {
   }
 
   return <div className='options'>
-    {options.map((option, index) => <Field className={`option ${value === option ? 'selected' : ''}`} noSwipe={true} noDirect={true} key={index} value={option} handleEvent={() => setValue(option)}/>)}
+    {options.map((option, index) => <Field className={`option ${value === option ? 'selected' : ''}`} key={index} value={option} handleEvent={() => setValue(option)}/>)}
   </div>
 }
 
