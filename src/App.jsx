@@ -13,7 +13,7 @@ import { WithAuth } from './components/contexts/auth-context'
 import { WithRules } from './components/contexts/rules-context'
 import { WithCharacters } from './components/contexts/characters-context'
 
-const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-zbzjw'
+const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
 
 function App() {
   return <LoadAllData appId={process.env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
