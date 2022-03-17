@@ -45,11 +45,11 @@ export default function AssignmentChoice ({ builder, choice, onChoice, control }
   return <div className='selection'>
     <div className='source'>
       {source.map((sourceValue, index) => <Field className={`recommendation ${selection.source === sourceValue ? 'selected' : ''} ${Object.values(value).includes(sourceValue) ? 'done' : ''}`}
-        noSwipe={true} noDirect={true} key={index} value={sourceValue} handleEvent={() => handle(sourceValue)}/>)}
+        key={index} value={sourceValue} handleEvent={() => handle(sourceValue)}/>)}
     </div>
     <div className='target'>
       {target.map((targetValue, index) => <Field className={`recommendation ${selection.target === targetValue ? 'selected' : ''} ${Object.keys(value).includes(targetValue) ? 'done' : ''}`}
-        noSwipe={true} noDirect={true} key={index} name={targetValue} value={value[targetValue] || ''} handleEvent={() => handle(targetValue)} />)}
+        key={index} name={targetValue} value={value[targetValue] || ''} handleEvent={() => handle(targetValue)} />)}
     </div>
   </div>
 }

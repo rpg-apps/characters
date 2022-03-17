@@ -1,138 +1,106 @@
 export const settings = {
-  description: {
-    editableName:        { type: 'boolean', text: 'click on the name to edit it' },
-    editableDescription: { type: 'boolean', text: 'click on the description to edit it' },
-    viewableDescription: { type: 'boolean', text: 'click on the description to see it' },
-    editableLook:        { type: 'boolean', text: 'click on the look to edit it' },
-    viewableLook:        { type: 'boolean', text: 'click on the look to see it' },
-    viewableClass:       { type: 'boolean', text: 'click on class to see it' },
-    viewableRace:        { type: 'boolean', text: 'click on race to see it' },
-    editableRace:        { type: 'boolean', text: 'click on race to edit it' },
-    runnableRace:        { type: 'boolean', text: 'swipe up on race to run the race move' },
-    viewableAlignment:   { type: 'boolean', text: 'click on alignment to see it' },
-    viewableBonds:       { type: 'boolean', text: 'click on bonds to edit them' }
-  },
-  xp: {
-    editableLevel: { type: 'boolean', text: 'swipe up or down on XP to change levels' },
-    editableXP:    { type: 'boolean', text: 'swipe right or left on XP to add or reduce XP' },
-    quickLevelUp:  { type: 'boolean', text: 'click on XP to Level Up when you can' }
+  advencement: {
+    allowXPEditing:           { type: 'boolean', text: 'manually change xp (drag left-right)' },
+    allowLevelEditing:        { type: 'boolean', text: 'manually change level (drag up-down)' },
+    allowLevelUpExec:         { type: 'boolean', text: 'trigger the level-up move automatically (double click)' }
   },
   stats: {
-    rollable: { type: 'boolean', text: 'swipe left on stat to roll it' },
-    editable: { type: 'boolean', text: 'swipe up or down on stat to change it' }
+    allowStatsExec:           { type: 'boolean', text: 'roll stats without a move (double click)' },
+    allowStatsEditing:        { type: 'boolean', text: 'manually change stats (drag up-down)' },
+    allowDebilitiesToggle:    { type: 'boolean', text: 'manually toggle debilities (long click)' },
   },
-  status: {
-    rollableDamage: { type: 'boolean', text: 'click on damage to roll it' },
-    editableDamage: { type: 'boolean', text: 'swipe up on damage to edit it' },
-    editableHP:     { type: 'boolean', text: 'swipe up and down on HP to edit it' },
-  },
-  collection: {
-    executableMoves: { type: 'boolean', text: 'allow ' }
+  battleStats: {
+    allowHpEditing:           { type: 'boolean', text: 'manually change hp (drag up-down)' },
+    allowArmorEditing:        { type: 'boolean', text: 'manually change armor (drag up-down)' },
+    allowDamageEditing:       { type: 'boolean', text: 'roll change damage (long click)' },
+    allowDamageRolls:         { type: 'boolean', text: 'roll damage without a move (double click)' }
   }
 }
 
 export const manual = {
-  description: { editableName: true,
-                 editableDescription: true, viewableDescription: false,
-                 editableLook: true, viewableLook: false,
-                 viewableClass: false,
-                 editableRace: true, viewableRace: false, runnableRace: true,
-                 viewableAlignment: true, viewableBonds: true },
-  xp: { editableLevel: true, editableXP: true, quickLevelUp: false },
-  stats: { rollable: true, editable: true },
-  status: { rollableDamage: false, editableDamage: true, editableHP: true },
-  collection: { executableMoves: false }
+  advencement: { allowXPEditing: true, allowLevelEditing: true, allowLevelUpExec: false },
+  stats:       { allowStatsExec: false, allowStatsEditing: true, allowDebilitiesToggle: true },
+  battleStats: { allowHpEditing: true, allowArmorEditing: true, allowDamageEditing: true, allowDamageRolls: false }
 }
 
 export const automatic = {
-  description: { editableName: true,
-                 editableDescription: true, viewableDescription: false,
-                 editableLook: true, viewableLook: false,
-                 viewableClass: false,
-                 editableRace: true, viewableRace: false, runnableRace: true,
-                 viewableAlignment: true, viewableBonds: true },
-  xp: { editableLevel: true, editableXP: true, quickLevelUp: false },
-  stats: { rollable: true, editable: false },
-  status: { rollableDamage: false, editableDamage: true, editableHP: true },
-  collection: { executableMoves: false }
+  advencement: { allowXPEditing: false, allowLevelEditing: false, allowLevelUpExec: true },
+  stats:       { allowStatsExec: false, allowStatsEditing: false, allowDebilitiesToggle: true },
+  battleStats: { allowHpEditing: false, allowArmorEditing: false, allowDamageEditing: false, allowDamageRolls: false }
 }
 
-export const getHandlers = settings => {
-  const handlers = {}
+export function getHandlers (settings) {
+  const handlers = { }
 
-  // -------------------- description --------------------
-  if (settings.description?.editableName) {
-    handlers.name = { click: 'edit name as text' }
+  // information
+  handlers.name =         { 'long click': 'edit name as text' }
+  handlers.description =  { 'click': 'show description', 'long click': 'edit description as long text' }
+  handlers.look =         { 'click': 'show description', 'long click': 'edit look as long text' }
+
+  // metadata labels
+  handlers.playbook =         { 'click': 'show introduction' }
+  handlers.race =             { 'click': 'show race', 'long click': 'execute race move' }
+  handlers.alignment =        { 'click': 'show alignment' }
+  handlers.bonds =            { 'click': 'edit bonds as bond array' }
+  handlers.holds =            { 'click': 'edit holds as hold array' }
+  handlers.modifiers =        { 'click': 'edit modifiers as modifier array' }
+
+  // main battle stats
+  if (settings.battleStats.allowHpEditing) {
+    handlers.hp = handlers['max hp'] = {
+     'dragging up': { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } },
+     'dragging down': { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
+    }
   }
-
-  if (settings.description?.editableDescription) {
-    handlers.description = { click: 'edit description as long text' }
-  } else if (settings.description?.viewableDescription) {
-    handlers.description = { click: 'show description' }
+  if (settings.battleStats.allowArmorEditing) {
+    handlers.armor = {
+     'dragging up': 'add 1 to armor',
+     'dragging down': { 'is armor > 0': { 'yes': 'remove 1 from armor', 'no': 'do nothing' } }
+    }
   }
+  handlers['damage-formula'] = { }
+  if (settings.battleStats.allowDamageEditing) Object.assign(handlers['damage-formula'], {
+    // TODO how do you edit this?!
+    'long click': 'edit damage formula as text'
+  })
+  if (settings.battleStats.allowDamageRolls) Object.assign(handlers['damage-formula'], {
+    'double click': 'deal damage'
+  })
 
-  if (settings.description?.editableLook) {
-    handlers.look = { click: 'edit look as long text' }
-  } else if (settings.description?.viewableLook) {
-    handlers.look = { click: 'show look' }
-  }
+  // TODO moves
 
-  if (settings.description?.viewableClass) {
-    handlers.playbook = { click: 'show playbook' }
-  }
+  // TODO gear
 
-  if (settings.description?.editableRace) {
-    handlers.race = { click: 'edit race as race' }
-  } else if (settings.description?.viewableRace) {
-    handlers.race = { click: 'show race' }
-  } else if (settings.description?.runnableRace) {
-    handlers.race = { click: 'trigger race.move' }
-  }
+  // level and xp
+  const xpHandlers = {}
+  if (settings.advencement.allowXPEditing) Object.assign(xpHandlers, {
+    'dragging right': 'add 1 to xp',
+    'dragging left': { 'is xp > 0': { 'yes': 'remove 1 from xp', 'no': 'do nothing' } }
+  })
+  if (settings.advencement.allowLevelEditing) Object.assign(xpHandlers, {
+    'dragging up': 'add 1 to level',
+    'dragging down': { 'is level > 1': { 'yes': 'remove 1 from level', 'no': 'do nothing' } }
+  })
+  if (settings.advencement.allowLevelUpExec) Object.assign(xpHandlers, {
+    'double click': { 'is level up allowed': { 'yes': 'trigger Level Up', 'no': 'do nothing' } }
+  })
+  handlers.level = handlers.xp = xpHandlers
 
-  if (settings.description?.viewableAlignment) {
-    handlers.alignment = { click: 'show alignment' }
-  }
-
-  if (settings.description?.viewableBonds) {
-    handlers.bonds = { click: 'edit bonds as bond array' }
-  }
-
-  handlers.level = handlers.xp = {
-    'swiped right': 'add 1 to xp',
-    'swiped left': { 'is xp > 0': { 'yes': 'remove 1 from xp', 'no': 'do nothing' } },
-    'swiped up': 'add 1 to level',
-    'swiped down': { 'is level > 0': { 'yes': 'remove 1 from level', 'no': 'do nothing' } },
-    click: { 'is level up allowed': { 'yes': 'trigger Level Up', 'no': 'do nothing' } }
-  }
-
-  // -------------------- main stats --------------------
-  handlers.hp = handlers['max hp'] = {
-   'swiped up': { 'is hp < max hp': { 'yes': 'add 1 to hp', 'no': 'do nothing' } },
-   'swiped down': { 'is hp > 0': { 'yes': 'remove 1 from hp', 'no': 'do nothing' } }
-  }
-  handlers['damage-formula'] = { click: 'deal damage' }
-
-  if (settings.collection.executableMoves) {
-    handlers['moves\\.\\d+\\.name'] = { click: (e, moveName) => `trigger ${moveName}` }
-  } else {
-    handlers['moves\\.\\d+\\.name'] = { click: (e, moveName) => `edit moves as move array` }
-  }
-
-  handlers['gear\\.\\d+\\.name'] = { click: (e, moveName) => `edit gear as equipment array` }
-
-  // -------------------- stats --------------------
+  // stats
   const stats = { strength: 'weak', dexterity: 'shakey', constitution: 'sick', intelligence: 'stunned', wisdom: 'confused', charisma: 'scarred' }
   Object.entries(stats).forEach(([stat, debility]) => {
     const modifier = stat.substring(0, 3)
-    handlers[modifier] = {
-      'swiped up': `add 1 to ${stat}`,
-      'swiped down': `remove 1 from ${stat}`,
-      'swiped right': `toggle ${debility}`
-    }
-
-    if (settings.stats?.rollable) {
-      handlers[modifier]['swiped left'] = `show roll+${modifier}`
-    }
+    handlers[modifier] = { }
+    if (settings.stats.allowStatsExec) Object.assign(handlers[modifier], {
+      'double click': `show roll+${modifier}`
+    })
+    if (settings.stats.allowStatsEditing) Object.assign(handlers[modifier], {
+      'dragging up': { [`is ${stat} < 18`]: { 'yes': `add 1 to ${stat}`, 'no': 'do nothing' } },
+      'dragging down': { [`is ${stat} > 8`]: { 'yes': `remove 1 from ${stat}`, 'no': 'do nothing' } }
+    })
+    if (settings.stats.allowDebilitiesToggle) Object.assign(handlers[modifier], {
+      'long click': `toggle ${debility}`
+    })
   })
 
   return handlers

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
-import { noCase } from 'change-case'
 import { FaArrowLeft, FaScroll } from 'react-icons/fa'
 
 import '../../../css/pages/character.scss'
@@ -21,8 +20,7 @@ export default function CharacterPage ({ match }) {
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
-  const handleEvent = async ({ name, value }, event) => {
-    const eventType = noCase(event._reactName?.substr(2) || `${event.action}${event.dir}`)
+  const handleEvent = async ({ name, value }, eventType, event) => {
     const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
     if (handler) {
       const procedure = (handler instanceof Function) ? handler(event, value) : handler

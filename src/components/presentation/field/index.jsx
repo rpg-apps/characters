@@ -1,12 +1,11 @@
 import React from 'react'
-import { useSwipeable } from 'react-swipeable'
+
+import EventManager from './event-manager'
+
+const eventManager = new EventManager()
 
 export default function Field (props) {
   const { handleEvent, className, name, value, children } = props
-  const swipeHandlers = useSwipeable({
-    onSwiped: e => handleEvent(props, { ...e, action: 'swiped' }),
-    onSwiping: e => handleEvent(props, { ...e, action: 'swiping' })
-  })
 
   if(value === undefined || ((typeof value === 'number') && isNaN(value))) {
     return <div className='bad field' name={name}></div>
@@ -25,8 +24,5 @@ export default function Field (props) {
     </Field>
   }
 
-  const eventHandling = { onClick: e => handleEvent(props, e) }
-  if (!props.noSwipe) { Object.assign(eventHandling, swipeHandlers) }
-  if (!props.noDirect) { Object.assign(eventHandling, { onMouseUp: e => handleEvent(props, e), onMouseDown: e => handleEvent(props, e) }) }
-  return <div name={name} value={value} {...eventHandling} className={className ? `${className} field` : 'field'}>{children}</div>
+  return <div name={name} value={value} {...eventManager.handlers(props)} className={className ? `${className} field` : 'field'}>{children}</div>
 }
