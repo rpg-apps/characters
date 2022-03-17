@@ -13,10 +13,10 @@ import { WithAuth } from './components/contexts/auth-context'
 import { WithRules } from './components/contexts/rules-context'
 import { WithCharacters } from './components/contexts/characters-context'
 
-const APP_ID = 'rpg-apps-zbzjw'
+const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-zbzjw'
 
 function App() {
-  return <LoadAllData appId={APP_ID}>
+  return <LoadAllData appId={process.env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
     <Router>
       <Switch>
         <Route path='/character/:id' component={Character}/>
