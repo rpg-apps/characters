@@ -21,7 +21,6 @@ export default function CharacterPage ({ match }) {
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
   const handleEvent = async ({ name, value }, eventType, event) => {
-    console.log(eventType)
     const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
     if (handler) {
       const procedure = (handler instanceof Function) ? handler(event, value) : handler

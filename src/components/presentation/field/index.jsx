@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 
 import EventManager from './event-manager'
 
+const eventManager = new EventManager()
+
 export default function Field (props) {
   const { handleEvent, className, name, value, children } = props
-  const eventManager = new EventManager(props)
 
   if(value === undefined || ((typeof value === 'number') && isNaN(value))) {
     return <div className='bad field' name={name}></div>
@@ -23,5 +24,5 @@ export default function Field (props) {
     </Field>
   }
 
-  return <div name={name} value={value} {...eventManager.handlers()} className={className ? `${className} field` : 'field'}>{children}</div>
+  return <div name={name} value={value} {...eventManager.handlers(props)} className={className ? `${className} field` : 'field'}>{children}</div>
 }
