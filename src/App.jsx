@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import env from 'react-dotenv'
 
 import './App.scss'
 
@@ -16,8 +17,8 @@ import { WithCharacters } from './components/contexts/characters-context'
 const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
 
 function App() {
-  console.log(process.env)
-  return <LoadAllData appId={process.env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
+  console.log(env)
+  return <LoadAllData appId={env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
     <Router>
       <Switch>
         <Route path='/character/:id' component={Character}/>
