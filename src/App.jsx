@@ -17,8 +17,7 @@ import { WithCharacters } from './components/contexts/characters-context'
 const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
 
 function App() {
-  console.log(env)
-  return <LoadAllData appId={env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
+  return <LoadAllData appId={env?.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
     <Router>
       <Switch>
         <Route path='/character/:id' component={Character}/>
