@@ -16,7 +16,7 @@ import { WithCharacters } from './components/contexts/characters-context'
 const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
 
 function App() {
-  console.log(process.env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID)
+  console.log(process.env)
   return <LoadAllData appId={process.env.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
     <Router>
       <Switch>
