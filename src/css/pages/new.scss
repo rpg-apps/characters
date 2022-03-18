@@ -18,7 +18,7 @@ $done-color: darken($primary-color, 10%);
   > .title {
     color: $primary-color;
     text-align: center;
-    font: 2rem 'Cinzel Decorative';
+    font: 2rem 'Cinzel';
     line-height: $title-height;
     height: $title-height;
   }
@@ -51,7 +51,7 @@ $done-color: darken($primary-color, 10%);
     > .title {
       color: $primary-color;
       text-align: center;
-      font: 2rem 'Cinzel Decorative';
+      font: 2rem 'Cinzel';
       line-height: $title-height;
       height: $title-height;
     }
@@ -128,7 +128,7 @@ $done-color: darken($primary-color, 10%);
 
     .title {
       width: $full;
-      font: 1rem 'Cinzel Decorative';
+      font: 1rem 'Cinzel';
       color: $primary-color;
       height: 1rem;
       margin: $small-gap 0;
