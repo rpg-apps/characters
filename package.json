@@ -1,7 +1,6 @@
 {
   "name": "characters",
   "version": "0.1.0",
-  "homepage": "http://docs.dungeonworldcharacters.xyz",
   "repository": "https://github.com/idanstark42/dw-characters",
   "private": true,
   "dependencies": {
@@ -28,8 +27,7 @@
   },
   "scripts": {
     "start": "react-dotenv && react-app-rewired start",
-    "build": "react-dotenv && react-app-rewired build",
-    "eject": "react-scripts eject"
+    "build": "react-dotenv && react-app-rewired build"
   },
   "eslintConfig": {
     "extends": [
@@ -41,8 +39,5 @@
     "last 1 firefox version",
     "last 1 safari version"
   ],
-  "devDependencies": {},
-  "react-dotenv": {
-    "whitelist": ["REALM_APP_ID"]
-  }
+  "devDependencies": {}
 }
