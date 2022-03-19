@@ -1,8 +1,7 @@
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f8415829-b7bd-40ea-8f67-eb41d88b2f59/deploy-status)](https://app.netlify.com/sites/zealous-swanson-b7f9ba/deploys)
 ![Version](https://img.shields.io/github/package-json/v/idanstark42/dw-characters)
 ![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)
-
-![Dependencies status](https://img.shields.io/david/idanstark42/dw-characters)
-
 ![Issues count](https://img.shields.io/github/issues/idanstark42/dw-characters)
 ![Pull requests](https://img.shields.io/github/issues-pr-raw/idanstark42/dw-characters?label=pull%20requests)
 
