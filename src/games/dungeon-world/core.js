@@ -20,7 +20,7 @@ export const settings = {
 export const manual = {
   advencement: { allowXPEditing: true, allowLevelEditing: true, allowLevelUpExec: false },
   stats:       { allowStatsExec: false, allowStatsEditing: true, allowDebilitiesToggle: true },
-  battleStats: { allowHpEditing: true, allowArmorEditing: true, allowDamageEditing: true, allowDamageRolls: false }
+  battleStats: { allowHpEditing: true, allowArmorEditing: true, allowDamageEditing: true, allowDamageRolls: true }
 }
 
 export const automatic = {
@@ -38,7 +38,7 @@ export function getHandlers (settings) {
   handlers.look =         { 'click': 'show description', 'long click': 'edit look as long text' }
 
   // metadata labels
-  handlers.playbook =         { 'click': 'show introduction' }
+  handlers.playbook =         { 'click': 'show introduction under class' }
   handlers.race =             { 'click': 'show race', 'long click': 'execute race move' }
   handlers.alignment =        { 'click': 'show alignment' }
   handlers.bonds =            { 'click': 'edit bonds as bond array' }
