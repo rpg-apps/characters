@@ -40,8 +40,8 @@ export default function CharacterPage ({ match }) {
   }, [character])
 
 
-  const output = text => {
-    setModal({ status: 'output' })
+  const output = (text, title) => {
+    setModal({ status: 'output', title, content: () => text })
   }
 
   const input = async (title, type = 'text') => {

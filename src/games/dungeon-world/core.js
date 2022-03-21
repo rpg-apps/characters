@@ -38,7 +38,7 @@ export function getHandlers (settings) {
   handlers.look =         { 'click': 'show description', 'long click': 'edit look as long text' }
 
   // metadata labels
-  handlers.playbook =         { 'click': 'show introduction' }
+  handlers.playbook =         { 'click': 'show introduction under class' }
   handlers.race =             { 'click': 'show race', 'long click': 'execute race move' }
   handlers.alignment =        { 'click': 'show alignment' }
   handlers.bonds =            { 'click': 'edit bonds as bond array' }
