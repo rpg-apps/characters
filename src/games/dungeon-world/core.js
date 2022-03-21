@@ -20,7 +20,7 @@ export const settings = {
 export const manual = {
   advencement: { allowXPEditing: true, allowLevelEditing: true, allowLevelUpExec: false },
   stats:       { allowStatsExec: false, allowStatsEditing: true, allowDebilitiesToggle: true },
-  battleStats: { allowHpEditing: true, allowArmorEditing: true, allowDamageEditing: true, allowDamageRolls: true }
+  battleStats: { allowHpEditing: true, allowArmorEditing: true, allowDamageEditing: true, allowDamageRolls: false }
 }
 
 export const automatic = {
