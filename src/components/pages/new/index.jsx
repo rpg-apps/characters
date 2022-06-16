@@ -10,6 +10,7 @@ import Loader from '../../presentation/loader'
 import { SUPPORTED_RULEBOOKS } from '../../../games'
 import Choice from './choice'
 
+// TODO add UI for post-character-creation choices.
 export default function New () {
   const rules = useRules()
   const history = useHistory()
@@ -39,7 +40,9 @@ export default function New () {
   }
 
   const finish = async () => {
-    await builder.finish()
+    await builder.finish(this)
+    console.log(builder.character)
+    console.log(builder.character.toJson())
     const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
     builder.clear()
     history.push(`/character/${id}`)

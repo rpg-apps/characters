@@ -333,7 +333,7 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   }
 
   > .field[name=playbook], > .field[name=race], > .field[name=alignment] {
-    @extend %flex-visible, %show-value, %full-size, %centering, %title, %oneline;
+    @extend %flex-visible, %full-size, %centering, %title, %oneline;
     flex-direction: column;
     gap: $tiny-gap;
     color: white;
@@ -347,15 +347,22 @@ $equipment: 'coin', 'Ragged Bow', 'Fine Bow', 'Hunter\'s Bow', 'Crossbow', 'Bund
   }
 
   > .field[name=playbook] {
+    @extend %show-value;
     grid-area: playbook;
   }
 
   > .field[name=race] {
     grid-area: race;
+    > .field[name="race.name"] {
+      @extend %show-value;
+    }
   }
 
   > .field[name=alignment] {
     grid-area: alignment;
+    > .field[name="alignment.name"] {
+      @extend %show-value;
+    }
 
     // @each $alignment in $alignments {
     //   &[value='#{$alignment}']::before {

@@ -19,6 +19,7 @@ export default function CharacterPage ({ match }) {
   const [modal, setModal] = useState({ status: '' })
   const forceUpdate = useForceUpdate()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
+  console.log(character)
 
   const handleEvent = async ({ name, value }, eventType, event) => {
     const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
