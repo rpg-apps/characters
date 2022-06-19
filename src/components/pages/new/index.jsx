@@ -5,6 +5,7 @@ import '../../../css/pages/new.scss'
 
 import { useRules } from '../../contexts/rules-context'
 import { useCharacters } from '../../contexts/characters-context'
+import { useProdcedureUI } from '../../hooks/procedure-ui'
 import OptionsChoice from './options-choice'
 import Loader from '../../presentation/loader'
 import { SUPPORTED_RULEBOOKS } from '../../../games'
@@ -14,6 +15,7 @@ import Choice from './choice'
 export default function New () {
   const rules = useRules()
   const history = useHistory()
+  const ui = useProdcedureUI()
   const characters = useCharacters()
 
   const [loading, setLoading] = useState(false)
@@ -40,9 +42,7 @@ export default function New () {
   }
 
   const finish = async () => {
-    await builder.finish(this)
-    console.log(builder.character)
-    console.log(builder.character.toJson())
+    await builder.finish(ui)
     const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
     builder.clear()
     history.push(`/character/${id}`)

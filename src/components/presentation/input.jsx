@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa'
 
+// TODO use https://react-jsonschema-form.readthedocs.io/en/latest/
 export default function Input ({ text='', value='', type, onChange=()=>{} }) {
   if (Array.isArray(type)) {
     return <ArrayInput {...{ text, value, itemType: type[0], onChange }} />
