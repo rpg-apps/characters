@@ -15,7 +15,7 @@ $done-color: darken($primary-color, 10%);
   flex-direction: column;
   justify-content: center;
 
-  > .title {
+  > [class=title] {
     color: $primary-color;
     text-align: center;
     font: 2rem 'Cinzel';
@@ -48,7 +48,7 @@ $done-color: darken($primary-color, 10%);
     gap: $large-gap;
     padding: $large-gap;
 
-    > .title {
+    > [class=title] {
       color: $primary-color;
       text-align: center;
       font: 2rem 'Cinzel';
@@ -126,7 +126,7 @@ $done-color: darken($primary-color, 10%);
     height: 0;
     gap: $small-gap;
 
-    .title {
+    [class=title] {
       width: $full;
       font: 1rem 'Cinzel';
       color: $primary-color;

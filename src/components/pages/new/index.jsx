@@ -15,12 +15,13 @@ import Choice from './choice'
 export default function New () {
   const rules = useRules()
   const history = useHistory()
-  const ui = useProdcedureUI()
   const characters = useCharacters()
 
   const [loading, setLoading] = useState(false)
   const [builder, setBuilder] = useState()
   const [choice, setChoice] = useState()
+
+  const ui = useProdcedureUI(() => builder.character)
 
   const initializeBuilder = async rulebook => {
     setBuilder((await rules.get([rulebook])).characters.builder)
@@ -28,6 +29,7 @@ export default function New () {
 
   const start = playbook => {
     builder.start(playbook)
+    console.log(builder.playbook)
     setChoice(builder.choice)
   }
 

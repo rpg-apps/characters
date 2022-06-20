@@ -16,6 +16,7 @@ export default function Input ({ text='', value='', type, onChange=()=>{} }) {
     console.warn('unknown input type', type)
     return <div className='error input'/>
   }
+
   return <InputType text={text} value={value} onChange={onChange} />
 }
 

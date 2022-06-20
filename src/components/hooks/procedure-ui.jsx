@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { FaEdit } from 'react-icons/fa'
 
 import Field from '../presentation/field'
+import Input from '../presentation/input'
 
 const STATUS = {
   OUTPUT: 'output',
@@ -12,15 +12,16 @@ const STATUS = {
 
 export function useProdcedureUI (character) {
   const [status, setStatus] = useState(undefined)
-  const [value, setValue] = useState('')
   const [content, setContent] = useState(undefined)
+
+  const getCharacter = () => ((character instanceof Function) ? character() : character)
 
   const findType = type => {
     if (type.endsWith(' array')) {
       const itemType = type.substring(0, type.length - ' array'.length)
       return [findType(itemType)]
     }
-    const complexTypeSubtypes = character.playbook.rules.types.find(t => (t.name === type) && t.fieldTypes)?.fieldTypes
+    const complexTypeSubtypes = getCharacter().playbook.rules.types.find(t => (t.name === type) && t.fieldTypes)?.fieldTypes
     if (!complexTypeSubtypes) return type
     return Object.entries(complexTypeSubtypes)
       .reduce((all, [key, subtype]) => ({ ...all, [key]: findType(subtype.name || subtype) }), {})
@@ -34,47 +35,62 @@ export function useProdcedureUI (character) {
     </div>)
   }
 
-  const input = (title, type = 'text', status = STATUS.INPUT) => {
+  const input = (title, type = 'text', { status, initialValue }) => {
     return new Promise(resolve => {
+      setStatus(status || STATUS.INPUT)
       type = findType(type) || type
-      const save = async () => {
-        await resolve(value)
-        await character.save()
-        exit()
+
+      const update = value => {
+        const save = async () => {
+          await resolve(value)
+          await getCharacter().save()
+          exit()
+        }
+
+        setContent(<div className='ui'>
+          <Input key='input' type={type} value={value} onChange={update} />
+          <div key='submit' className='primary button' onClick={save}>done</div>
+        </div>)
       }
-      setContent(<div className='ui'>
-        <Input key='input' type={type} value={value} onChange={setValue} />
-        <div key='submit' className='primary button' onClick={save}>done</div>
-      </div>)
+
+      update(initialValue)
     })
   }
 
   const choose = (title, options, count = 1) => {
     return new Promise(resolve => {
-      const save = async () => {
-        await resolve(value)
-        await character.save()
-        exit()
-      }
-      setContent(<div className='ui'>
+      setStatus(STATUS.CHOOSE)
+
+
+      const update = value => {
+        const save = async () => {
+          await resolve(value)
+          await getCharacter().save()
+          exit()
+        }
+
+        setContent(<div className='ui'>
         <div className='options'>
-          {options.map((option, index) => <Field key={index} name={index} className='option' value={option} handleEvent={() => setvalue(option)} />)}
+          {options.map((option, index) =>
+            <Field key={index} name={index} className={`option ${value === option ? 'selected' : ''}`} value={option} handleEvent={() => update(option)} />)}
         </div>
         <div key='submit' className='primary button' onClick={save}>done</div>
       </div>)
+      }
+
+      update()
     })
   }
 
   const edit = async (fieldName, type) => {
-    setValue(await character.get(fieldName, { ui }))
-    const result = await input(fieldName, type, STATUS.EDIT)
-    await character.set(fieldName, result)
+    const initialValue = await getCharacter().get(fieldName, { ui })
+    const result = await input(fieldName, type, { status: STATUS.EDIT, initialValue })
+    await getCharacter().set(fieldName, result)
   }
 
   const exit = () => {
     setStatus(undefined)
-    setValue('')
-    setContent('')
+    setContent(undefined)
   }
 
   const ui = { status, output, input, choose, edit, content }

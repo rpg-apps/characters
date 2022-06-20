@@ -11,6 +11,7 @@ const choices = { TypeChoice, FieldChoice, AssignmentChoice }
 
 export default function Choice ({ choice, builder, onChoice }) {
   const [value, setValue] = useState(choices[choice.constructor.name].initialValue)
+  console.log(choice)
   const ChoiceComponent = choices[choice.constructor.name]
 
   const submit = () => {

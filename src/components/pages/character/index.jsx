@@ -11,16 +11,14 @@ import { useForceUpdate } from '../../hooks/force-update'
 import { useProdcedureUI } from '../../hooks/procedure-ui'
 import Character from '../../presentation/character'
 import Loader from '../../presentation/loader'
-import Input from '../../presentation/input'
 
 Modal.setAppElement('#root')
 
 export default function CharacterPage ({ match }) {
   const [handlers, setHandlers] = useState({})
-  const [modal, setModal] = useState({ status: '' })
   const forceUpdate = useForceUpdate()
-  const ui = useProdcedureUI()
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
+  const ui = useProdcedureUI(character)
 
   const handleEvent = async ({ name, value }, eventType, event) => {
     const handler = Object.entries(handlers).find(([key, handler]) => Boolean(new RegExp(`^${key}$`).exec(name)))?.[1]?.[eventType]
@@ -28,13 +26,18 @@ export default function CharacterPage ({ match }) {
       const procedure = (handler instanceof Function) ? handler(event, value) : handler
       if (procedure.constructor === String && procedure.startsWith('edit')) {
         const [fieldName, type] = procedure.replace('edit ', '').split(' as ').map(x => x.trim())
-        edit(fieldName, type)
+        ui.edit(fieldName, type)
       } else {
         await character.execute(procedure, ui)
       }
       forceUpdate()
       await character.save()
     }
+  }
+
+  const editNotes = async () => {
+    character.notes = await ui.input('notes', 'long text', { status: 'edit notes', initialValue: character.notes })
+    await character.save()
   }
 
   const refreshHandlers = useCallback(() => {
@@ -57,7 +60,7 @@ export default function CharacterPage ({ match }) {
       <Link className='back link' to='/'><FaArrowLeft /></Link>
       <div className='notes' onClick={() => editNotes()}><FaScroll /></div>
       <Modal isOpen={Boolean(ui.status)} onRequestClose={ui.exit} className={Character.classes(character)}>
-        {ui.content}
+        {(ui.content instanceof Function) ? ui.content() : ui.content }
       </Modal>
     </Character>
   </div>
