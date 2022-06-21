@@ -29,6 +29,7 @@ export default function New () {
 
   const start = playbook => {
     builder.start(playbook)
+    builder.character.save = () => {}
     console.log(builder.playbook)
     setChoice(builder.choice)
   }
@@ -38,16 +39,20 @@ export default function New () {
     if (builder.choice) {
       setChoice(builder.choice)
     } else {
-      setLoading(true)
       finish()
     }
   }
 
   const finish = async () => {
+    setLoading(true)
     await builder.finish(ui)
     const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
     builder.clear()
     history.push(`/character/${id}`)
+  }
+
+  if (ui.status && ui.content) {
+    return ui.content
   }
 
   if (loading) {

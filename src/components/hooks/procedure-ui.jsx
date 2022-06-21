@@ -36,6 +36,7 @@ export function useProdcedureUI (character) {
   }
 
   const input = (title, type = 'text', { status, initialValue }) => {
+    console.log('input', title, type)
     return new Promise(resolve => {
       setStatus(status || STATUS.INPUT)
       type = findType(type) || type
@@ -58,9 +59,9 @@ export function useProdcedureUI (character) {
   }
 
   const choose = (title, options, count = 1) => {
+    console.log('choose', title, options, count)
     return new Promise(resolve => {
       setStatus(STATUS.CHOOSE)
-
 
       const update = value => {
         const save = async () => {
