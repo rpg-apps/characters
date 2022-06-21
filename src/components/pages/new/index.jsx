@@ -30,7 +30,6 @@ export default function New () {
   const start = playbook => {
     builder.start(playbook)
     builder.character.save = () => {}
-    console.log(builder.playbook)
     setChoice(builder.choice)
   }
 
@@ -52,7 +51,7 @@ export default function New () {
   }
 
   if (ui.status && ui.content) {
-    return ui.content
+    return <Page className='new game'>{ui.content}</Page>
   }
 
   if (loading) {

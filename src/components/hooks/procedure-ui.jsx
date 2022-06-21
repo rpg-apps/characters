@@ -36,7 +36,6 @@ export function useProdcedureUI (character) {
   }
 
   const input = (title, type = 'text', { status, initialValue }) => {
-    console.log('input', title, type)
     return new Promise(resolve => {
       setStatus(status || STATUS.INPUT)
       type = findType(type) || type
@@ -58,12 +57,23 @@ export function useProdcedureUI (character) {
     })
   }
 
-  const choose = (title, options, count = 1) => {
-    console.log('choose', title, options, count)
+  const choose = (title, options) => {
+    const count = 2
     return new Promise(resolve => {
       setStatus(STATUS.CHOOSE)
 
-      const update = value => {
+      const update = (value = [], option) => {
+        value = (() => {
+          if (option === undefined)  return value
+          if (value.includes(option)) {
+            value.splice(value.indexOf(option), 1)
+          } else {
+            value = value.concat([option])
+          }
+          return value
+        }) ()
+        const maxedOut = value.length === count
+
         const save = async () => {
           await resolve(value)
           await getCharacter().save()
@@ -71,9 +81,10 @@ export function useProdcedureUI (character) {
         }
 
         setContent(<div className='ui'>
-        <div className='options'>
-          {options.map((option, index) =>
-            <Field key={index} name={index} className={`option ${value === option ? 'selected' : ''}`} value={option} handleEvent={() => update(option)} />)}
+        <div className={`options ${maxedOut ? 'maxed-out' : ''}`}>
+          {options.map((option, index) => {
+            return <Field key={index} name={index} className={`option ${value.includes(option) ? 'selected' : ''}`} value={option} handleEvent={() => update(value, option)} />
+          })}
         </div>
         <div key='submit' className='primary button' onClick={save}>done</div>
       </div>)
