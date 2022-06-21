@@ -5,11 +5,13 @@ import '../../../css/pages/new.scss'
 
 import { useRules } from '../../contexts/rules-context'
 import { useCharacters } from '../../contexts/characters-context'
+import { useProdcedureUI } from '../../hooks/procedure-ui'
 import OptionsChoice from './options-choice'
 import Loader from '../../presentation/loader'
 import { SUPPORTED_RULEBOOKS } from '../../../games'
 import Choice from './choice'
 
+// TODO add UI for post-character-creation choices.
 export default function New () {
   const rules = useRules()
   const history = useHistory()
@@ -19,12 +21,15 @@ export default function New () {
   const [builder, setBuilder] = useState()
   const [choice, setChoice] = useState()
 
+  const ui = useProdcedureUI(() => builder.character)
+
   const initializeBuilder = async rulebook => {
     setBuilder((await rules.get([rulebook])).characters.builder)
   }
 
   const start = playbook => {
     builder.start(playbook)
+    builder.character.save = () => {}
     setChoice(builder.choice)
   }
 
@@ -33,16 +38,20 @@ export default function New () {
     if (builder.choice) {
       setChoice(builder.choice)
     } else {
-      setLoading(true)
       finish()
     }
   }
 
   const finish = async () => {
-    await builder.finish()
+    setLoading(true)
+    await builder.finish(ui)
     const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
     builder.clear()
     history.push(`/character/${id}`)
+  }
+
+  if (ui.status && ui.content) {
+    return <Page className='new game'>{ui.content}</Page>
   }
 
   if (loading) {

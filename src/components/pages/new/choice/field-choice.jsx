@@ -1,4 +1,5 @@
 import React from 'react'
+import equal from 'fast-deep-equal/es6/react'
 
 import Field from '../../../presentation/field'
 
@@ -26,7 +27,7 @@ function Options ({ options, control }) {
   }
 
   return <div className='options'>
-    {options.map((option, index) => <Field className={`option ${value === option ? 'selected' : ''}`} key={index} value={option} handleEvent={() => setValue(option)}/>)}
+    {options.map((option, index) => <Field className={`option ${equal(value, option) ? 'selected' : ''}`} key={index} value={option} handleEvent={() => setValue(option)}/>)}
   </div>
 }
 

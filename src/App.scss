@@ -43,15 +43,32 @@
   color: $primary-color;
 }
 
+label { font-size: 0.7rem; }
+
+input[type="text"], input[type="password"] {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  margin: 0.5rem;
+  width: calc(100% - 1rem);
+}
+
 .auth {
   display: flex;
   flex-direction: column;
   padding: $large-gap;
   gap: $large-gap;
+  overflow: auto;
+
   form {
     height: 50%;
     color: white;
     padding: $small-gap;
+
+    input[type="text"], input[type="password"] {
+      margin: 0rem;
+      width: 100%;
+    }
 
     .title {
       font: 2rem 'Cinzel';
@@ -76,19 +93,6 @@
     .button {
       margin-right: 0;
       margin-left: 0;
-    }
-
-    &:first-child {
-      position: relative;
-
-      &::after {
-        content: 'OR';
-        position: absolute;
-        font: 2rem 'Cinzel';
-        bottom: -0.5rem;
-        width: calc(#{$full} - #{2*$large-gap});
-        text-align: center;
-      }
     }
   }
 }

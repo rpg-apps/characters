@@ -69,14 +69,9 @@ $plan-height: 4rem;
       border: 1px solid #960000;
       background: #9600007a;
 
-      label { font-size: 0.7rem; }
-
-      input[type="text"] {
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: none;
-        margin: 0.5rem;
-        width: calc(100% - 1rem);
+      .danger-zone .button {
+        margin-right: 0.5rem;
+        margin-left: 0.5rem;
       }
     }
   }

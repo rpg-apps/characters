@@ -7,7 +7,7 @@ const eventManager = new EventManager()
 export default function Field (props) {
   const { handleEvent, className, name, value, children } = props
 
-  if(value === undefined || ((typeof value === 'number') && isNaN(value))) {
+  if(value === undefined || value === null || ((typeof value === 'number') && isNaN(value))) {
     return <div className='bad field' name={name}></div>
   }
 

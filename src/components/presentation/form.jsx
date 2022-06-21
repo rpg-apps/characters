@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import Input from './input'
 
+// TODO use https://react-jsonschema-form.readthedocs.io/en/latest/
 export default function Form ({ id, title, submit, submitClass, submitText, fields }) {
   const [data, setData] = useState({})
 

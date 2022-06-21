@@ -15,7 +15,7 @@ $done-color: darken($primary-color, 10%);
   flex-direction: column;
   justify-content: center;
 
-  > .title {
+  > [class=title] {
     color: $primary-color;
     text-align: center;
     font: 2rem 'Cinzel';
@@ -48,7 +48,7 @@ $done-color: darken($primary-color, 10%);
     gap: $large-gap;
     padding: $large-gap;
 
-    > .title {
+    > [class=title] {
       color: $primary-color;
       text-align: center;
       font: 2rem 'Cinzel';
@@ -126,7 +126,7 @@ $done-color: darken($primary-color, 10%);
     height: 0;
     gap: $small-gap;
 
-    .title {
+    [class=title] {
       width: $full;
       font: 1rem 'Cinzel';
       color: $primary-color;
@@ -193,5 +193,29 @@ $done-color: darken($primary-color, 10%);
     }
 
     .target .field { @extend %show-name; }
+  }
+
+  > .ui {
+    height: $full;
+    display: flex;
+    flex-direction: column;
+    padding: $large-gap;
+
+    > .options {
+      flex: 1;
+
+      &.maxed-out .option:not(.selected) {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .option {
+        @extend %centering, %inverted, %show-value, %round;
+        padding: $large-gap;
+        margin: $large-gap;
+
+        &.selected { background: $selection-color; }
+      }
+    }
   }
 }
