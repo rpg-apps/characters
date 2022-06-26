@@ -2,13 +2,19 @@ import React, { useState } from 'react'
 
 import Input from './input'
 
-// TODO use https://react-jsonschema-form.readthedocs.io/en/latest/
-export default function Form ({ id, title, submit, submitClass, submitText, fields }) {
-  const [data, setData] = useState({})
+export default function Form ({ id, title, type, submit, submitClass, submitText }) {
+  const [data, setData] = useState(defaultData(type))
 
   return <form id={id}>
     <div className='title'>{title}</div>
-    {fields.map((field, index) => <Input key={index} text={`${field.title || field.name || field}:`} value={data[field.name || field]} type={field.type || 'text'} onChange={value => setData({ ...data, [field.name || field]: value })} />)}
+    <Input value={data} type={type} onChange={({ data }) => setData(data)} />
     <div className={`${submitClass} button`} onClick={() => submit(data)}>{submitText || title}</div>
   </form>
 }
+
+function defaultData (type) {
+  if (type.constructor === String)  return Input.Defaults[type]
+  return Object.entries(type).reduce((val, [field, type]) => ({ ...val, [field]: defaultData(type) }), { })
+}
+
+

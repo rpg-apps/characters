@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from 'react'
 import { useHistory } from 'react-router'
 import * as Realm from 'realm-web'
-import { JsonForms } from '@jsonforms/react'
-import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
-// import Form from '../presentation/form'
+import Form from '../presentation/form'
 
 const AuthContext = createContext()
 
@@ -41,14 +39,10 @@ export function WithAuth ({ appId, children }) {
 
   if (!currentUser) {
     return <div className='auth'>
-      <div className='title'>Login</div>
-      <JsonForms scheme={{type: 'object', properties: {email: { type: 'string', format: 'email' }, password: { type: 'password' }}, required: ['email', 'password']}} data={{email:'', password: ''}} renderers={materialRenderers} cells={materialCells} />
-      <div className='title'>Signup</div>
-      <JsonForms scheme={{type: 'object', properties: {email: { type: 'string', format: 'email' }, password: { type: 'password' }, validation: { type: 'password' }}, required: ['email', 'password', 'validation']}} data={{email:'', password: '', validation: ''}} renderers={materialRenderers} cells={materialCells} />
+      <Form id='login' title='Login' submitClass='primary' submit={loginWithEmailAndPassword} type={{ email: 'email', password: 'password' }} />
+      <Form id='signup' title='Signup' submitClass='primary' submit={({ email, password, confirmation }) => signup(email, password)} type={{ email: 'email', password: 'password', confirmation: 'password' }} />
     </div>
   }
 
   return <AuthContext.Provider value={{ ...app, user: currentUser, logOut }}>{children}</AuthContext.Provider>
 }
-// <Form id='login' title='Login' submitClass='primary' submit={loginWithEmailAndPassword} fields={['email', { name: 'password', type: 'password' }]} />
-//      <Form id='signup' title='Signup' submitClass='primary' submit={({ email, password, confirmation }) => signup(email, password)} fields={['email', { name: 'password', type: 'password' }, { name: 'confirmation', title: 'Confirm password', type: 'password' }]} />

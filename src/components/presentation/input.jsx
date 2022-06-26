@@ -1,125 +1,49 @@
 import React from 'react'
-import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa'
 
-// TODO use https://react-jsonschema-form.readthedocs.io/en/latest/
-export default function Input ({ text='', value='', type, onChange=()=>{} }) {
-  if (Array.isArray(type)) {
-    return <ArrayInput {...{ text, value, itemType: type[0], onChange }} />
+import { JsonForms } from '@jsonforms/react'
+import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
+
+export default function Input ({ value='', type, onChange=()=>{} }) {
+  return <JsonForms scheme={scheme(type)} uischema={uiScheme(type)} data={value} renderers={materialRenderers} cells={materialCells} onChange={onChange} />
+}
+
+Input.Defaults = {
+  'text': '',
+  'long text': '',
+  'email': '',
+  'password': ''
+}
+
+function scheme (type) {
+  return {
+    type: 'object',
+    properties: Object.entries(type).reduce((props, [key, value]) => ({ ...props, [key]: schemeField(value) }), { }),
+    required: Object.keys(type)
   }
+}
 
-  if (type.constructor !== String) {
-    return <ComplexInput {...{ text, value, type, onChange }} />
+function schemeField (type) {
+  if (STRING_SYNONOMS.includes(type))  return { type: 'string' }
+  return { type }
+}
+
+const STRING_SYNONOMS = ['text', 'long text', 'email']
+
+function uiScheme (type) {
+  return {
+    type: 'VerticalLayout',
+    elements: Object.entries(type).map(([key, value]) => ({ type: 'Control', scope: `#/properties/${key}`, ...fieldUiScheme(value) }))
   }
-
-  const InputType = InputTypes[type]
-  if (!InputType) {
-    console.warn('unknown input type', type)
-    return <div className='error input'/>
-  }
-
-  return <InputType text={text} value={value} onChange={onChange} />
 }
 
-Input.Controlled = function ControlletInput ({ text='', type='text', control }) {
-  return <Input type={type} text={text} value={control[0]} onChange={control[1]} />
+function fieldUiScheme (type) {
+  const options = Object.assign({}, DEFAULT_UI)
+  if (CONSTANT_UIS[type]) Object.assign(options, CONSTANT_UIS[type])
+  return { options }
 }
 
-function BooleanInput ({ text, value, onChange }) {
-  return <label className='checkbox'>
-    <input type='checkbox' chceked={value} onChange={(e, checked) => onChange(checked)} />
-    {text}
-  </label>
-}
+const DEFAULT_UI = { hideRequiredAsterisk: true }
 
-function TextInput ({ text, value, onChange }) {
-  return <div className='text input'>
-    <label>{text}</label>
-    <input type='text' value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-}
-
-function LongTextInput ({ text, value, onChange }) {
-  return <div className='text input'>
-    <label>{text}</label>
-    <textarea value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-}
-
-function PasswordInput ({ text, value, onChange }) {
-  return <div className='text input'>
-    <label>{text}</label>
-    <input type='password' value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-}
-
-function NumberInput ({ text, value, onChange }) {
-  return <div className='number input'>
-    <label>{text}</label>
-    <div className='reduce' onClick={() => onChange(value - 1)}><FaMinus /></div>
-    <input type='number' value={value} onChange={e => onChange(e.target.value)} />
-    <div className='add' onClick={() => onChange(value + 1)}><FaPlus /></div>
-  </div>
-}
-
-function ComplexInput ({ text, value, type, onChange }) {
-  return <div className='complex input'>
-    <label>{text}</label>
-    {Object.entries(type).filter(([fieldName, fieldType]) => !IgnoredTypes.includes(fieldType)).map(([fieldName, fieldType]) =>
-      <Input key={fieldName} type={fieldType} text={fieldName} value={value[fieldName]} onChange={val => onChange({ ...value, [fieldName]: val })} />
-    )}
-  </div>
-}
-
-function ArrayInput ({ text, value, itemType, onChange }) {
-  const itemChange = index => (newItem => {
-    value[index] = newItem
-    return onChange(value)
-  })
-
-  const itemDelete = index => () => {
-    value.splice(index, 1)
-    return onChange(value)
-  }
-
-  const itemAdd = () => {
-    value.push(generateValue(itemType))
-    return onChange(value)
-  }
-
-  const generateValue = type => {
-    if (Array.isArray(type)) {
-      return []
-    } else if (type.constructor !== String) {
-      return Object.entries(itemType).reduce((result, [subfield, subtype]) => ({ ...result, [subfield]: generateValue(subtype) }), { })
-    } else {
-      return Defaults[type]
-    }
-  }
-
-  return <div className='array input'>
-    <label>{text}</label>
-    <div className='items'>
-      {value.map((item, index) => <div key={index} className='item'>
-        <Input value={item} type={itemType} onChange={itemChange(index)} text=''/>
-        <div className='delete' onClick={itemDelete(index)}><FaTrash /></div>
-      </div>)}
-      <div className='add' onClick={itemAdd}><FaPlus /> add</div>
-    </div>
-  </div>
-}
-
-const IgnoredTypes = ['procedure']
-
-const InputTypes = {
-  boolean: BooleanInput,
-  text: TextInput,
-  password: PasswordInput,
-  'long text': LongTextInput,
-  number: NumberInput
-}
-
-const Defaults = {
-  boolean: false,
-  text: '',
-  'long text': ''
+const CONSTANT_UIS = {
+  password: { format: 'password' }
 }

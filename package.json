@@ -10,6 +10,7 @@
     "@jsonforms/material-renderers": "^2.5.2",
     "@jsonforms/react": "^2.5.2",
     "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "@rpg-apps/rpg-js": "0.1.9",
     "bluebird": "^3.7.2",
     "change-case": "^4.1.2",
