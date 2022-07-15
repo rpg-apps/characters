@@ -3,6 +3,7 @@ import React from 'react'
 import Field from '../../../presentation/field'
 import Input from '../../../presentation/input'
 
+// CONTINUE HERE!! Type choice is not usable since the value in the jsonforms is returned as object, and not as a basic property.
 export default function TypeChoice ({ builder, choice, onChoice, control }) {
   return <div className='input'>
     <Input.Controlled type={choice.type} control={control}/>

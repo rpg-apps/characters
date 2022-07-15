@@ -5,18 +5,18 @@ import mapObject from 'map-obj'
 
 export default function Input ({ value='', type, onChange=()=>{}, layout=Layout.VERTICAL }) {
   const adapter = generateAdapter(type, ROOT_SCOPE, layout)
-  console.log(JSON.stringify(adapter))
+  console.log(adapter)
   return <JsonForms scheme={adapter.scheme}
                     uischema={adapter.uiScheme}
-                    data={value || adapter.defaultData}
+                    data={adapter.value(value)}
                     renderers={materialRenderers}
                     cells={materialCells}
-                    onChange={onChange}
+                    onChange={adapter.onChange(onChange)}
           />
 }
 
 Input.Controlled = function ControlledInput ({ type, control, layout }) {
-  return <Input type={type} value={control[0]} onChange={({ data }) => control[1](data)} layout={layout} />
+  return <Input type={type} value={control[0]} onChange={control[1]} layout={layout} />
 }
 
 function generateAdapter (type, scope, layout) {
@@ -35,41 +35,50 @@ const arrayInputAdapter = (type, scope, layout) => {
   return {
     scheme: { type: 'array', items: itemsAdapater.scheme },
     uiScheme: { type: 'Control', scope },
-    defaultData: []
+    value: val => val || [],
+    defaultData: [],
+    onChange: callback => ({ data, errors }) => callback(data, errors)
   }
 }
 
 const objectInputAdapter = (type, scope, layout) => {
   const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout))])
+  const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
   return {
     scheme: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.scheme]), required: Object.keys(adapters) },
     uiScheme: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiScheme)  },
-    defaultData: mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
+    value: val => val || defaultData,
+    defaultData,
+    onChange: callback => ({ data, errors }) => callback(data, errors)
   }
 }
 
 const basicInputAdapter = (type, scope, layout) => {
   if (scope === ROOT_SCOPE) {
-    const adapater = objectInputAdapter({ value: type }, scope, layout)
-    adapater.uiScheme.elements[0].label = false
-    return adapater
+    const adapter = objectInputAdapter({ value: type }, scope, layout)
+    adapter.uiScheme.elements[0].label = false
+    adapter.value = value => (value ? ({ value }) : adapter.defaultData)
+    adapter.onChange = callback => ({ data, errors }) => callback(data.value, errors)
+    return adapter
   }
-  const adapater = BASIC_TYPES[type]
-  if (!adapater) throw new Error(`Missing Input Adapater ${type}`)
+  const adapter = BASIC_TYPES[type]
+  if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
   return {
-    scheme: { type: adapater.name },
-    uiScheme: { type: 'Control', options: { ...(adapater.ui || {}), hideRequiredAsterisk: true }, scope },
-    defaultData: adapater.defaultData
+    scheme: { type: adapter.name },
+    uiScheme: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope },
+    value: val => val || adapter.defaultData,
+    defaultData: adapter.defaultData,
+    onChange: callback => ({ data, errors }) => callback(data, errors)
   }
 }
 
 const BASIC_TYPES = {
-  'boolean': { name: 'string', defaultData: false },
-  'number': { name: 'string', defaultData: 0 },
-  'text': { name: 'string', defaultData: '' },
-  'long text': { name: 'string', defaultData: '' },
-  'email': { name: 'string', defaultData: '' },
-  'password': { name: 'string', ui: { format: 'password' }, defaultData: '' }
+  'boolean':    { name: 'boolean',  defaultData: false },
+  'number':     { name: 'number',   defaultData: 0 },
+  'text':       { name: 'string',   defaultData: '' },
+  'long text':  { name: 'string',   defaultData: '',  ui: { multi: true } },
+  'email':      { name: 'string',   defaultData: '' },
+  'password':   { name: 'string',   defaultData: '',  ui: { format: 'password' } }
 }
 
 const ROOT_SCOPE = '#'
