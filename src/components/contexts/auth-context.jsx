@@ -7,7 +7,7 @@ const AuthContext = createContext()
 
 export const useAuth = () => useContext(AuthContext)
 
-// TODO validations (issue #11: https://github.com/rpg-apps/characters/issues/11)
+// TODO client side validations (issue #11: https://github.com/rpg-apps/characters/issues/11)
 // TODO google login (issue #2: https://github.com/rpg-apps/characters/issues/2)
 // TODO reset password (issue #29: https://github.com/rpg-apps/characters/issues/29)
 export function WithAuth ({ appId, children }) {

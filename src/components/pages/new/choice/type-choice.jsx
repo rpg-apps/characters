@@ -6,7 +6,7 @@ import Input from '../../../presentation/input'
 export default function TypeChoice ({ builder, choice, onChoice, control }) {
   return <div className='input'>
     <Input.Controlled type={choice.type} control={control}/>
-    <Recommendations recommendations={builder.playbook.fields[choice.recommendations]} control={control} />
+    <Recommendations recommendations={builder.playbook.fields[choice.recommendations]} control={control}/>
   </div>
 }
 
@@ -44,7 +44,7 @@ function Recommendations ({ recommendations, control }) {
     <div className='title'>recommendations</div>
     <div className='options'>
       {recommendations.map((recommendation, index) =>
-        <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
+        <Field className={`recommendation ${(val === recommendation) ? 'selected' : ''}`} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
       )}
     </div>
   </div>

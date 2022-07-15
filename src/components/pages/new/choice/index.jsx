@@ -10,7 +10,11 @@ import ChoiceSubmit from '../choice-submit'
 const choices = { TypeChoice, FieldChoice, AssignmentChoice }
 
 export default function Choice ({ choice, builder, onChoice }) {
-  const [value, setValue] = useState(choices[choice.constructor.name].initialValue)
+  const [value, change] = useState(choices[choice.constructor.name].initialValue)
+  const setValue = val => {
+    console.log('setting', val)
+    change(val)
+  }
   const ChoiceComponent = choices[choice.constructor.name]
 
   const submit = () => {
