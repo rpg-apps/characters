@@ -8,7 +8,7 @@ export default function Form ({ id, title, type, submit, submitClass, submitText
 
   return <form id={id}>
     <div className='title'>{title}</div>
-    <Input value={value} type={type} onChange={({ data }) => setValue(data)} />
+    <Input value={value} type={type} onChange={(data) => setValue(data)} />
     <div className={`${submitClass} button`} onClick={() => submit(value)}>{submitText || title}</div>
   </form>
 }
