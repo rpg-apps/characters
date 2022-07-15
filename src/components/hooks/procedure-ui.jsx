@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+import mapObject from 'map-obj'
 import Field from '../presentation/field'
 import Input from '../presentation/input'
 
@@ -23,8 +23,7 @@ export function useProdcedureUI (character) {
     }
     const complexTypeSubtypes = getCharacter().playbook.rules.types.find(t => (t.name === type) && t.fieldTypes)?.fieldTypes
     if (!complexTypeSubtypes) return type
-    return Object.entries(complexTypeSubtypes)
-      .reduce((all, [key, subtype]) => ({ ...all, [key]: findType(subtype.name || subtype) }), {})
+    return mapObject(complexTypeSubtypes, (key, subtype) => [key, findType(subtype.name || subtype)])
   }
 
   const output = async (title, text) => {

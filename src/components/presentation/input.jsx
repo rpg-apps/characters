@@ -1,125 +1,88 @@
 import React from 'react'
-import { FaPlus, FaMinus, FaTrash } from 'react-icons/fa'
+import { JsonForms } from '@jsonforms/react'
+import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
+import mapObject from 'map-obj'
 
-// TODO use https://react-jsonschema-form.readthedocs.io/en/latest/
-export default function Input ({ text='', value='', type, onChange=()=>{} }) {
-  if (Array.isArray(type)) {
-    return <ArrayInput {...{ text, value, itemType: type[0], onChange }} />
-  }
-
-  if (type.constructor !== String) {
-    return <ComplexInput {...{ text, value, type, onChange }} />
-  }
-
-  const InputType = InputTypes[type]
-  if (!InputType) {
-    console.warn('unknown input type', type)
-    return <div className='error input'/>
-  }
-
-  return <InputType text={text} value={value} onChange={onChange} />
+export default function Input ({ value='', type, onChange=()=>{}, layout=Layout.VERTICAL }) {
+  const adapter = generateAdapter(type, ROOT_SCOPE, layout)
+  console.log(adapter)
+  return <JsonForms scheme={adapter.scheme}
+                    uischema={adapter.uiScheme}
+                    data={adapter.value(value)}
+                    renderers={materialRenderers}
+                    cells={materialCells}
+                    onChange={adapter.onChange(onChange)}
+          />
 }
 
-Input.Controlled = function ControlletInput ({ text='', type='text', control }) {
-  return <Input type={type} text={text} value={control[0]} onChange={control[1]} />
+Input.Controlled = function ControlledInput ({ type, control, layout }) {
+  return <Input type={type} value={control[0]} onChange={control[1]} layout={layout} />
 }
 
-function BooleanInput ({ text, value, onChange }) {
-  return <label className='checkbox'>
-    <input type='checkbox' chceked={value} onChange={(e, checked) => onChange(checked)} />
-    {text}
-  </label>
-}
-
-function TextInput ({ text, value, onChange }) {
-  return <div className='text input'>
-    <label>{text}</label>
-    <input type='text' value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-}
-
-function LongTextInput ({ text, value, onChange }) {
-  return <div className='text input'>
-    <label>{text}</label>
-    <textarea value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-}
-
-function PasswordInput ({ text, value, onChange }) {
-  return <div className='text input'>
-    <label>{text}</label>
-    <input type='password' value={value} onChange={e => onChange(e.target.value)} />
-  </div>
-}
-
-function NumberInput ({ text, value, onChange }) {
-  return <div className='number input'>
-    <label>{text}</label>
-    <div className='reduce' onClick={() => onChange(value - 1)}><FaMinus /></div>
-    <input type='number' value={value} onChange={e => onChange(e.target.value)} />
-    <div className='add' onClick={() => onChange(value + 1)}><FaPlus /></div>
-  </div>
-}
-
-function ComplexInput ({ text, value, type, onChange }) {
-  return <div className='complex input'>
-    <label>{text}</label>
-    {Object.entries(type).filter(([fieldName, fieldType]) => !IgnoredTypes.includes(fieldType)).map(([fieldName, fieldType]) =>
-      <Input key={fieldName} type={fieldType} text={fieldName} value={value[fieldName]} onChange={val => onChange({ ...value, [fieldName]: val })} />
-    )}
-  </div>
-}
-
-function ArrayInput ({ text, value, itemType, onChange }) {
-  const itemChange = index => (newItem => {
-    value[index] = newItem
-    return onChange(value)
-  })
-
-  const itemDelete = index => () => {
-    value.splice(index, 1)
-    return onChange(value)
-  }
-
-  const itemAdd = () => {
-    value.push(generateValue(itemType))
-    return onChange(value)
-  }
-
-  const generateValue = type => {
-    if (Array.isArray(type)) {
-      return []
-    } else if (type.constructor !== String) {
-      return Object.entries(itemType).reduce((result, [subfield, subtype]) => ({ ...result, [subfield]: generateValue(subtype) }), { })
+function generateAdapter (type, scope, layout) {
+  if (type.constructor === String) {
+    if (type.startsWith('array ')) {
+      return arrayInputAdapter(type, scope, layout)
     } else {
-      return Defaults[type]
+      return basicInputAdapter(type, scope, layout)
     }
   }
-
-  return <div className='array input'>
-    <label>{text}</label>
-    <div className='items'>
-      {value.map((item, index) => <div key={index} className='item'>
-        <Input value={item} type={itemType} onChange={itemChange(index)} text=''/>
-        <div className='delete' onClick={itemDelete(index)}><FaTrash /></div>
-      </div>)}
-      <div className='add' onClick={itemAdd}><FaPlus /> add</div>
-    </div>
-  </div>
+  return objectInputAdapter(type, scope, layout)
 }
 
-const IgnoredTypes = ['procedure']
-
-const InputTypes = {
-  boolean: BooleanInput,
-  text: TextInput,
-  password: PasswordInput,
-  'long text': LongTextInput,
-  number: NumberInput
+const arrayInputAdapter = (type, scope, layout) => {
+  const itemsAdapater = generateAdapter(type.replace(/^array /, ''), scope, Layout.flip(layout))
+  return {
+    scheme: { type: 'array', items: itemsAdapater.scheme },
+    uiScheme: { type: 'Control', scope },
+    value: val => val || [],
+    defaultData: [],
+    onChange: callback => ({ data, errors }) => callback(data, errors)
+  }
 }
 
-const Defaults = {
-  boolean: false,
-  text: '',
-  'long text': ''
+const objectInputAdapter = (type, scope, layout) => {
+  const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout))])
+  const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
+  return {
+    scheme: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.scheme]), required: Object.keys(adapters) },
+    uiScheme: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiScheme)  },
+    value: val => val || defaultData,
+    defaultData,
+    onChange: callback => ({ data, errors }) => callback(data, errors)
+  }
 }
+
+const basicInputAdapter = (type, scope, layout) => {
+  if (scope === ROOT_SCOPE) {
+    const adapter = objectInputAdapter({ value: type }, scope, layout)
+    adapter.uiScheme.elements[0].label = false
+    adapter.value = value => (value ? ({ value }) : adapter.defaultData)
+    adapter.onChange = callback => ({ data, errors }) => callback(data.value, errors)
+    return adapter
+  }
+  const adapter = BASIC_TYPES[type]
+  if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
+  return {
+    scheme: { type: adapter.name },
+    uiScheme: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope },
+    value: val => val || adapter.defaultData,
+    defaultData: adapter.defaultData,
+    onChange: callback => ({ data, errors }) => callback(data, errors)
+  }
+}
+
+const BASIC_TYPES = {
+  'boolean':    { name: 'boolean',  defaultData: false },
+  'number':     { name: 'number',   defaultData: 0 },
+  'text':       { name: 'string',   defaultData: '' },
+  'long text':  { name: 'string',   defaultData: '',  ui: { multi: true } },
+  'email':      { name: 'string',   defaultData: '' },
+  'password':   { name: 'string',   defaultData: '',  ui: { format: 'password' } }
+}
+
+const ROOT_SCOPE = '#'
+
+const Layout = { HORIZONTAL: 'HorizonalLayout', VERTICAL: 'VerticalLayout' }
+Layout.flip = layout => (layout === Layout.VERTICAL) ? Layout.HORIZONTAL : Layout.VERTICAL
+Input.Layout = Layout

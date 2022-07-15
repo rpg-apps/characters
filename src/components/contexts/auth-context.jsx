@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext, createContext } from 'react'
 import { useHistory } from 'react-router'
 import * as Realm from 'realm-web'
-
 import Form from '../presentation/form'
 
 const AuthContext = createContext()
 
 export const useAuth = () => useContext(AuthContext)
 
-// TODO validations (issue #11: https://github.com/rpg-apps/characters/issues/11)
+// TODO client side validations (issue #11: https://github.com/rpg-apps/characters/issues/11)
 // TODO google login (issue #2: https://github.com/rpg-apps/characters/issues/2)
 // TODO reset password (issue #29: https://github.com/rpg-apps/characters/issues/29)
 export function WithAuth ({ appId, children }) {
@@ -40,8 +39,8 @@ export function WithAuth ({ appId, children }) {
 
   if (!currentUser) {
     return <div className='auth'>
-      <Form id='login' title='Login' submitClass='primary' submit={loginWithEmailAndPassword} fields={['email', { name: 'password', type: 'password' }]} />
-      <Form id='signup' title='Signup' submitClass='primary' submit={({ email, password, confirmation }) => signup(email, password)} fields={['email', { name: 'password', type: 'password' }, { name: 'confirmation', title: 'Confirm password', type: 'password' }]} />
+      <Form id='login' title='Login' submitClass='primary' submit={loginWithEmailAndPassword} type={{ email: 'email', password: 'password' }} />
+      <Form id='signup' title='Signup' submitClass='primary' submit={({ email, password, confirmation }) => signup(email, password)} type={{ email: 'email', password: 'password', confirmation: 'password' }} />
     </div>
   }
 
