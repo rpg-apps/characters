@@ -1,18 +1,18 @@
-import React from 'react'
 import { JsonForms } from '@jsonforms/react'
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import mapObject from 'map-obj'
 
+import { ajv, useErrors } from './validation'
+
 export default function Input ({ value='', type, onChange=()=>{}, layout=Layout.VERTICAL }) {
   const adapter = generateAdapter(type, ROOT_SCOPE, layout)
-  console.log(adapter)
-  return <JsonForms scheme={adapter.scheme}
-                    uischema={adapter.uiScheme}
-                    data={adapter.value(value)}
-                    renderers={materialRenderers}
-                    cells={materialCells}
-                    onChange={adapter.onChange(onChange)}
-          />
+  const { change, errors } = useErrors(adapter, onChange, ROOT_SCOPE)
+
+  return <JsonForms schema={adapter.schema}           uischema={adapter.uiScheme}
+                    renderers={materialRenderers}     cells={materialCells} ajv={ajv}
+                    data={adapter.value(value)}       onChange={change}
+                    validationMode='ValidateAndHide'  additionalErrors={errors}
+  />
 }
 
 Input.Controlled = function ControlledInput ({ type, control, layout }) {
@@ -33,11 +33,12 @@ function generateAdapter (type, scope, layout) {
 const arrayInputAdapter = (type, scope, layout) => {
   const itemsAdapater = generateAdapter(type.replace(/^array /, ''), scope, Layout.flip(layout))
   return {
-    scheme: { type: 'array', items: itemsAdapater.scheme },
+    schema: { type: 'array', items: itemsAdapater.schema },
     uiScheme: { type: 'Control', scope },
     value: val => val || [],
     defaultData: [],
-    onChange: callback => ({ data, errors }) => callback(data, errors)
+    onChange: callback => ({ data, errors }) => callback(data, errors),
+    validate: (data, scope) => data.map(item => itemsAdapater.validate(item, scope, data)).reduce((arr, subarr) => arr.concat(subarr), [])
   }
 }
 
@@ -45,11 +46,12 @@ const objectInputAdapter = (type, scope, layout) => {
   const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout))])
   const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
   return {
-    scheme: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.scheme]), required: Object.keys(adapters) },
+    schema: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.schema]), required: Object.keys(adapters) },
     uiScheme: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiScheme)  },
     value: val => val || defaultData,
     defaultData,
-    onChange: callback => ({ data, errors }) => callback(data, errors)
+    onChange: callback => ({ data, errors }) => callback(data, errors),
+    validate: (data, scope) => Object.entries(adapters).map(([field, adapter]) => adapter.validate(data[field], `${scope}/properties/${field}`, data)).reduce((arr, subarr) => arr.concat(subarr), [])
   }
 }
 
@@ -64,21 +66,23 @@ const basicInputAdapter = (type, scope, layout) => {
   const adapter = BASIC_TYPES[type]
   if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
   return {
-    scheme: { type: adapter.name },
+    schema: { type: adapter.name, ...(adapter.options || {}) },
     uiScheme: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope },
     value: val => val || adapter.defaultData,
     defaultData: adapter.defaultData,
-    onChange: callback => ({ data, errors }) => callback(data, errors)
+    onChange: callback => ({ data, errors }) => callback(data, errors),
+    validate: adapter.validate || (() => [])
   }
 }
 
 const BASIC_TYPES = {
-  'boolean':    { name: 'boolean',  defaultData: false },
-  'number':     { name: 'number',   defaultData: 0 },
-  'text':       { name: 'string',   defaultData: '' },
-  'long text':  { name: 'string',   defaultData: '',  ui: { multi: true } },
-  'email':      { name: 'string',   defaultData: '' },
-  'password':   { name: 'string',   defaultData: '',  ui: { format: 'password' } }
+  'boolean':      { name: 'boolean',  defaultData: false },
+  'number':       { name: 'number',   defaultData: 0 },
+  'text':         { name: 'string',   defaultData: '' },
+  'long text':    { name: 'string',   defaultData: '',  ui: { multi: true } },
+  'email':        { name: 'string',   defaultData: '', options: { format: 'email' } },
+  'password':     { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { lengthRange: [6,128] } },
+  'confirmation': { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { confirmation: true } }
 }
 
 const ROOT_SCOPE = '#'

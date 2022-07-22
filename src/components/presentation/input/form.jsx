@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import Input from './input'
+import Input from './index'
 
 // Input with a title and a submit button
 export default function Form ({ id, title, type, submit, submitClass, submitText }) {
