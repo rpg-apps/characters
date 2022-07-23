@@ -1,8 +1,9 @@
-const { override, addBabelPlugins  } = require('customize-cra')
+const { override, addExternalBabelPlugins  } = require('customize-cra')
 
 module.exports = override(
-  ...addBabelPlugins(
+  ...addExternalBabelPlugins(
     '@babel/plugin-proposal-logical-assignment-operators',
-    '@babel/plugin-proposal-optional-chaining'
+    '@babel/plugin-proposal-optional-chaining',
+    '@babel/plugin-proposal-nullish-coalescing-operator'
   )
 )
