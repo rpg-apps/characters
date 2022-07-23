@@ -35,7 +35,6 @@ export function WithAuth ({ appId, children }) {
   })
 
   async function logIn(credential) {
-    console.log(JSON.stringify(credential))
     await app.logIn(credential)
     setCurrentUser(app.currentUser)
   }
@@ -56,7 +55,6 @@ export function WithAuth ({ appId, children }) {
   }
 
   async function loginWithGoogle ({ credential }) {
-    console.log(credential)
     return await logIn(Realm.Credentials.google(credential))
   }
 
