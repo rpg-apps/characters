@@ -8,11 +8,10 @@ import Graveyard from './components/pages/home/graveyard'
 import New from './components/pages/new'
 import Character from './components/pages/character'
 
-import './games/dungeon-world/core.scss'
-
 import { WithAuth } from './components/contexts/auth-context'
 import { WithRules } from './components/contexts/rules-context'
 import { WithCharacters } from './components/contexts/characters-context'
+import { WithAdapters } from './components/contexts/game-adapters-context'
 
 const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
 
@@ -32,9 +31,11 @@ function App() {
 function LoadAllData ({ children, appId }) {
   return <WithAuth appId={appId}>
     <WithRules>
-      <WithCharacters>
-        {children}
-      </WithCharacters>
+      <WithAdapters>
+        <WithCharacters>
+          {children}
+        </WithCharacters>
+      </WithAdapters>
     </WithRules>
   </WithAuth>
 }

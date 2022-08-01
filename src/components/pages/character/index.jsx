@@ -41,7 +41,7 @@ export default function CharacterPage ({ match }) {
   }
 
   const refreshHandlers = useCallback(() => {
-    setHandlers(character.adapters.reduce((results, adapter) => ({ ...results, ...adapter.getHandlers(character.calculatedSettings || {}) }), {}))
+    // setHandlers(character.adapters.reduce((results, adapter) => ({ ...results, ...adapter.getHandlers(character.calculatedSettings || {}) }), {}))
   }, [character])
 
   useEffect(() => {

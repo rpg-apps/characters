@@ -5,10 +5,10 @@ import '../../../css/pages/new.scss'
 
 import { useRules } from '../../contexts/rules-context'
 import { useCharacters } from '../../contexts/characters-context'
+import { useSupportedRulebooks } from '../../contexts/game-adapters-context'
 import { useProdcedureUI } from '../../hooks/procedure-ui'
 import OptionsChoice from './options-choice'
 import Loader from '../../presentation/loader'
-import { SUPPORTED_RULEBOOKS } from '../../../games'
 import Choice from './choice'
 
 // TODO add UI for post-character-creation choices.
@@ -22,6 +22,7 @@ export default function New () {
   const [choice, setChoice] = useState()
 
   const ui = useProdcedureUI(() => builder.character)
+  const supportedRulebooks = useSupportedRulebooks()
 
   const initializeBuilder = async rulebook => {
     setBuilder((await rules.get([rulebook])).characters.builder)
@@ -60,7 +61,7 @@ export default function New () {
 
   if (!builder) {
     return <Page className='choose game'>
-      <OptionsChoice title='choose game' options={SUPPORTED_RULEBOOKS} onChoice={initializeBuilder} />
+      <OptionsChoice title='choose game' options={supportedRulebooks} onChoice={initializeBuilder} />
     </Page>
   }
 

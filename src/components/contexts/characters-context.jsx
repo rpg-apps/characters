@@ -3,7 +3,7 @@ import Loader from '../presentation/loader'
 
 import { useAuth } from './auth-context'
 import { useRules } from './rules-context'
-import { adaptersForCharacter, plansForCharacter } from '../../games'
+import { useAdapters, mergeAdapters } from './game-adapters-context'
 
 const CharactersContext = createContext()
 
@@ -12,6 +12,7 @@ export const useCharacters = () => useContext(CharactersContext)
 export function WithCharacters ({ children }) {
   const { user } = useAuth()
   const rules = useRules()
+  const adapters = useAdapters()
   const [characterJsons, setCharacterJsons] = useState(false)
   const [characters, setCharacters] = useState(false)
 
@@ -21,7 +22,8 @@ export function WithCharacters ({ children }) {
   const parseCharacter = useCallback(async rawCharacter => {
     const character = await (await rules.get(rawCharacter.rulebooks)).characters.load(rawCharacter)
     Object.assign(character, {
-      id: rawCharacter._id, adapters: adaptersForCharacter(character), plans: plansForCharacter(character),
+      id: rawCharacter._id,
+      adapter: mergeAdapters(character.rulebooks.map(rulebook => rulebook.split(' ')).map(([game, rulebook]) => adapters[game][rulebook])),
       save: async () => await user.callFunction('updateCharacter', {
         id: character.id.toString(),
         character: Object.assign(character.toJson(), { settings: character.settings })
@@ -35,6 +37,10 @@ export function WithCharacters ({ children }) {
         character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
       },
     })
+    character.plans = [
+      { name: 'manual',     description: 'Just like a character sheet', settings: Object.fromEntries(character.adapter.settings.map(setting => [setting.name, setting.manual]))    },
+      { name: 'automatic',  description: 'Does everything for you',     settings: Object.fromEntries(character.adapter.settings.map(setting => [setting.name, setting.automatic])) }
+    ]
     character.setSettings(rawCharacter.settings)
     return character
   }, [user,rules, load])
