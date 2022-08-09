@@ -22,7 +22,7 @@ export function WithAuth ({ appId, children }) {
     if (params.get('token') && params.get('tokenId')) {
       setResettingPassword(true)
     }
-  })
+  }, [setResettingPassword])
 
   useEffect(() => {
     setApp(new Realm.App(appId))

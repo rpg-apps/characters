@@ -43,7 +43,7 @@ export function WithCharacters ({ children }) {
     ]
     character.setSettings(rawCharacter.settings)
     return character
-  }, [user,rules, load])
+  }, [user, rules, adapters, load])
 
   const parseCharacters = useCallback(async rawCharacters => {
     const chars = []

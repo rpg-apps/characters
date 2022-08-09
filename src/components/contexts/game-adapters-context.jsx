@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useContext, createContext } fr
 import merge from 'deepmerge'
 
 import { useAuth } from './auth-context'
-import { useRules } from './rules-context'
 
 import Loader from '../presentation/loader'
 import localAdapters from '../../adapters'
@@ -29,7 +28,6 @@ export const mergeAdapters = adapters => {
 
 export function WithAdapters ({ children }) {
   const { user } = useAuth()
-  const rules = useRules()
   const [adapters, setAdapters] = useState(false)
 
   const load = useCallback(async () => {

@@ -1,24 +1,36 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
+import ReactJsonSchema from 'react-json-schema'
 
-import Field from './field'
+import Loader from './loader'
 
-export default function Character ({ character, children, handleEvent=()=>{} }) {
-  const fields = () => {
-    return []
-      .concat(Object.entries(character.fields))
-      .concat(Object.entries(character.playbookFields))
-      .concat([['playbook', character.playbook.name], ['modifiers', character.modifiers]])
-      .sort(([key1], [key2]) => {
-        if (key1 < key2) return -1
-        if (key1 > key2) return 1
-        return 0
-      })
+const CharacterSchema = new ReactJsonSchema()
+
+const calculate = async (schema, character) => {
+  if (schema.children) {
+    schema.children.forEach(subschema => calculate(subschema, character))
   }
 
-  return <div className={`character ${Character.classes(character)}`}>
-    {fields().map(([key, value]) => <Field key={key} name={key} value={value} handleEvent={handleEvent} />)}
-    {children}
-  </div>
+  schema.component = schema.component || 'div'
+
+  if (schema.value) {
+    schema.text = await character.get(schema.value, { })
+  }
 }
 
-Character.classes = character => `${character.playbook.name} ${character.rulebooks.map(rb => rb.replace(' ', '-')).join(' ')}`
+export default function Character ({ character, ui, Component, ...props }) {
+  const [characterComponent, setCharacterComponent] = useState([])
+
+  useEffect(() => {
+    (async () => {
+      const schema = character.adapter[ui]
+      await calculate(schema, character)
+      setCharacterComponent(CharacterSchema.parseSchema(schema))
+    }) ()
+  }, [character, ui])
+
+  if (!characterComponent) {
+    return <Loader />
+  }
+
+  return <Component {...props} className={`character ${props.className} ${ui} ${character.rulebooks.join(' ')}`}>{characterComponent}</Component>
+}
