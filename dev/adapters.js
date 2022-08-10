@@ -10,14 +10,14 @@ const GAME_FOLDER = game => path.join(ADAPTERS_FOLDER, game)
 const GAME_FILE = game => path.join(ADAPTERS_FOLDER, game, 'index.js')
 const RULEBOOK_FILE = (game, rulebook) => path.join(ADAPTERS_FOLDER, game, `${rulebook}.js`)
 
-const ADAPTER_TEMPLATE = (game, rulebook) => `export default ${JSON.stringify({ game, rulebook, characterSheet: {}, characterCard: {}, css: '', assets: [], settings: [] })}`
+const ADAPTER_TEMPLATE = (game, rulebook) => `export default ${JSON.stringify({ game, rulebook, 'character-sheet': {}, 'character-card': {}, css: {}, assets: [], settings: [] })}`
 const INDEX_FILE_TEMPLATE = `
-const adapters = {}
+let adapters = []
 // assignment
 export default adapters
 `
 const GAME_FILE_TEMPLATE = `
-const game = {}
+const game = []
 // assignment
 export default game
 `
@@ -46,12 +46,12 @@ caporal.name('adapters').version('v1').description('manage game UI adapters')
 
     updateFile(INDEX_FILE, content =>
       `import ${pascalCase(game)} from './${headerCase(game).toLowerCase()}';
-      ${content.replace('// assignment', `adapters['${headerCase(game).toLowerCase()}'] = ${pascalCase(game)};
+      ${content.replace('// assignment', `adapters = adapters.concat(${pascalCase(game)});
       // assignment`)}`, INDEX_FILE_TEMPLATE)
 
     updateFile(GAME_FILE(game), content =>
       `import ${pascalCase(rulebook)} from './${headerCase(rulebook).toLowerCase()}';
-      ${content.replace('// assignment', `game['${headerCase(rulebook).toLowerCase()}'] = ${pascalCase(rulebook)};
+      ${content.replace('// assignment', `game.push(${pascalCase(rulebook)});
       // assignment`)}`, GAME_FILE_TEMPLATE)
 
     fs.writeFileSync(RULEBOOK_FILE(game, rulebook), ADAPTER_TEMPLATE(game, rulebook))

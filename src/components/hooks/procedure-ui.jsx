@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import mapObject from 'map-obj'
-import Field from '../presentation/field'
 import Input from '../presentation/input'
 
 const STATUS = {
@@ -81,9 +80,6 @@ export function useProdcedureUI (character) {
 
         setContent(<div className='ui'>
         <div className={`options ${maxedOut ? 'maxed-out' : ''}`}>
-          {options.map((option, index) => {
-            return <Field key={index} name={index} className={`option ${value.includes(option) ? 'selected' : ''}`} value={option} handleEvent={() => update(value, option)} />
-          })}
         </div>
         <div key='submit' className='primary button' onClick={save}>done</div>
       </div>)

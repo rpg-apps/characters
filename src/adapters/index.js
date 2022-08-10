@@ -1,6 +1,6 @@
 import DungeonWorld from './dungeon-world';
-      
-const adapters = {}
-adapters['dungeon-world'] = DungeonWorld;
+
+let adapters = []
+adapters = adapters.concat(DungeonWorld);
       // assignment
 export default adapters

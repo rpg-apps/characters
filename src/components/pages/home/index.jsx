@@ -11,7 +11,7 @@ export default function Home (props) {
   const characters = useCharacters().filter(character => character.alive)
 
   const content = characters.length ?
-    characters.map((character, index) => <Character character={character} ui='characterCard' Component={Link} key={index} to={`/character/${character.id}`}/>)
+    characters.map((character, index) => <Character character={character} ui='character-card' Component={Link} key={index} to={`/character/${character.id}`}/>)
     :
     <div className='empty characters'>
       <div className='primary'>No one is here</div>

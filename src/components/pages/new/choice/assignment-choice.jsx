@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Field from '../../../presentation/field'
 
 export default function AssignmentChoice ({ builder, choice, onChoice, control }) {
   const [value, setValue] = control
@@ -44,12 +43,8 @@ export default function AssignmentChoice ({ builder, choice, onChoice, control }
 
   return <div className='selection'>
     <div className='source'>
-      {source.map((sourceValue, index) => <Field className={`recommendation ${selection.source === sourceValue ? 'selected' : ''} ${Object.values(value).includes(sourceValue) ? 'done' : ''}`}
-        key={index} value={sourceValue} handleEvent={() => handle(sourceValue)}/>)}
     </div>
     <div className='target'>
-      {target.map((targetValue, index) => <Field className={`recommendation ${selection.target === targetValue ? 'selected' : ''} ${Object.keys(value).includes(targetValue) ? 'done' : ''}`}
-        key={index} name={targetValue} value={value[targetValue] || ''} handleEvent={() => handle(targetValue)} />)}
     </div>
   </div>
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Field from '../../../presentation/field'
 import Input from '../../../presentation/input'
 
 // CONTINUE HERE!! Type choice is not usable since the value in the jsonforms is returned as object, and not as a basic property.
@@ -32,9 +31,6 @@ function Recommendations ({ recommendations, control }) {
       <div className='options'>
         {recommendations.map((recommendationCollection, index) =>
           <div key={index} className='recommendations-collection'>
-            {recommendationCollection.map((recommendation, index) =>
-              <Field className={`recommendation ${val.includes(recommendation) ? 'selected' : ''}`} key={index} value={recommendation} handleEvent={update}/>
-            )}
           </div>
         )}
       </div>
@@ -44,9 +40,6 @@ function Recommendations ({ recommendations, control }) {
   return <div className='recommendations'>
     <div className='title'>recommendations</div>
     <div className='options'>
-      {recommendations.map((recommendation, index) =>
-        <Field className={`recommendation ${(val === recommendation) ? 'selected' : ''}`} key={index} value={recommendation} handleEvent={() => setValue(recommendation)}/>
-      )}
     </div>
   </div>
 }

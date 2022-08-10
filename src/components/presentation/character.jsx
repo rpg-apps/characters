@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactJsonSchema from 'react-json-schema'
+import { camelCase } from 'change-case'
 
 import Loader from './loader'
 
@@ -7,7 +8,9 @@ const CharacterSchema = new ReactJsonSchema()
 
 const calculate = async (schema, character) => {
   if (schema.children) {
-    schema.children.forEach(subschema => calculate(subschema, character))
+    for (let subschema of schema.children) {
+      await calculate(subschema, character)
+    }
   }
 
   schema.component = schema.component || 'div'
@@ -17,12 +20,12 @@ const calculate = async (schema, character) => {
   }
 }
 
-export default function Character ({ character, ui, Component, ...props }) {
-  const [characterComponent, setCharacterComponent] = useState([])
+export default function Character ({ character, ui, Component="div", ...props }) {
+  const [characterComponent, setCharacterComponent] = useState(null)
 
   useEffect(() => {
     (async () => {
-      const schema = character.adapter[ui]
+      const schema = character.adapter[camelCase(ui)]
       await calculate(schema, character)
       setCharacterComponent(CharacterSchema.parseSchema(schema))
     }) ()
