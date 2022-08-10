@@ -58,8 +58,8 @@ function addGameToIndex (game) {
 
 // realm
 
-function realmApp () {
-  const app = new Realm.App({ id: DEVELOPMENT_REALM_APP_ID })
+function realmApp (appId = DEVELOPMENT_REALM_APP_ID) {
+  const app = new Realm.App({ id: appId })
   return promptPassword('password: ').then(password => {
     app.logIn(Realm.Credentials.emailPassword(ADMIN, password))
     return app.currentUser
@@ -82,8 +82,8 @@ function create ({ game, rulebook }) {
   fs.writeFileSync(RULEBOOK_FILE(game, rulebook), ADAPTER_TEMPLATE(game, rulebook))
 }
 
-function destroy ({ game, rulebook }) {
-  return realmApp()
+function destroy ({ game, rulebook }, { appId }) {
+  return realmApp(appId)
     .then(user => user.callFunction('deleteAdapter', [{ game, rulebook }]))
     .then(() => process.exit(0))
 }
@@ -96,13 +96,13 @@ function clearCache () {
   fs.writeFileSync(INDEX_FILE, INDEX_FILE_TEMPLATE)
 }
 
-function pull ({ game, rulebook }) {
+function pull ({ game, rulebook }, { appId }) {
   validateDirExistance(ADAPTERS_FOLDER)
   validateDirExistance(GAME_FOLDER(game))
 
   addRulebookToGame(game, rulebook)
   addGameToIndex(game)
-  return realmApp()
+  return realmApp(appId)
     .then(user => user.callFunction('pullAdapter', [{ game, rulebook }]))
     .then(([adapter]) => {
       if (!adapter) throw new Error('Rulebook not found')
@@ -110,11 +110,11 @@ function pull ({ game, rulebook }) {
     }).then(() => process.exit(0))
 }
 
-function push ({ game, rulebook }) {
+function push ({ game, rulebook }, { appId }) {
   if (!fs.existsSync(RULEBOOK_FILE(game, rulebook))) throw new Error('Rulebook not found')
 
   const adapter = JSON.parse(fs.readFileSync(RULEBOOK_FILE(game, rulebook)).toString().replace('export default ', ''))
-  return realmApp()
+  return realmApp(appId)
     .then(user => user.callFunction('pushAdapter', [{ adapter }]))
     .then(() => process.exit(0))
 }
@@ -129,16 +129,19 @@ caporal.name('adapters').version('v1').description('manage game UI adapters')
   .command('delete', 'Delete an adapter from DB.')
   .argument('<game>', 'The name of the adapter game')
   .argument('<rulebook>', 'The name of the adapter rulebook in the game (default is core)', /.*/, 'core')
+  .option('--app-id <appId>', 'Realm App Id, defaults to the test app')
   .action(destroy)
   .command('clear', 'Clears the local cache of adapters.')
   .action(clearCache)
   .command('pull', 'Load an adapter from the DB to the local cache.')
   .argument('<game>', 'The name of the adapter game')
   .argument('<rulebook>', 'The name of the adapter rulebook in the game (default is core)', /.*/, 'core')
+  .option('--app-id <appId>', 'Realm App Id, defaults to the test app')
   .action(pull)
   .command('push', 'Save an adapter to the DB')
   .argument('<game>', 'The name of the adapter game')
   .argument('<rulebook>', 'The name of the adapter rulebook in the game (default is core)', /.*/, 'core')
+  .option('--app-id <appId>', 'Realm App Id, defaults to the test app')
   .action(push)
 
 caporal.parse(process.argv)
