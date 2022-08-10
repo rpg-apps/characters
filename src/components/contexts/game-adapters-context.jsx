@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext, createContext } from 'react'
 import merge from 'deepmerge'
+import uniq from 'uniq'
 
 import { useAuth } from './auth-context'
 
@@ -36,7 +37,7 @@ export function WithAdapters ({ children }) {
   const [adapters, setAdapters] = useState(null)
 
   const load = useCallback(async () => {
-    const adaptersArray = (await user.callFunction('getAdapters')).concat(localAdapters).filter(adapter => Boolean(adapter.game))
+    const adaptersArray = uniq((await user.callFunction('getAdapters')).concat(localAdapters).filter(adapter => Boolean(adapter.game)), (adapter1, adapter2) => (adapter1.game === adapter2.game && adapter1.rulebook === adapter2.rulebook) ? 0 : 1)
     setAdapters(adaptersArray.reduce((all, adapter) => {
       if (!all[adapter.game]) { all[adapter.game] = { } }
       all[adapter.game][adapter.rulebook] = adapter
