@@ -37,15 +37,15 @@ export function WithAdapters ({ children }) {
   const [adapters, setAdapters] = useState(null)
 
   const load = useCallback(async () => {
-    const adaptersArray = uniq((await user.callFunction('getAdapters')).concat(localAdapters).filter(adapter => Boolean(adapter.game)), (adapter1, adapter2) => (adapter1.game === adapter2.game && adapter1.rulebook === adapter2.rulebook) ? 0 : 1)
+    const adaptersArray = uniq(localAdapters.concat(await user.callFunction('getAdapters')).filter(adapter => Boolean(adapter.game)), (adapter1, adapter2) => (adapter1.game === adapter2.game && adapter1.rulebook === adapter2.rulebook) ? 0 : 1)
     setAdapters(adaptersArray.reduce((all, adapter) => {
       if (!all[adapter.game]) { all[adapter.game] = { } }
       all[adapter.game][adapter.rulebook] = adapter
       return all
     }, { }))
 
-    adaptersArray.forEach(adapter => addCSS(adapter.game, adapter.rulebook, adapter.css))
     console.log(adaptersArray)
+    adaptersArray.forEach(adapter => addCSS(adapter.game, adapter.rulebook, adapter.css))
   }, [user])
 
   useEffect(() => { load() }, [user, load])

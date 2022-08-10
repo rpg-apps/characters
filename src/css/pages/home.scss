@@ -8,6 +8,7 @@ $footer-height: 6rem;
 
   .characters {
     @extend %scrolly;
+    padding: $large-gap;
     height: calc(#{$page-height} - #{$footer-height});
 
     .dead {
