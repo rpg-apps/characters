@@ -44,7 +44,6 @@ export function WithAdapters ({ children }) {
       return all
     }, { }))
 
-    console.log(adaptersArray)
     adaptersArray.forEach(adapter => addCSS(adapter.game, adapter.rulebook, adapter.css))
   }, [user])
 

@@ -1,76 +1,60 @@
-@import "../utils.scss";
-
-$footer-height: 6rem;
-
 .home.page {
   display: flex;
   flex-direction: column;
 
-  .characters {
-    @extend %scrolly;
-    padding: $large-gap;
-    height: calc(#{$page-height} - #{$footer-height});
+  .header {
+    transition: height 1s linear;
+    position: relative;
 
-    .dead {
-      position: relative;
-
-      &::before {
-        content: 'Click to revive';
-        font: 2rem 'Cinzel';
-        z-index: 1;
-        color: white;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      > * { opacity: 0.5; }
+    .logo {
+      position: absolute;
+      aspect-ratio: 1;
+      transition-property: top, left, height;
+      transition-duration: 1s;
+      transition-timing-function: linear;
     }
 
-    .character {
-      @extend %round;
-      @extend %inverted;
-      margin: $large-gap;
-      padding: $large-gap;
+    #app-name, button {
+      opacity: 1;
+      transition-property: opacity;
+      transition-duration: 1s;
+      transition-timing-function: linear;
+      transition-delay: 1s;
     }
 
-    &.empty {
-      @extend %centering;
-      flex-direction: column;
-      padding: 1*$large-gap 3*$large-gap 5*$large-gap 3*$large-gap;
-      color: white;
-      text-align: center;
+    #app-name {
+      position: absolute;
+      left: 2.5rem;
+      top: 0.75rem;
+    }
 
-      > :first-child { font: 2rem 'Cinzel'; }
-      > :last-child  { font: 1rem 'Cinzel'; }
+    button {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.25rem;
     }
   }
 
-  .footer {
-    height: $footer-height;
-
-    .button {
-      height: 2rem;
-      font: 1rem 'Cinzel';
-      margin-bottom: $small-gap;
+  &.init .header {
+    height: 100vh;
+    #app-name, button {
+      opacity: 0;
     }
 
-    .links {
-      display: flex;
-      padding: 0 $large-gap;
-      justify-content: space-between;
-
-      .link {
-        float: right;
-        font: 1rem 'Cinzel';
-        > svg { vertical-align: middle; }
-      }
+    .logo {
+      top: calc(50vh - 4.6rem);
+      left: calc(50vw - 4rem);
+      height: 8rem;
+      aspect-ratio: 1;
     }
+  }
 
+  &:not(.init) .header {
+    height: 3rem;
+    .logo {
+      height: 1.5rem;
+      top: 0.75rem;
+      left: 0.75rem;
+    }
   }
 }

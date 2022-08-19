@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import { FaRegSun } from 'react-icons/fa'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 import Customization from './customization'
 import DangerZone from './danger-zone'
@@ -27,7 +27,7 @@ export default function CharacterSettings ({ character, onChange }) {
   const custom = character.plans.every(plan => character.settings !== plan.name)
 
   return <div className='settings'>
-    <FaRegSun onClick={toggle} />
+    <MoreVertIcon onClick={toggle} />
     <Modal className='settings' isOpen={showing} onRequestClose={toggle}>
       {character.plans.map(plan => <Plan selected={character.settings === plan.name} key={plan.name} name={plan.name} description={plan.description} onClick={async () => await set(plan.name)} />)}
       <Customization.Button selected={custom} onClick={async () => await set({})}/>

@@ -63,7 +63,8 @@ export function WithCharacters ({ children }) {
     setCharacters(await parseCharacters(characterJsons))
   })() }, [user, rules, characterJsons, parseCharacters])
 
-  if (!characters) return <Loader className='home page' />
+  if (!characters)
+    return <Loader className='home page' />
 
   return <CharactersContext.Provider value={characters}>{children}</CharactersContext.Provider>
 }

@@ -1,7 +1,3 @@
-import React from 'react'
-import equal from 'fast-deep-equal/es6/react'
-
-
 export default function FieldChoice ({ choice, builder, onChoice, control }) {
   return <Options options={builder.playbook.fields[choice.field]} control={control} />
 }

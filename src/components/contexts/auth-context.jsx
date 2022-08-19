@@ -13,7 +13,7 @@ const GOOGLE_CLIENT_ID = '978183971965-qa08agsv6eid4opprucba6hv4mbq5ovn.apps.goo
 export function WithAuth ({ appId, children }) {
   const [app, setApp] = useState(new Realm.App(appId))
   const [currentUser, setCurrentUser] = useState(app.currentUser);
-  const [view, setView] = useState('login')
+  const [view, setView] = useState()
   const [resetingPassword, setResettingPassword] = useState(false)
   const history = useHistory()
 
@@ -29,10 +29,23 @@ export function WithAuth ({ appId, children }) {
   }, [appId])
 
   useEffect(() => {
+    if (!currentUser) {
+      initGoogleLogin()
+    }
+  }, [currentUser])
+
+  function initGoogleLogin () {
     /* global google */
     google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: loginWithGoogle })
     google.accounts.id.renderButton(document.getElementById('google-login'), { theme: 'outline', size: 'large' })
-  })
+  }
+
+  function changeView (newView) {
+    if (newView === 'login') {
+      initGoogleLogin()
+    }
+    setView(newView)
+  }
 
   async function logIn(credential) {
     await app.logIn(credential)
@@ -60,7 +73,7 @@ export function WithAuth ({ appId, children }) {
 
   async function forgotPassword ({ email }) {
     await app.emailPasswordAuth.sendResetPasswordEmail({ email })
-    setView('login')
+    changeView('login')
   }
 
   async function resetPassword ({ password }) {
@@ -78,18 +91,18 @@ export function WithAuth ({ appId, children }) {
   const views = {
     signup: [
       <Form id='signup' key='signup-form' title='Signup' submit={signup} type={{ email: 'email', password: 'password', confirmation: 'confirmation' }} />,
-      <div className='link' key='login-link' onClick={() => setView('signup')}>I already have a user</div>
+      <div className='link' key='login-link' onClick={() => changeView('signup')}>I already have a user</div>
     ],
     login: [
       <Form id='login' key='login-form' title='Login' submit={loginWithEmailAndPassword} type={{ email: 'email', password: 'password' }} />,
       <div id='google-login' key='google-login'></div>,
-      <div className='link' key='signup-link' onClick={() => setView('signup')}>Sign up</div>,
-      <div className='link' key='forgot-password' onClick={() => setView('forgotPassword')}>Forgot my password</div>
+      <div className='link' key='signup-link' onClick={() => changeView('signup')}>Sign up</div>,
+      <div className='link' key='forgot-password' onClick={() => changeView('forgotPassword')}>Forgot my password</div>
     ],
     forgotPassword: [
       <Form id='login' key='login-form' title='Reset Password' submitText='Send Reset Email' submit={forgotPassword} type={{ email: 'email' }} />,
-      <div className='link' key='signup-link' onClick={() => setView('signup')}>Let's just signup a new user</div>,
-      <div className='link' key='login-link' onClick={() => setView('login')}>I remembered!</div>
+      <div className='link' key='signup-link' onClick={() => changeView('signup')}>Let's just signup a new user</div>,
+      <div className='link' key='login-link' onClick={() => changeView('login')}>I remembered!</div>
     ]
   }
 
