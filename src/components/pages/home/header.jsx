@@ -10,18 +10,20 @@ import MenuItem from '@mui/material/MenuItem'
 import { useAuth } from '../../contexts/auth-context'
 import Logo from '../../presentation/logo'
 
-export default function Header () {
-  const [open, setOpen] = useState(false)
+export default function Header ({ graveyardControl }) {
+  const { logOut } = useAuth()
+  const [menuAnchor, setMenuAnchor] = useState(null)
+  const [graveyard, setGraveyard] = graveyardControl
 
   return <AppBar className='header'>
     <Toolbar>
       <Logo />
       <div id='app-name'>Characters</div>
-      <IconButton><MoreVertIcon/></IconButton>
-      <Menu id='menu-appbar' open={open}>
-        <MenuItem>Graveyard</MenuItem>
+      <IconButton onClick={event => setMenuAnchor(event.currentTarget)}><MoreVertIcon/></IconButton>
+      <Menu id='menu-appbar' anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+        <MenuItem onClick={() => setGraveyard(!graveyard)}>{graveyard ?  'Back' : 'Graveyard'}</MenuItem>
         <MenuItem>About</MenuItem>
-        <MenuItem><LogoutIcon /> Logout</MenuItem>
+        <MenuItem onClick={logOut}><LogoutIcon /> Logout</MenuItem>
       </Menu>
     </Toolbar>
   </AppBar>

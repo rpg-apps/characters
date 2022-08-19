@@ -30,7 +30,7 @@ export default function Home (props) {
 
   const filteredCharacters = characters.filter(character => character.alive === !graveyard)
   const content = filteredCharacters.length ?
-    filteredCharacters.map((character, index) => <Character character={character} ui='character-card' Component={Link} key={index} to={`/character/${character.id}`}/>)
+    filteredCharacters.map((character, index) => graveyard ? <Character character={character} ui='character-card' className='dead' key={index} to={`/character/${character.id}`}/> : <Character character={character} ui='character-card' Component={Link} key={index} to={`/character/${character.id}`}/>)
     :
     <div className='empty characters'>
       <div className='primary'>No one is here</div>
@@ -38,10 +38,10 @@ export default function Home (props) {
     </div>
 
   return <div className={`home page ${init ? 'init' : ''}`}>
-    <Header />
-    {/*<div className='characters'>
+    <Header graveyardControl={[graveyard, setGraveyard]} />
+    <div className='characters'>
       {content}
-    </div>*/}
-    {/*<Footer />*/}
+    </div>
+    <Footer />
   </div>
 }

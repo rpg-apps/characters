@@ -3,24 +3,7 @@
   flex-direction: column;
 
   .header {
-    transition: height 1s linear;
     position: relative;
-
-    .logo {
-      position: absolute;
-      aspect-ratio: 1;
-      transition-property: top, left, height;
-      transition-duration: 1s;
-      transition-timing-function: linear;
-    }
-
-    #app-name, button {
-      opacity: 1;
-      transition-property: opacity;
-      transition-duration: 1s;
-      transition-timing-function: linear;
-      transition-delay: 1s;
-    }
 
     #app-name {
       position: absolute;
@@ -35,18 +18,66 @@
     }
   }
 
-  &.init .header {
-    height: 100vh;
-    #app-name, button {
-      opacity: 0;
+  .characters {
+    flex-grow: 1;
+    padding: 1rem;
+
+    .character {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 8rem;
+      padding: 1rem;
+      background: white;
+      margin-bottom: 1rem;
+    }
+  }
+
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  /* Initialization animation */
+
+  .header {
+    transition: height 1s linear;
+    .logo {
+      position: absolute;
+      aspect-ratio: 1;
+      transition-property: top, left, height;
+      transition-duration: 1s;
+      transition-timing-function: linear;
+    }
+  }
+
+  .header #app-name, .header button, .characters, footer {
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+    transition-timing-function: linear;
+    transition-delay: 1s;
+  }
+
+  &.init {
+    .header {
+      height: 100vh;
+
+      .logo {
+        top: calc(50vh - 4.6rem);
+        left: calc(50vw - 4rem);
+        height: 8rem;
+        aspect-ratio: 1;
+      }
     }
 
-    .logo {
-      top: calc(50vh - 4.6rem);
-      left: calc(50vw - 4rem);
-      height: 8rem;
-      aspect-ratio: 1;
-    }
+    .header #app-name, .header button, .characters, footer { opacity: 0; }
   }
 
   &:not(.init) .header {
