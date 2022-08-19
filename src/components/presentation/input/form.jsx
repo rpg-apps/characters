@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 
 import Input from './index'
 
@@ -9,6 +11,8 @@ export default function Form ({ id, title, type, submit, submitClass, submitText
   return <form id={id}>
     <div className='title'>{title}</div>
     <Input value={value} type={type} onChange={(data) => setValue(data)} />
-    <div className={`${submitClass} primary button`} onClick={() => submit(value)}>{submitText || title}</div>
+    <Box sx={{ textAlign: 'center', marginTop: '1rem' }}>
+      <Button variant='contained' className={submitClass} onClick={() => submit(value)}>{submitText || title}</Button>
+    </Box>
   </form>
 }

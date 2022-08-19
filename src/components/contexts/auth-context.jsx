@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from 'react'
 import { useHistory } from 'react-router'
 import * as Realm from 'realm-web'
+import Button from '@mui/material/Button'
 
 import Form from '../presentation/input/form'
 
@@ -24,15 +25,9 @@ export function WithAuth ({ appId, children }) {
     }
   }, [setResettingPassword])
 
-  useEffect(() => {
-    setApp(new Realm.App(appId))
-  }, [appId])
+  useEffect(() => setApp(new Realm.App(appId)), [appId])
 
-  useEffect(() => {
-    if (!currentUser) {
-      initGoogleLogin()
-    }
-  }, [currentUser])
+  useEffect(() => changeView('login'), [currentUser])
 
   function initGoogleLogin () {
     /* global google */
@@ -41,10 +36,10 @@ export function WithAuth ({ appId, children }) {
   }
 
   function changeView (newView) {
-    if (newView === 'login') {
-      initGoogleLogin()
-    }
     setView(newView)
+    if (newView === 'login') {
+      setTimeout(initGoogleLogin)
+    }
   }
 
   async function logIn(credential) {
@@ -91,18 +86,24 @@ export function WithAuth ({ appId, children }) {
   const views = {
     signup: [
       <Form id='signup' key='signup-form' title='Signup' submit={signup} type={{ email: 'email', password: 'password', confirmation: 'confirmation' }} />,
-      <div className='link' key='login-link' onClick={() => changeView('signup')}>I already have a user</div>
+      <div className='links' key='links'>
+        <Button variant='text' onClick={() => changeView('login')}>I already have a user</Button>
+      </div>
     ],
     login: [
       <Form id='login' key='login-form' title='Login' submit={loginWithEmailAndPassword} type={{ email: 'email', password: 'password' }} />,
       <div id='google-login' key='google-login'></div>,
-      <div className='link' key='signup-link' onClick={() => changeView('signup')}>Sign up</div>,
-      <div className='link' key='forgot-password' onClick={() => changeView('forgotPassword')}>Forgot my password</div>
+      <div className='links' key='links'>
+        <Button variant='text' onClick={() => changeView('signup')}>Sign up</Button>
+        <Button variant='text' onClick={() => changeView('forgotPassword')}>Forgot my password</Button>
+      </div>
     ],
     forgotPassword: [
       <Form id='login' key='login-form' title='Reset Password' submitText='Send Reset Email' submit={forgotPassword} type={{ email: 'email' }} />,
-      <div className='link' key='signup-link' onClick={() => changeView('signup')}>Let's just signup a new user</div>,
-      <div className='link' key='login-link' onClick={() => changeView('login')}>I remembered!</div>
+      <div className='links' key='links'>
+        <Button variant='text' onClick={() => changeView('signup')}>Let's just signup a new user</Button>
+        <Button variant='text' onClick={() => changeView('login')}>I remembered!</Button>
+      </div>
     ]
   }
 

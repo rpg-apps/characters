@@ -1,6 +1,7 @@
 import env from 'react-dotenv'
 
 import './App.scss'
+import './css/auth.scss'
 
 import DataProvider from './components/contexts'
 import Router from './components/pages'
