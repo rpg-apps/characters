@@ -5,6 +5,7 @@ export default function OptionsChoice ({ title, options, onChoice }) {
     onChoice(options[0])
     return ''
   }
+
   return [
     <div key='title' className='title'>{title}</div>,
     <div key='options' className='options'>

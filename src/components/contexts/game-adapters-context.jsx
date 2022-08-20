@@ -13,7 +13,7 @@ export const useAdapters = () => useContext(GameAdaptersContext)
 
 export const useSupportedRulebooks = () => {
   const adapters = useContext(GameAdaptersContext)
-  return adapters.map(adapter => `${adapter.game} ${adapter.rulebook}`)
+  return Object.entries(adapters).reduce((rulebooks, [game, gameRulebooks]) => rulebooks.concat(Object.keys(gameRulebooks).map(rulebook => `${game} ${rulebook}`)), [])
 }
 
 export const mergeAdapters = adapters => {

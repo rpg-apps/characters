@@ -8,6 +8,7 @@ import { useCharacters } from '../../contexts/characters-context'
 import { useSupportedRulebooks } from '../../contexts/game-adapters-context'
 import { useProdcedureUI } from '../../hooks/procedure-ui'
 import OptionsChoice from './options-choice'
+import PrgoressMenu from './progress-menu'
 import Loader from '../../presentation/loader'
 import Choice from './choice'
 
@@ -52,7 +53,7 @@ export default function New () {
   }
 
   if (ui.status && ui.content) {
-    return <Page className='new game'>{ui.content}</Page>
+    return <Page className='new game' step={3}>{ui.content}</Page>
   }
 
   if (loading) {
@@ -60,21 +61,26 @@ export default function New () {
   }
 
   if (!builder) {
-    return <Page className='choose game'>
+    return <Page className='choose game' step={0}>
       <OptionsChoice title='choose game' options={supportedRulebooks} onChoice={initializeBuilder} />
     </Page>
   }
 
   if (!choice) {
-    return <Page className={`choose playbook rules ${builder.rulebook.rulebooks.join(' ')}`}>
+    return <Page className={`choose playbook rules ${builder.rulebook.rulebooks.join(' ')}`} step={1}>
       <OptionsChoice title='choose playbook' options={builder.playbookOptions()} onChoice={start} />
     </Page>
   }
 
-  return <Page className={builder.rulebook.rulebooks.join(' ')}>
+  return <Page className={builder.rulebook.rulebooks.join(' ')} step={2}>
     <Choice choice={choice} builder={builder} onChoice={update} />
   </Page>
 }
 
-function Page ({ children, className='' }) { return <div className={`new page ${className}`}>{children}</div> }
+function Page ({ children, className='', step=0 }) {
+  return <div className={`new page ${className}`}>
+    {children}
+    <PrgoressMenu steps={6} step={step} />
+  </div>
+}
 

@@ -7,7 +7,6 @@ import { useCharacters } from '../../contexts/characters-context'
 import Footer from './footer'
 import Header from './header'
 import Character from '../../presentation/character'
-import Logo from '../../presentation/logo'
 
 const HOME_EMPTY_MESSAGE = 'Maybe create a character instead of staring at an empty page?'
 const GRAVEYARD_EMPTY_MESSAGE = 'Isn\'t it a good thing no one died?'
@@ -30,7 +29,7 @@ export default function Home (props) {
 
   const filteredCharacters = characters.filter(character => character.alive === !graveyard)
   const content = filteredCharacters.length ?
-    filteredCharacters.map((character, index) => graveyard ? <Character character={character} ui='character-card' className='dead' key={index} to={`/character/${character.id}`}/> : <Character character={character} ui='character-card' Component={Link} key={index} to={`/character/${character.id}`}/>)
+    filteredCharacters.map((character, index) => graveyard ? <Character character={character} ui='character-card' className='dead' onClick={() => revive(character)} key={index} to={`/character/${character.id}`}/> : <Character character={character} ui='character-card' Component={Link} key={index} to={`/character/${character.id}`}/>)
     :
     <div className='empty characters'>
       <div className='primary'>No one is here</div>
