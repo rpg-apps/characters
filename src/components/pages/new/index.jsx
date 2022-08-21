@@ -1,86 +1,28 @@
-import React, { useState } from 'react'
-import { useHistory } from 'react-router'
+import { useState } from 'react'
 
 import '../../../css/pages/new.scss'
 
-import { useRules } from '../../contexts/rules-context'
-import { useCharacters } from '../../contexts/characters-context'
-import { useSupportedRulebooks } from '../../contexts/game-adapters-context'
-import { useProdcedureUI } from '../../hooks/procedure-ui'
-import OptionsChoice from './options-choice'
 import PrgoressMenu from './progress-menu'
 import Loader from '../../presentation/loader'
-import Choice from './choice'
+import Step from './step'
 
-// TODO add UI for post-character-creation choices.
 export default function New () {
-  const rules = useRules()
-  const history = useHistory()
-  const characters = useCharacters()
-
   const [loading, setLoading] = useState(false)
-  const [builder, setBuilder] = useState()
-  const [choice, setChoice] = useState()
+  const [steps, setSteps] = useState(['game', 'playbook'])
+  const [stepIndex, setStepIndex] = useState(0)
+  const [value, setValue] = useState(undefined)
 
-  const ui = useProdcedureUI(() => builder.character)
-  const supportedRulebooks = useSupportedRulebooks()
+  const next = () => setStepIndex(stepIndex + 1)
+  const back = () => setStepIndex(stepIndex - 1)
 
-  const initializeBuilder = async rulebook => {
-    setBuilder((await rules.get([rulebook])).characters.builder)
-  }
-
-  const start = playbook => {
-    builder.start(playbook)
-    builder.character.save = () => {}
-    setChoice(builder.choice)
-  }
-
-  const update = value => {
-    builder.choose(value)
-    if (builder.choice) {
-      setChoice(builder.choice)
-    } else {
-      finish()
-    }
-  }
-
-  const finish = async () => {
-    setLoading(true)
-    await builder.finish(ui)
-    const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
-    builder.clear()
-    history.push(`/character/${id}`)
-  }
-
-  if (ui.status && ui.content) {
-    return <Page className='new game' step={3}>{ui.content}</Page>
-  }
+  const step = steps[stepIndex]
 
   if (loading) {
     return <Loader className='new page' />
   }
 
-  if (!builder) {
-    return <Page className='choose game' step={0}>
-      <OptionsChoice title='choose game' options={supportedRulebooks} onChoice={initializeBuilder} />
-    </Page>
-  }
-
-  if (!choice) {
-    return <Page className={`choose playbook rules ${builder.rulebook.rulebooks.join(' ')}`} step={1}>
-      <OptionsChoice title='choose playbook' options={builder.playbookOptions()} onChoice={start} />
-    </Page>
-  }
-
-  return <Page className={builder.rulebook.rulebooks.join(' ')} step={2}>
-    <Choice choice={choice} builder={builder} onChoice={update} />
-  </Page>
-}
-
-function Page ({ children, className='', step=0 }) {
-  return <div className={`new page ${className}`}>
-    {children}
-    <PrgoressMenu steps={6} step={step} />
+  return <div className='new page'>
+    <Step step={step} control={[value, setValue]} />
+    <PrgoressMenu steps={steps.length} step={stepIndex} back={step.back} next={step.next} />
   </div>
 }
-

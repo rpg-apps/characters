@@ -12,8 +12,6 @@ export default function Home (props) {
 
   useEffect(() => { setTimeout(() => setInit(false), 0) }, [])
 
-  const toggleGraveyard = () => setGraveyard(!graveyard)
-
   return <div className={`home page ${init ? 'init' : ''}`}>
     <Header graveyardControl={[graveyard, setGraveyard]} />
     <CharactersList graveyard={graveyard} />

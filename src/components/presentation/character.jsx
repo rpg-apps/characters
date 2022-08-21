@@ -20,7 +20,7 @@ const calculate = async (schema, character) => {
   }
 }
 
-export default function Character ({ character, ui, Component="div", ...props }) {
+export default function Character ({ character, ui, Component='div', ...props }) {
   const [characterComponent, setCharacterComponent] = useState(null)
 
   useEffect(() => {
