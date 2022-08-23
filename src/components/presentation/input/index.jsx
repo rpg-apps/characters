@@ -8,7 +8,6 @@ export default function Input ({ value='', type, onChange=()=>{}, layout=Layout.
   const adapter = generateAdapter(type, ROOT_SCOPE, layout)
   const { change, errors } = useErrors(adapter, onChange, ROOT_SCOPE)
 
-  console.log(adapter.uiSchema)
   return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
                     renderers={materialRenderers}     cells={materialCells} ajv={ajv}
                     data={adapter.value(value)}       onChange={change}

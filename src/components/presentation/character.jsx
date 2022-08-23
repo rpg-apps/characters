@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import ReactJsonSchema from 'react-json-schema'
 import { camelCase } from 'change-case'
+import { isPlainObject } from 'is-plain-object'
 
 import Loader from './loader'
 
@@ -13,7 +14,7 @@ export function Character ({ character, ui, Component='div', className, ...props
 }
 
 export function Uncalculated ({ value, component = 'div' }) {
-  return <Processed schema={value.constructor === String ? { text: value } : value} component={component} preprocess={async schema => {
+  return <Processed schema={isPlainObject(value) ? value : { text: value }} component={component} preprocess={async schema => {
       preprocess(schema)
       return Schema.parseSchema(schema)
   }} />
