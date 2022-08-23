@@ -6,7 +6,7 @@ import ChoiceStep from './choice-step'
 export default forwardRef(function PlaybookStep ({ value: builder, update }, ref) {
   const [playbook, setPlaybook] = useState(undefined)
 
-  useEffect(update, [playbook, update])
+  useEffect(update, [playbook])
 
   useImperativeHandle(ref, () => ({
     canBack: true,

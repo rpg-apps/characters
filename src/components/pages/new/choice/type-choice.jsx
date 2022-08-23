@@ -20,11 +20,12 @@ function Recommendations ({ recommendations, control }) {
   if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) return ''
 
   if (Array.isArray(recommendations[0])) {
-    const update = ({ value }) => {
+    const update = (value) => {
+      const previousValue = val || ''
       const group = recommendations.find(g => g.includes(value))
-      const newValue = group.filter(item => val.includes(item)).reduce((result, item) => {
+      const newValue = group.filter(item => previousValue.includes(item)).reduce((result, item) => {
         return result.replace(item, '')
-      }, val)
+      }, previousValue)
         .replace(/^(,\s*)*/, '')
         .replace(/(,\s*)*$/, '')
         .replace(/,\s*(,\s*)+/, ', ')
@@ -34,7 +35,11 @@ function Recommendations ({ recommendations, control }) {
     return <div className='recommendations'>
       <div className='title'>recommendations</div>
       <div className='options'>
-        {recommendations.map((recommendationCollection, index) => '')}
+        {recommendations.map((recommendationCollection, index) => <div key={index} className='recommendations collection'>
+          {recommendationCollection.map((recommendation, index) => <Button key={index} variant='contained' onClick={() => update(recommendation)}>
+            <Uncalculated value={recommendation} />
+          </Button>)}
+        </div>)}
       </div>
     </div>
   }

@@ -52,11 +52,26 @@
     &.choice {
       .input {
         padding: 0 1rem;
+
+        .MuiInputBase-multiline {
+          align-items: flex-start;
+        }
       }
 
       .recommendations {
         width: 100%;
         height: calc(100% - 3rem);
+
+        .recommendations.collection {
+          width: calc(50% - 1rem);
+          height: unset !important;
+          display: flex;
+          flex-direction: column;
+          justify-content: top;
+          align-items: stretch;
+          padding: 1rem;
+          gap: 1rem;
+        }
 
         .options {
           width: 100%;
