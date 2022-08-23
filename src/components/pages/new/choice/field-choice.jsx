@@ -1,4 +1,4 @@
-export default function FieldChoice ({ choice, builder, onChoice, control }) {
+export default function FieldChoice ({ choice, builder, control }) {
   return <Options options={builder.playbook.fields[choice.field]} control={control} />
 }
 

@@ -10,28 +10,69 @@
     font-size: 2rem;
   }
 
-  .options {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: start;
-    padding: 1rem;
+  .step {
+    width: 100%;
+    height: calc(100% - 3rem);
 
-    > * {
+    > *:not(.title) {
       width: 100%;
-      cursor: pointer;
+      height: calc(100% - 3rem);
     }
 
-    .option.selected {
-      box-shadow: 0px 0px 3px 3px #5fbdf9;
+    &.options .options {
+      flex-grow: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      padding: 1rem;
+
+      .option {
+        width: 100%;
+        cursor: pointer;
+        margin-bottom: 1rem;
+
+        &.selected { box-shadow: 0px 0px 3px 3px #5fbdf9; }
+
+        .rulebook.card {
+          width: 100%;
+          height: 8rem;
+          background: white
+        }
+
+        .playbook.card {
+          width: 100%;
+          height: 5rem;
+          background: white
+        }
+      }
     }
 
-    .rulebook.card {
-      width: 100%;
-      height: 8rem;
-      background: white
+    &.choice {
+      .input {
+        padding: 0 1rem;
+      }
+
+      .recommendations {
+        width: 100%;
+        height: calc(100% - 3rem);
+
+        .options {
+          width: 100%;
+          height: calc(100% - 3rem);
+          overflow-y: auto;
+          overflow-x: hidden;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          padding: 1rem;
+
+          > * {
+            width: calc(33% - 0.67rem);
+          }
+        }
+      }
     }
   }
-
 }

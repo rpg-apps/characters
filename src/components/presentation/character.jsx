@@ -4,36 +4,61 @@ import { camelCase } from 'change-case'
 
 import Loader from './loader'
 
-const CharacterSchema = new ReactJsonSchema()
+const Schema = new ReactJsonSchema()
 
-const calculate = async (schema, character) => {
-  if (schema.children) {
-    for (let subschema of schema.children) {
-      await calculate(subschema, character)
-    }
-  }
-
-  schema.component = schema.component || 'div'
-
-  if (schema.value) {
-    schema.text = await character.get(schema.value, { })
-  }
+export function Character ({ character, ui, Component='div', className, ...props }) {
+  return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')}`}>
+    <Calculated character={character} component={ui} />
+  </Component>
 }
 
-export default function Character ({ character, ui, Component='div', ...props }) {
-  const [characterComponent, setCharacterComponent] = useState(null)
+export function Uncalculated ({ value, component = 'div' }) {
+  return <Processed schema={value.constructor === String ? { text: value } : value} component={component} preprocess={async schema => {
+      preprocess(schema)
+      return Schema.parseSchema(schema)
+  }} />
+}
 
-  useEffect(() => {
-    (async () => {
-      const schema = character.adapter[camelCase(ui)]
-      await calculate(schema, character)
-      setCharacterComponent(CharacterSchema.parseSchema(schema))
-    }) ()
-  }, [character, ui])
+export function Calculated ({ character, component = 'div' }) {
+  const schema = character.adapter.components[camelCase(component)]
+  return <Processed schema={schema} component={component} preprocess={async schema => {
+      preprocess(schema)
+      await calcaulte(schema, character)
+      return Schema.parseSchema(schema)
+  }} />
+}
 
-  if (!characterComponent) {
+function Processed ({ schema, component = 'div', preprocess }) {
+  const [processedComponent, setProcessedComponent] = useState(null)
+
+  useEffect(() => { (async () => { setProcessedComponent(await preprocess(schema)) }) () }, [schema, component, preprocess])
+
+  if (!processedComponent) {
     return <Loader />
   }
 
-  return <Component {...props} className={`character ${props.className} ${ui} ${character.rulebooks.join(' ')}`}>{characterComponent}</Component>
+  return processedComponent
+}
+
+const recursivly = async (schema, callback) => {
+  if (schema.children) {
+    for (let subschema of schema.children) {
+      await recursivly(subschema, callback)
+    }
+  }
+
+  await callback(schema)
+  return schema
+}
+
+const calcaulte = async (schema, character) => {
+  return await recursivly(schema, async subschema => {
+    if (subschema.value) subschema.text = await character.get(subschema.value, { })
+  })
+}
+
+const preprocess = async (schema, defaultComponent = 'div') => {
+  return await recursivly(schema, async subschema => {
+    schema.component = schema.component || defaultComponent
+  })
 }

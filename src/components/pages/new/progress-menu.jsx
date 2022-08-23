@@ -6,8 +6,8 @@ import CheckIcon from '@mui/icons-material/Check'
 
 const DO_NOTHING = () => {}
 
-export default function PrgoressMenu ({ steps, step, canNext = true, canPrevious = true, next = DO_NOTHING, back = DO_NOTHING }) {
-  const backButton = <Button size="small" onClick={back} disabled={!canPrevious}><ArrowLeftIcon /> Back</Button>
+export default function PrgoressMenu ({ steps, step, canNext = false, canBack = false, next = DO_NOTHING, back = DO_NOTHING }) {
+  const backButton = <Button size="small" onClick={back} disabled={!canBack}><ArrowLeftIcon /> Back</Button>
   const nextButton = (() => {
     if (step === steps.length - 1)
       return <Button size="small" onClick={next} disabled={!canNext}>Finish <CheckIcon /></Button>

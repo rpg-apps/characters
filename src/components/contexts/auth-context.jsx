@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, createContext } from 'react'
+import React, { useState, useEffect, useCallback, useContext, createContext } from 'react'
 import { useHistory } from 'react-router'
 import * as Realm from 'realm-web'
 import Button from '@mui/material/Button'
@@ -18,6 +18,19 @@ export function WithAuth ({ appId, children }) {
   const [resetingPassword, setResettingPassword] = useState(false)
   const history = useHistory()
 
+  const initGoogleLogin = useCallback(() => {
+    /* global google */
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: loginWithGoogle })
+    google.accounts.id.renderButton(document.getElementById('google-login'), { theme: 'outline', size: 'large' })
+  }, [])
+
+  const changeView = useCallback(newView => {
+    setView(newView)
+    if (newView === 'login') {
+      setTimeout(initGoogleLogin)
+    }
+  }, [setView, initGoogleLogin])
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('token') && params.get('tokenId')) {
@@ -27,20 +40,7 @@ export function WithAuth ({ appId, children }) {
 
   useEffect(() => setApp(new Realm.App(appId)), [appId])
 
-  useEffect(() => changeView('login'), [currentUser])
-
-  function initGoogleLogin () {
-    /* global google */
-    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: loginWithGoogle })
-    google.accounts.id.renderButton(document.getElementById('google-login'), { theme: 'outline', size: 'large' })
-  }
-
-  function changeView (newView) {
-    setView(newView)
-    if (newView === 'login') {
-      setTimeout(initGoogleLogin)
-    }
-  }
+  useEffect(() => changeView('login'), [currentUser, changeView])
 
   async function logIn(credential) {
     await app.logIn(credential)

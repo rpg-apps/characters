@@ -1,7 +1,7 @@
 import { Link, useHistory } from 'react-router-dom'
 
 import { useCharacters } from '../../contexts/characters-context'
-import Character from '../../presentation/character'
+import { Character } from '../../presentation/character'
 
 const HOME_EMPTY_MESSAGE = 'Maybe create a character instead of staring at an empty page?'
 const GRAVEYARD_EMPTY_MESSAGE = 'Isn\'t it a good thing no one died?'

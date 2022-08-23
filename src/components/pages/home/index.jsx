@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 
 import '../../../css/pages/home.scss'
 
+import Page from '../../presentation/page'
+
 import Header from './header'
 import CharactersList from './characters-list'
 import Footer from './footer'
@@ -12,9 +14,9 @@ export default function Home (props) {
 
   useEffect(() => { setTimeout(() => setInit(false), 0) }, [])
 
-  return <div className={`home page ${init ? 'init' : ''}`}>
+  return <Page name={`home ${init ? 'init' : ''}`}>
     <Header graveyardControl={[graveyard, setGraveyard]} />
     <CharactersList graveyard={graveyard} />
     <Footer />
-  </div>
+  </Page>
 }

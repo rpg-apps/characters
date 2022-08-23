@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function AssignmentChoice ({ builder, choice, onChoice, control }) {
+export default function AssignmentChoice ({ builder, choice, control }) {
   const [value, setValue] = control
   const [selection, setSelection] = useState({})
 

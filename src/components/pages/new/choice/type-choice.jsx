@@ -1,11 +1,16 @@
 import React from 'react'
+import Button from '@mui/material/Button'
 
 import Input from '../../../presentation/input'
+import { Uncalculated } from '../../../presentation/character'
 
-// CONTINUE HERE!! Type choice is not usable since the value in the jsonforms is returned as object, and not as a basic property.
-export default function TypeChoice ({ builder, choice, onChoice, control }) {
-  return <div className='input'>
-    <Input.Controlled type={choice.type} control={control}/>
+export default function TypeChoice ({ builder, choice, control }) {
+  const [value, setValue] = control
+
+  return <div className='choice'>
+    <div className='input'>
+      <Input.Controlled type={{ [choice.name]: choice.type }} control={[{ [choice.name]: value }, data => setValue(data[choice.name])]}/>
+    </div>
     <Recommendations recommendations={builder.playbook.fields[choice.recommendations]} control={control}/>
   </div>
 }
@@ -29,10 +34,7 @@ function Recommendations ({ recommendations, control }) {
     return <div className='recommendations'>
       <div className='title'>recommendations</div>
       <div className='options'>
-        {recommendations.map((recommendationCollection, index) =>
-          <div key={index} className='recommendations-collection'>
-          </div>
-        )}
+        {recommendations.map((recommendationCollection, index) => '')}
       </div>
     </div>
   }
@@ -40,6 +42,7 @@ function Recommendations ({ recommendations, control }) {
   return <div className='recommendations'>
     <div className='title'>recommendations</div>
     <div className='options'>
+      {recommendations.map((recommendation, index) => <Button key={index} variant='contained' onClick={() => setValue(recommendation)}><Uncalculated value={recommendation} /></Button>)}
     </div>
   </div>
 }

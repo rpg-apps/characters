@@ -1,4 +1,4 @@
-
+import DungeonWorld from './dungeon-world';
 let adapters = []
-// assignment
+adapters = adapters.concat(DungeonWorld); // assignment
 export default adapters
