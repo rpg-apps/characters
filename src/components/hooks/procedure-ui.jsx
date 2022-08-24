@@ -10,8 +10,7 @@ const STATUS = {
 }
 
 export function useProdcedureUI (character) {
-  const [status, setStatus] = useState(undefined)
-  const [content, setContent] = useState(undefined)
+  const [state, setState] = useState({ status: undefined, content: undefined })
 
   const getCharacter = () => ((character instanceof Function) ? character() : character)
 
@@ -26,16 +25,17 @@ export function useProdcedureUI (character) {
   }
 
   const output = async (title, text) => {
-    setStatus(STATUS.OUTPUT)
-    setContent(<div className='ui'>
+    setState({
+      status: STATUS.OUTPUT,
+      content: <div className='ui'>
       <div className='title'>{title}</div>
       <div className='content'>{text}</div>
-    </div>)
+    </div>
+    })
   }
 
   const input = (title, type = 'text', { status, initialValue }) => {
     return new Promise(resolve => {
-      setStatus(status || STATUS.INPUT)
       type = findType(type) || type
 
       const update = value => {
@@ -45,10 +45,13 @@ export function useProdcedureUI (character) {
           exit()
         }
 
-        setContent(<div className='ui'>
-          <Input key='input' type={type} value={value} onChange={update} />
-          <div key='submit' className='primary button' onClick={save}>done</div>
-        </div>)
+        setState({
+          status: status || STATUS.INPUT,
+          content: <div className='ui'>
+            <Input key='input' type={type} value={value} onChange={update} />
+            <div key='submit' className='primary button' onClick={save}>done</div>
+          </div>
+        })
       }
 
       update(initialValue)
@@ -58,7 +61,6 @@ export function useProdcedureUI (character) {
   const choose = (title, options) => {
     const count = 2
     return new Promise(resolve => {
-      setStatus(STATUS.CHOOSE)
 
       const update = (value = [], option) => {
         value = (() => {
@@ -78,11 +80,14 @@ export function useProdcedureUI (character) {
           exit()
         }
 
-        setContent(<div className='ui'>
-        <div className={`options ${maxedOut ? 'maxed-out' : ''}`}>
-        </div>
-        <div key='submit' className='primary button' onClick={save}>done</div>
-      </div>)
+        setState({
+          status: STATUS.CHOOSE,
+          content: <div className='ui'>
+            <div className={`options ${maxedOut ? 'maxed-out' : ''}`}>
+            </div>
+            <div key='submit' className='primary button' onClick={save}>done</div>
+          </div>
+        })
       }
 
       update()
@@ -96,11 +101,10 @@ export function useProdcedureUI (character) {
   }
 
   const exit = () => {
-    setStatus(undefined)
-    setContent(undefined)
+    setState({ status: undefined, content: undefined })
   }
 
-  const ui = { status, output, input, choose, edit, content }
+  const ui = Object.assign({ output, input, choose, edit }, state)
 
   return ui
 }

@@ -26,16 +26,18 @@ export default function New () {
   const setValue = async value => setState({ value })
 
   const next = async () => {
-    if (stepRef.current.finish) return stepRef.current.finish()
-    const value = await stepRef.current.next()
-    const additionalSteps = stepRef.current.additionalSteps ? stepRef.current.additionalSteps() : []
+    const step = stepRef.current
+    if (step.finish) return step.finish()
+    const value = await step.next()
+    const additionalSteps = step.additionalSteps ? step.additionalSteps() : []
     const steps = state.steps.concat(additionalSteps)
     setState({ value, steps, index: state.index + 1 })
   }
   const back = async () => {
-    if (stepRef.current.cancel) return stepRef.current.cancel()
-    const value = await stepRef.current.back()
-    const additionalSteps = stepRef.current.additionalSteps ? stepRef.current.additionalSteps() : []
+    const step = stepRef.current
+    if (step.cancel) return step.cancel()
+    const value = await step.back()
+    const additionalSteps = step.additionalSteps ? step.additionalSteps() : []
     const steps = state.steps.filter(step => !additionalSteps.includes(step))
     setState({ value, steps, index: state.index - 1 })
   }

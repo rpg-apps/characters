@@ -132,8 +132,13 @@
           align-items: center;
           justify-content: space-evenly;
 
-          > * {
-            width: 100%;
+          .option {
+            width: 8rem;
+            text-align: center;
+
+            &.used {
+              background: var(--primary-color);
+            }
           }
         }
       }

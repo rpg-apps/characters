@@ -34,10 +34,11 @@ export default function AssignmentChoice ({ builder, choice, control }) {
     else                                            setSelection(newSelection)
   }
 
-  const selected = option => Object.keys(value || {}).includes(option) || Object.values(value || {}).includes(option)
+  const selected = option => selection.source === option || selection.target === option
+  const used = option => Object.keys(value || {}).includes(option) || Object.values(value || {}).includes(option)
 
   const handle = option => {
-    if (selected(option)) {
+    if (used(option)) {
       unassign(option)
     } else {
       select(option)
@@ -46,10 +47,10 @@ export default function AssignmentChoice ({ builder, choice, control }) {
 
   return <div className='selection'>
     <div className='source'>
-      {source.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} source`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
+      {source.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} ${used(option) ? 'used' : ''} option`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
     </div>
     <div className='target'>
-      {target.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} target`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
+      {target.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} ${used(option) ? 'used' : ''} option`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
     </div>
   </div>
 }

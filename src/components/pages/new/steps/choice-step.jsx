@@ -30,13 +30,18 @@ export default forwardRef(function GameStep ({ value: builder, update, setLoadin
     },
     back: () => { },
     finish: (builder.hasNexChoice() ? undefined : (async () => {
-              setLoading(true)
-              await builder.finish(ui)
-              const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
-              builder.clear()
-              history.push(`/character/${id}`)
-            }))
+      console.log('finishing')
+      await builder.finish(ui)
+      setLoading(true)
+      console.log('post builder')
+      const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
+      console.log('got id', id)
+      builder.clear()
+      history.push(`/character/${id}`)
+    }))
   }))
+
+  if (ui.status)  return ui.content
 
   return <div className={`choice step ${choice.name}`}>
     <div className='title'>{choice.name}</div>

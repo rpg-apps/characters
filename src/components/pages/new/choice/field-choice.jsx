@@ -12,7 +12,7 @@ function Options ({ options, control }) {
       setValue((Array.isArray(value) ? value : []).filter(item => !group.includes(item)).concat([option]))
     }
 
-    const selected = option => value.includes(option)
+    const selected = option => (value || []).includes(option)
 
     return <div className='options'>
       {options.map((optionsCollection, index) =>

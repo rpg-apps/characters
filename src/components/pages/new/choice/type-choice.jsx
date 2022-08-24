@@ -31,7 +31,7 @@ function Recommendations ({ recommendations, control }) {
       setValue(newValue.length > 0 ? `${newValue}, ${value}` : value)
     }
 
-    const selected = recommendation => val.includes(recommendation)
+    const selected = recommendation => (val || '').includes(recommendation)
 
     return <div className='recommendations'>
       <div className='title'>recommendations</div>
