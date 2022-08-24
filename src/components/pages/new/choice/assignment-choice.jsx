@@ -1,5 +1,3 @@
-import Button from '@mui/material/Button'
-
 import { useState } from 'react'
 import { Uncalculated } from '../../../presentation/character'
 
@@ -36,21 +34,22 @@ export default function AssignmentChoice ({ builder, choice, control }) {
     else                                            setSelection(newSelection)
   }
 
-  const handle = item => {
-    const val = value || {}
-    if (Object.keys(val).includes(item) || Object.values(val).includes(item)) {
-      unassign(item)
+  const selected = option => Object.keys(value || {}).includes(option) || Object.values(value || {}).includes(option)
+
+  const handle = option => {
+    if (selected(option)) {
+      unassign(option)
     } else {
-      select(item)
+      select(option)
     }
   }
 
   return <div className='selection'>
     <div className='source'>
-      {source.map(sourceOption => <Button variant='contained' onClick={() => handle(sourceOption)}><Uncalculated value={sourceOption} /></Button>)}
+      {source.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} source`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
     </div>
     <div className='target'>
-      {target.map(targetOption => <Button variant='contained' onClick={() => handle(targetOption)}><Uncalculated value={targetOption} /></Button>)}
+      {target.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} target`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
     </div>
   </div>
 }

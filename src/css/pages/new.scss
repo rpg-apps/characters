@@ -58,9 +58,18 @@
         }
       }
 
+      .recommendation, .option {
+        background: white;
+        padding: 1rem;
+        color: black;
+        cursor: pointer;
+
+        &.selected { box-shadow: 0px 0px 3px 3px #5fbdf9; }
+      }
+
       .recommendations {
         width: 100%;
-        height: calc(100% - 3rem);
+        height: calc(100% - 4rem);
 
         .recommendations.collection {
           width: calc(50% - 1rem);
@@ -80,11 +89,51 @@
           overflow-x: hidden;
           display: flex;
           flex-wrap: wrap;
+          flex-direction: row;
           gap: 1rem;
           padding: 1rem;
 
           > * {
             width: calc(33% - 0.67rem);
+          }
+        }
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+        overflow-y: auto;
+
+        .options-collection {
+          display: flex;
+          flex-direction: column;
+          padding: 1rem;
+          gap: 1rem;
+          justify-content: space-evenly;
+        }
+      }
+
+      .selection {
+        width: 100%;
+        height: calc(100% - 3rem);
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        gap: 3rem;
+        padding: 1rem;
+
+        .source, .target {
+          height: 100%;
+          width: calc(50% - 3rem);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-evenly;
+
+          > * {
+            width: 100%;
           }
         }
       }

@@ -1,5 +1,3 @@
-import Button from '@mui/material/Button'
-
 import { Uncalculated } from '../../../presentation/character'
 
 export default function FieldChoice ({ choice, builder, control }) {
@@ -14,21 +12,25 @@ function Options ({ options, control }) {
       setValue((Array.isArray(value) ? value : []).filter(item => !group.includes(item)).concat([option]))
     }
 
+    const selected = option => value.includes(option)
+
     return <div className='options'>
       {options.map((optionsCollection, index) =>
         <div key={index} className='options-collection'>
-          {optionsCollection.map((option, index) => <Button key={index} variant='contained' onClick={() => update(option)}>
+          {optionsCollection.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} option`} onClick={() => update(option)}>
             <Uncalculated value={option} />
-          </Button>)}
+          </div>)}
         </div>
       )}
     </div>
   }
 
+  const selected = option => (value === option)
+
   return <div className='options'>
-    {options.map((option, index) => <Button key={index} variant='contained' onClick={() => setValue(option)}>
+    {options.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} option`} onClick={() => setValue(option)}>
       <Uncalculated value={option} />
-    </Button>)}
+    </div>)}
   </div>
 }
 

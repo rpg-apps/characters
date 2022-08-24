@@ -1,5 +1,4 @@
 import React from 'react'
-import Button from '@mui/material/Button'
 
 import Input from '../../../presentation/input'
 import { Uncalculated } from '../../../presentation/character'
@@ -32,22 +31,26 @@ function Recommendations ({ recommendations, control }) {
       setValue(newValue.length > 0 ? `${newValue}, ${value}` : value)
     }
 
+    const selected = recommendation => val.includes(recommendation)
+
     return <div className='recommendations'>
       <div className='title'>recommendations</div>
       <div className='options'>
         {recommendations.map((recommendationCollection, index) => <div key={index} className='recommendations collection'>
-          {recommendationCollection.map((recommendation, index) => <Button key={index} variant='contained' onClick={() => update(recommendation)}>
+          {recommendationCollection.map((recommendation, index) => <div key={index} className={`${selected(recommendation) ? 'selected' : ''} option`} onClick={() => update(recommendation)}>
             <Uncalculated value={recommendation} />
-          </Button>)}
+          </div>)}
         </div>)}
       </div>
     </div>
   }
 
+  const selected = recommendation => (val === recommendation)
+
   return <div className='recommendations'>
     <div className='title'>recommendations</div>
     <div className='options'>
-      {recommendations.map((recommendation, index) => <Button key={index} variant='contained' onClick={() => setValue(recommendation)}><Uncalculated value={recommendation} /></Button>)}
+      {recommendations.map((recommendation, index) => <div key={index} className={`${selected(recommendation) ? 'selected' : ''} option`} onClick={() => setValue(recommendation)}><Uncalculated value={recommendation} /></div>)}
     </div>
   </div>
 }
