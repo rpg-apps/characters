@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactJsonSchema from 'react-json-schema'
-import { camelCase } from 'change-case'
+import { pascalCase } from 'change-case'
 import { isPlainObject } from 'is-plain-object'
 
 import Loader from './loader'
@@ -14,25 +14,24 @@ export function Character ({ character, ui, Component='div', className, ...props
 }
 
 export function Uncalculated ({ value, component = 'div' }) {
-  return <Processed schema={isPlainObject(value) ? value : { text: value }} component={component} preprocess={async schema => {
-      preprocess(schema)
+  return <Processed schema={{ text: value }} component={component} action={async schema => {
+      await preprocess(schema)
       return Schema.parseSchema(schema)
   }} />
 }
 
 export function Calculated ({ character, component = 'div' }) {
-  const schema = character.adapter.components[camelCase(component)]
-  return <Processed schema={schema} component={component} preprocess={async schema => {
-      preprocess(schema)
-      await calcaulte(schema, character)
-      return Schema.parseSchema(schema)
+  return <Processed schema={character.adapter.components[pascalCase(component)]} component={component} action={async schema => {
+    await calcaulte(schema, character)
+    await preprocess(schema)
+    return Schema.parseSchema(schema)
   }} />
 }
 
-function Processed ({ schema, component = 'div', preprocess }) {
+function Processed ({ schema, component = 'div', action }) {
   const [processedComponent, setProcessedComponent] = useState(null)
 
-  useEffect(() => { (async () => { setProcessedComponent(await preprocess(schema)) }) () }, [schema, component, preprocess])
+  useEffect(() => { (async () => { setProcessedComponent(await action(schema)) }) () }, [schema, component, preprocess])
 
   if (!processedComponent) {
     return <Loader />
@@ -42,13 +41,13 @@ function Processed ({ schema, component = 'div', preprocess }) {
 }
 
 const recursivly = async (schema, callback) => {
+  await callback(schema)
+
   if (schema.children) {
     for (let subschema of schema.children) {
-      await recursivly(subschema, callback)
-    }
+      await recursivly(subschema, callback)    }
   }
 
-  await callback(schema)
   return schema
 }
 
@@ -59,7 +58,14 @@ const calcaulte = async (schema, character) => {
 }
 
 const preprocess = async (schema, defaultComponent = 'div') => {
-  return await recursivly(schema, async subschema => {
-    schema.component = schema.component || defaultComponent
+  return await recursivly(schema, subschema => {
+    subschema.component = subschema.component || defaultComponent
+    if (Array.isArray(subschema.text)) {
+      subschema.children = (subschema.children || []).concat(subschema.text.map(child => ({ text: child })))
+      delete subschema.text
+    } else if (isPlainObject(subschema.text)) {
+      subschema.children = (subschema.children || []).concat(Object.entries(subschema.text).map(([key, value]) => ({ className: key, text: value })))
+      delete subschema.text
+    }
   })
 }

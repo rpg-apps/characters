@@ -14,6 +14,7 @@ const INITIAL_STEPS = [GameStep, PlaybookStep]
 
 export default function New () {
   const [state, update] = useState({ index: 0, value: undefined, steps: INITIAL_STEPS })
+  const [loading, setLoading] = useState(false)
   const stepRef = useRef()
   const forceUpdate = useForceUpdate()
   const setState = newState => update(Object.assign({}, state, newState))
@@ -39,8 +40,8 @@ export default function New () {
     setState({ value, steps, index: state.index - 1 })
   }
 
-  return <Page name='new'>
-    <Step value={state.value} update={forceUpdate} setValue={setValue} ref={stepRef} />
+  return <Page name='new' loading={loading}>
+    <Step value={state.value} update={forceUpdate} setValue={setValue} ref={stepRef} setLoading={setLoading} />
     <PrgoressMenu steps={state.steps.length + 1} step={state.index}
       next={next} back={back} canBack={stepRef.current?.canBack} canNext={stepRef.current?.canNext} />
   </Page>

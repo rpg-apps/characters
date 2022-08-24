@@ -1,17 +1,22 @@
 import { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 
+import { useCharacters } from '../../../contexts/characters-context'
+import { useProdcedureUI } from '../../../hooks/procedure-ui'
+
 import TypeChoice from '../choice/type-choice'
 import FieldChoice from '../choice/field-choice'
 import AssignmentChoice from '../choice/assignment-choice'
 
-const choices = { TypeChoice, FieldChoice, AssignmentChoice }
+const choiceComponents = { TypeChoice, FieldChoice, AssignmentChoice }
 
-export default forwardRef(function GameStep ({ value: builder, update }, ref) {
+export default forwardRef(function GameStep ({ value: builder, update, setLoading }, ref) {
   const [value, setValue] = useState()
   const history = useHistory()
+  const characters = useCharacters()
+  const ui = useProdcedureUI(() => builder.character)
   const choice = builder.choice
-  const ChoiceComponent = choices[choice.constructor.name]
+  const ChoiceComponent = choiceComponents[choice.constructor.name]
 
   useEffect(update, [value])
 
@@ -23,7 +28,14 @@ export default forwardRef(function GameStep ({ value: builder, update }, ref) {
       setValue(undefined)
       return builder
     },
-    back: () => { }
+    back: () => { },
+    finish: (builder.hasNexChoice() ? undefined : (async () => {
+              setLoading(true)
+              await builder.finish(ui)
+              const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
+              builder.clear()
+              history.push(`/character/${id}`)
+            }))
   }))
 
   return <div className={`choice step ${choice.name}`}>
