@@ -1,6 +1,6 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
-import OptionsStep from './options-step'
+import { Selection } from '../../../presentation/character/selection'
 import ChoiceStep from './choice-step'
 
 export default forwardRef(function PlaybookStep ({ value: builder, update }, ref) {
@@ -20,8 +20,7 @@ export default forwardRef(function PlaybookStep ({ value: builder, update }, ref
     additionalSteps: () => builder.playbook.rules.choices.map(() => ChoiceStep)
   }))
 
-  const PlaybookOption = ({ option }) => <div className={`playbook card ${option}`}></div>
-
-  return <OptionsStep className='playbook' title='choose a playbook' Option={PlaybookOption}
-    options={builder.playbookOptions()} select={setPlaybook} selected={pb => pb === playbook} />
+  return <Selection className='playbook step' title='choose a playbook' options={builder.playbookOptions()} select={setPlaybook} selected={pb => pb === playbook}>
+    {playbook => <div className={`playbook card ${playbook}`}></div>}
+  </Selection>
 })

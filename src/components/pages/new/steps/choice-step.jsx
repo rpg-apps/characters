@@ -30,12 +30,9 @@ export default forwardRef(function GameStep ({ value: builder, update, setLoadin
     },
     back: () => { },
     finish: (builder.hasNexChoice() ? undefined : (async () => {
-      console.log('finishing')
       await builder.finish(ui)
       setLoading(true)
-      console.log('post builder')
       const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
-      console.log('got id', id)
       builder.clear()
       history.push(`/character/${id}`)
     }))

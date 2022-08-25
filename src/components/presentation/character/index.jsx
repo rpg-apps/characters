@@ -3,35 +3,35 @@ import ReactJsonSchema from 'react-json-schema'
 import { pascalCase } from 'change-case'
 import { isPlainObject } from 'is-plain-object'
 
-import Loader from './loader'
+import Loader from '../loader'
 
 const Schema = new ReactJsonSchema()
 
 export function Character ({ character, ui, Component='div', className, ...props }) {
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')}`}>
-    <Calculated character={character} component={ui} />
+    <Calculated character={character} schemaName={ui} />
   </Component>
 }
 
-export function Uncalculated ({ value, component = 'div' }) {
-  return <Processed schema={{ text: value }} component={component} action={async schema => {
+export function Uncalculated ({ value }) {
+  return <Processed schema={{ text: value }} action={async schema => {
       await preprocess(schema)
       return Schema.parseSchema(schema)
   }} />
 }
 
-export function Calculated ({ character, component = 'div' }) {
-  return <Processed schema={character.adapter.components[pascalCase(component)]} component={component} action={async schema => {
+export function Calculated ({ character, schemaName }) {
+  return <Processed schema={character.adapter.components[pascalCase(schemaName)]} action={async schema => {
     await calcaulte(schema, character)
     await preprocess(schema)
     return Schema.parseSchema(schema)
   }} />
 }
 
-function Processed ({ schema, component = 'div', action }) {
+function Processed ({ schema, action }) {
   const [processedComponent, setProcessedComponent] = useState(null)
 
-  useEffect(() => { (async () => { setProcessedComponent(await action(schema)) }) () }, [schema, component, preprocess])
+  useEffect(() => { (async () => { setProcessedComponent(await action(schema)) }) () }, [schema, preprocess])
 
   if (!processedComponent) {
     return <Loader />

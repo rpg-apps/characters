@@ -5,141 +5,46 @@
   display: flex;
   flex-direction: column;
 
-  .title {
-    text-align: center;
-    font-size: 2rem;
-  }
-
   .step {
     width: 100%;
     height: calc(100% - 3rem);
+    padding: 1rem;
 
-    > *:not(.title) {
-      width: 100%;
-      height: calc(100% - 3rem);
-    }
-
-    &.options .options {
-      flex-grow: 1;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      padding: 1rem;
-
-      .option {
-        width: 100%;
-        cursor: pointer;
-        margin-bottom: 1rem;
-
-        &.selected { box-shadow: 0px 0px 3px 3px #5fbdf9; }
-
-        .rulebook.card {
-          width: 100%;
-          height: 8rem;
-          background: white
-        }
-
-        .playbook.card {
-          width: 100%;
-          height: 5rem;
-          background: white
-        }
-      }
-    }
+    &.game .option { height: 8rem; }
+    &.playbook .option { height: 5rem; }
 
     &.choice {
-      .input {
-        padding: 0 1rem;
+      > .recommendations.selection { height: calc(100vh - 12rem); }
 
-        .MuiInputBase-multiline {
-          align-items: flex-start;
-        }
-      }
-
-      .recommendation, .option {
-        background: white;
-        padding: 1rem;
-        color: black;
-        cursor: pointer;
-
-        &.selected { box-shadow: 0px 0px 3px 3px #5fbdf9; }
-      }
-
-      .recommendations {
-        width: 100%;
-        height: calc(100% - 4rem);
-
-        .recommendations.collection {
-          width: calc(50% - 1rem);
-          height: unset !important;
-          display: flex;
-          flex-direction: column;
-          justify-content: top;
-          align-items: stretch;
-          padding: 1rem;
-          gap: 1rem;
-        }
-
-        .options {
-          width: 100%;
-          height: calc(100% - 3rem);
-          overflow-y: auto;
-          overflow-x: hidden;
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: row;
-          gap: 1rem;
-          padding: 1rem;
-
-          > * {
-            width: calc(33% - 0.67rem);
-          }
-        }
-      }
-
-      .options {
+      .recommendations .selections {
+        height: calc(100vh - 12rem);
         display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        gap: 1rem;
-        overflow-y: auto;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
 
-        .options-collection {
-          display: flex;
-          flex-direction: column;
-          padding: 1rem;
-          gap: 1rem;
-          justify-content: space-evenly;
+        > .recommendations.collection  {
+          width: calc(50% - 3rem);
         }
       }
 
-      .selection {
+      .assignment {
         width: 100%;
         height: calc(100% - 3rem);
         display: flex;
         justify-content: space-between;
         align-items: stretch;
-        gap: 3rem;
-        padding: 1rem;
+        gap: 1rem;
 
-        .source, .target {
+        .options {
           height: 100%;
-          width: calc(50% - 3rem);
           display: flex;
           flex-direction: column;
-          align-items: center;
           justify-content: space-evenly;
+          align-items: center;
+        }
 
-          .option {
-            width: 8rem;
-            text-align: center;
-
-            &.used {
-              background: var(--primary-color);
-            }
-          }
+        .option  {
+          width: calc(100% - 3rem);
         }
       }
     }

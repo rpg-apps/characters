@@ -47,13 +47,13 @@
   /* Initialization animation */
 
   .header {
-    transition: height 1s linear;
+    transition: height 1s ease-in-out;
     .logo {
       position: absolute;
       aspect-ratio: 1;
       transition-property: top, left, height;
       transition-duration: 1s;
-      transition-timing-function: linear;
+      transition-timing-function: ease-in-out;
     }
   }
 
@@ -61,7 +61,7 @@
     opacity: 1;
     transition-property: opacity;
     transition-duration: 0.5s;
-    transition-timing-function: linear;
+    transition-timing-function: ease-in-out;
     transition-delay: 1s;
   }
 

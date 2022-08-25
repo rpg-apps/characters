@@ -1,7 +1,9 @@
 import React from 'react'
 
 import Input from '../../../presentation/input'
-import { Uncalculated } from '../../../presentation/character'
+import Title from '../../../presentation/title'
+
+import { Selection } from '../../../presentation/character/selection'
 
 export default function TypeChoice ({ builder, choice, control }) {
   const [value, setValue] = control
@@ -34,12 +36,10 @@ function Recommendations ({ recommendations, control }) {
     const selected = recommendation => (val || '').includes(recommendation)
 
     return <div className='recommendations'>
-      <div className='title'>recommendations</div>
-      <div className='options'>
+      <Title title='recommendations' />
+      <div className='selections'>
         {recommendations.map((recommendationCollection, index) => <div key={index} className='recommendations collection'>
-          {recommendationCollection.map((recommendation, index) => <div key={index} className={`${selected(recommendation) ? 'selected' : ''} option`} onClick={() => update(recommendation)}>
-            <Uncalculated value={recommendation} />
-          </div>)}
+          <Selection.Uncalculated className='recommendations' options={recommendationCollection} selected={selected} select={update} />
         </div>)}
       </div>
     </div>
@@ -47,12 +47,5 @@ function Recommendations ({ recommendations, control }) {
 
   const selected = recommendation => (val === recommendation)
 
-  return <div className='recommendations'>
-    <div className='title'>recommendations</div>
-    <div className='options'>
-      {recommendations.map((recommendation, index) => <div key={index} className={`${selected(recommendation) ? 'selected' : ''} option`} onClick={() => setValue(recommendation)}><Uncalculated value={recommendation} /></div>)}
-    </div>
-  </div>
+  return <Selection.Uncalculated className='recommendations' title='recommendations' options={recommendations} selected={selected} select={setValue} />
 }
-
-TypeChoice.initialValue = ''

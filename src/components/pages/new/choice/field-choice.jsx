@@ -1,4 +1,5 @@
 import { Uncalculated } from '../../../presentation/character'
+import { Selection } from '../../../presentation/character/selection'
 
 export default function FieldChoice ({ choice, builder, control }) {
   return <Options options={builder.playbook.fields[choice.field]} control={control} />
@@ -17,9 +18,7 @@ function Options ({ options, control }) {
     return <div className='options'>
       {options.map((optionsCollection, index) =>
         <div key={index} className='options-collection'>
-          {optionsCollection.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} option`} onClick={() => update(option)}>
-            <Uncalculated value={option} />
-          </div>)}
+          <Selection.Uncalculated options={optionsCollection} selected={selected} select={update} />
         </div>
       )}
     </div>
@@ -27,11 +26,5 @@ function Options ({ options, control }) {
 
   const selected = option => (value === option)
 
-  return <div className='options'>
-    {options.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} option`} onClick={() => setValue(option)}>
-      <Uncalculated value={option} />
-    </div>)}
-  </div>
+  return <Selection.Uncalculated options={options} selected={selected} select={setValue} />
 }
-
-FieldChoice.initialValue = []

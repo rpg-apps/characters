@@ -3,8 +3,7 @@ import { useHistory } from 'react-router'
 
 import { useRules } from '../../../contexts/rules-context'
 import { useSupportedRulebooks } from '../../../contexts/game-adapters-context'
-
-import OptionsStep from './options-step'
+import { Selection } from '../../../presentation/character/selection'
 
 export default forwardRef(function GameStep ({ value, setValue }, ref) {
   const rules = useRules()
@@ -29,8 +28,7 @@ export default forwardRef(function GameStep ({ value, setValue }, ref) {
     }
   }
 
-  const RulebookOption = ({ option }) => <div className={`rulebook card ${option}`}></div>
-
-  return <OptionsStep className='game' title='choose a game' Option={RulebookOption}
-    options={supportedRulebooks} select={toggleRulebook} selected={selected} />
+  return <Selection className='game step' title='choose a game' options={supportedRulebooks} select={toggleRulebook} selected={selected}>
+    {rulebook => <div className={`rulebook card ${rulebook}`}></div>}
+  </Selection>
 })

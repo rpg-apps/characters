@@ -8,6 +8,6 @@ export default function CharacterPage ({ match }) {
   const character = useCharacters().find(character => character.id.toString() === match.params.id)
 
   return <Page name='character'>
-    <Character character={character} ui='character-sheet' />
+    <Character character={character} ui='character sheet' />
   </Page>
 }

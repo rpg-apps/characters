@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Uncalculated } from '../../../presentation/character'
+import { Selection } from '../../../presentation/character/selection'
 
 export default function AssignmentChoice ({ builder, choice, control }) {
   const [value, setValue] = control
@@ -45,14 +46,8 @@ export default function AssignmentChoice ({ builder, choice, control }) {
     }
   }
 
-  return <div className='selection'>
-    <div className='source'>
-      {source.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} ${used(option) ? 'used' : ''} option`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
-    </div>
-    <div className='target'>
-      {target.map((option, index) => <div key={index} className={`${selected(option) ? 'selected' : ''} ${used(option) ? 'used' : ''} option`} onClick={() => handle(option)}><Uncalculated value={option} /></div>)}
-    </div>
+  return <div className='assignment'>
+    <Selection.Uncalculated className='source' options={source} selected={selected} classes={option => used(option) ? 'used' : ''} select={handle} />
+    <Selection.Uncalculated className='target' options={target} selected={selected} classes={option => used(option) ? 'used' : ''} select={handle} />
   </div>
 }
-
-AssignmentChoice.initialValue = {}

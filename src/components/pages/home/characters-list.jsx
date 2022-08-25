@@ -36,9 +36,9 @@ function List ({ graveyard, characters, revive }) {
 }
 
 function DeadCharacterCard ({ character, revive }) {
-  return <Character character={character} ui='character-card' className='dead' onClick={() => revive(character)}/>
+  return <Character character={character} ui='character card' className='dead' onClick={() => revive(character)}/>
 }
 
 function LiveCharacterCard ({ character }) {
-  return <Character character={character} ui='character-card' Component={Link} to={`/character/${character.id}`}/>
+  return <Character character={character} ui='character card' Component={Link} to={`/character/${character.id}`}/>
 }
