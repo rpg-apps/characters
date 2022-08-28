@@ -1,5 +1,3 @@
-import Promise from 'bluebird'
-
 export const useMemoryCache = (load, keyEncoding) => new MemoryCache(load, keyEncoding)
 
 export class MemoryCache {

@@ -1,43 +1,23 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import env from 'react-dotenv'
 
 import './App.scss'
+import './css/auth.scss'
 
-import Home from './components/pages/home'
-import Graveyard from './components/pages/home/graveyard'
-import New from './components/pages/new'
-import Character from './components/pages/character'
-
-import { WithAuth } from './components/contexts/auth-context'
-import { WithRules } from './components/contexts/rules-context'
-import { WithCharacters } from './components/contexts/characters-context'
-import { WithAdapters } from './components/contexts/game-adapters-context'
+import DataProvider from './components/contexts'
+import Router from './components/pages'
+import Theme from './components/presentation/theme'
+import Favicon from './components/presentation/favicon'
 
 const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
+const APP_ID = env?.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID
 
 function App() {
-  return <LoadAllData appId={env?.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID}>
-    <Router>
-      <Switch>
-        <Route path='/character/:id' component={Character}/>
-        <Route path='/new' component={New}/>
-        <Route path='/graveyard' component={Graveyard}/>
-        <Route path='/' component={Home}/>
-      </Switch>
-    </Router>
-  </LoadAllData>
+  return <Theme>
+    <Favicon />
+    <DataProvider appId={APP_ID}>
+      <Router />
+    </DataProvider>
+  </Theme>
 }
 
-function LoadAllData ({ children, appId }) {
-  return <WithAuth appId={appId}>
-    <WithRules>
-      <WithAdapters>
-        <WithCharacters>
-          {children}
-        </WithCharacters>
-      </WithAdapters>
-    </WithRules>
-  </WithAuth>
-}
-
-export default App;
+export default App

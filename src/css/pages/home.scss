@@ -1,76 +1,91 @@
-@import "../utils.scss";
-
-$footer-height: 6rem;
-
 .home.page {
   display: flex;
   flex-direction: column;
 
-  .characters {
-    @extend %scrolly;
-    padding: $large-gap;
-    height: calc(#{$page-height} - #{$footer-height});
+  .header {
+    position: relative;
 
-    .dead {
-      position: relative;
-
-      &::before {
-        content: 'Click to revive';
-        font: 2rem 'Cinzel';
-        z-index: 1;
-        color: white;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      > * { opacity: 0.5; }
+    #app-name {
+      position: absolute;
+      left: 2.5rem;
+      top: 0.75rem;
     }
 
-    .character {
-      @extend %round;
-      @extend %inverted;
-      margin: $large-gap;
-      padding: $large-gap;
-    }
-
-    &.empty {
-      @extend %centering;
-      flex-direction: column;
-      padding: 1*$large-gap 3*$large-gap 5*$large-gap 3*$large-gap;
-      color: white;
-      text-align: center;
-
-      > :first-child { font: 2rem 'Cinzel'; }
-      > :last-child  { font: 1rem 'Cinzel'; }
+    button {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.25rem;
     }
   }
 
-  .footer {
-    height: $footer-height;
+  .characters {
+    flex-grow: 1;
+    padding: 1rem;
 
-    .button {
-      height: 2rem;
-      font: 1rem 'Cinzel';
-      margin-bottom: $small-gap;
+    .character {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 5rem;
+      padding: 1rem;
+      background: white;
+      margin-bottom: 1rem;
     }
+  }
 
-    .links {
-      display: flex;
-      padding: 0 $large-gap;
-      justify-content: space-between;
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
 
-      .link {
-        float: right;
-        font: 1rem 'Cinzel';
-        > svg { vertical-align: middle; }
+    > :only-child {
+      width: 100%;
+    }
+  }
+
+  /* Initialization animation */
+
+  .header {
+    transition: height 1s ease-in-out;
+    .logo {
+      position: absolute;
+      aspect-ratio: 1;
+      transition-property: top, left, height;
+      transition-duration: 1s;
+      transition-timing-function: ease-in-out;
+    }
+  }
+
+  .header #app-name, .header button, .characters, footer {
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+    transition-delay: 1s;
+  }
+
+  &.init {
+    .header {
+      height: 100vh;
+
+      .logo {
+        top: calc(50vh - 4.6rem);
+        left: calc(50vw - 4rem);
+        height: 8rem;
+        aspect-ratio: 1;
       }
     }
 
+    .header #app-name, .header button, .characters, footer { opacity: 0; }
+  }
+
+  &:not(.init) .header {
+    height: 3rem;
+    .logo {
+      height: 1.5rem;
+      top: 0.75rem;
+      left: 0.75rem;
+    }
   }
 }

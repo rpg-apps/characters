@@ -14,7 +14,7 @@ const GAME_FILE = game => path.join(ADAPTERS_FOLDER, game, 'index.js')
 const RULEBOOK_FILE = (game, rulebook) => path.join(ADAPTERS_FOLDER, game, `${rulebook}.js`)
 const ADMIN = 'idanstark42@gmail.com'
 
-const ADAPTER_TEMPLATE = (game, rulebook) => `export default ${JSON.stringify({ game, rulebook, 'character-sheet': {}, 'character-card': {}, css: {}, settings: [] })}`
+const ADAPTER_TEMPLATE = (game, rulebook) => `export default ${JSON.stringify({ game, rulebook, components: { 'CharacterSheet': {}, 'CharacterCard': {} }, css: {}, settings: [] })}`
 const INDEX_FILE_TEMPLATE = `
 let adapters = []
 // assignment

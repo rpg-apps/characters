@@ -1,11 +1,17 @@
 import React from 'react'
 
 import Input from '../../../presentation/input'
+import Title from '../../../presentation/title'
 
-// CONTINUE HERE!! Type choice is not usable since the value in the jsonforms is returned as object, and not as a basic property.
-export default function TypeChoice ({ builder, choice, onChoice, control }) {
-  return <div className='input'>
-    <Input.Controlled type={choice.type} control={control}/>
+import { Selection } from '../../../presentation/character/selection'
+
+export default function TypeChoice ({ builder, choice, control }) {
+  const [value, setValue] = control
+
+  return <div className='choice'>
+    <div className='input'>
+      <Input.Controlled type={{ [choice.name]: choice.type }} control={[{ [choice.name]: value }, data => setValue(data[choice.name])]}/>
+    </div>
     <Recommendations recommendations={builder.playbook.fields[choice.recommendations]} control={control}/>
   </div>
 }
@@ -15,33 +21,31 @@ function Recommendations ({ recommendations, control }) {
   if (!recommendations || !Array.isArray(recommendations) || recommendations.length === 0) return ''
 
   if (Array.isArray(recommendations[0])) {
-    const update = ({ value }) => {
+    const update = (value) => {
+      const previousValue = val || ''
       const group = recommendations.find(g => g.includes(value))
-      const newValue = group.filter(item => val.includes(item)).reduce((result, item) => {
+      const newValue = group.filter(item => previousValue.includes(item)).reduce((result, item) => {
         return result.replace(item, '')
-      }, val)
+      }, previousValue)
         .replace(/^(,\s*)*/, '')
         .replace(/(,\s*)*$/, '')
         .replace(/,\s*(,\s*)+/, ', ')
       setValue(newValue.length > 0 ? `${newValue}, ${value}` : value)
     }
 
+    const selected = recommendation => (val || '').includes(recommendation)
+
     return <div className='recommendations'>
-      <div className='title'>recommendations</div>
-      <div className='options'>
-        {recommendations.map((recommendationCollection, index) =>
-          <div key={index} className='recommendations-collection'>
-          </div>
-        )}
+      <Title title='recommendations' />
+      <div className='selections'>
+        {recommendations.map((recommendationCollection, index) => <div key={index} className='recommendations collection'>
+          <Selection.Uncalculated className='recommendations' options={recommendationCollection} selected={selected} select={update} />
+        </div>)}
       </div>
     </div>
   }
 
-  return <div className='recommendations'>
-    <div className='title'>recommendations</div>
-    <div className='options'>
-    </div>
-  </div>
-}
+  const selected = recommendation => (val === recommendation)
 
-TypeChoice.initialValue = ''
+  return <Selection.Uncalculated className='recommendations' title='recommendations' options={recommendations} selected={selected} select={setValue} />
+}

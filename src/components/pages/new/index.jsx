@@ -1,80 +1,50 @@
-import React, { useState } from 'react'
-import { useHistory } from 'react-router'
+import { useState, useEffect, useRef } from 'react'
 
 import '../../../css/pages/new.scss'
 
-import { useRules } from '../../contexts/rules-context'
-import { useCharacters } from '../../contexts/characters-context'
-import { useSupportedRulebooks } from '../../contexts/game-adapters-context'
-import { useProdcedureUI } from '../../hooks/procedure-ui'
-import OptionsChoice from './options-choice'
-import Loader from '../../presentation/loader'
-import Choice from './choice'
+import PrgoressMenu from './progress-menu'
+import Page from '../../presentation/page'
 
-// TODO add UI for post-character-creation choices.
+import { useForceUpdate } from '../../hooks/force-update'
+
+import GameStep from './steps/game-step'
+import PlaybookStep from './steps/playbook-step'
+
+const INITIAL_STEPS = [GameStep, PlaybookStep]
+
 export default function New () {
-  const rules = useRules()
-  const history = useHistory()
-  const characters = useCharacters()
-
+  const [state, update] = useState({ index: 0, value: undefined, steps: INITIAL_STEPS })
   const [loading, setLoading] = useState(false)
-  const [builder, setBuilder] = useState()
-  const [choice, setChoice] = useState()
+  const stepRef = useRef()
+  const forceUpdate = useForceUpdate()
+  const setState = newState => update(Object.assign({}, state, newState))
 
-  const ui = useProdcedureUI(() => builder.character)
-  const supportedRulebooks = useSupportedRulebooks()
+  useEffect(forceUpdate, [stepRef, state])
 
-  const initializeBuilder = async rulebook => {
-    setBuilder((await rules.get([rulebook])).characters.builder)
+  const Step = state.steps[state.index]
+
+  const setValue = async value => setState({ value })
+
+  const next = async () => {
+    const step = stepRef.current
+    if (step.finish) return step.finish()
+    const value = await step.next()
+    const additionalSteps = step.additionalSteps ? step.additionalSteps() : []
+    const steps = state.steps.concat(additionalSteps)
+    setState({ value, steps, index: state.index + 1 })
+  }
+  const back = async () => {
+    const step = stepRef.current
+    if (step.cancel) return step.cancel()
+    const value = await step.back()
+    const additionalSteps = step.additionalSteps ? step.additionalSteps() : []
+    const steps = state.steps.filter(step => !additionalSteps.includes(step))
+    setState({ value, steps, index: state.index - 1 })
   }
 
-  const start = playbook => {
-    builder.start(playbook)
-    builder.character.save = () => {}
-    setChoice(builder.choice)
-  }
-
-  const update = value => {
-    builder.choose(value)
-    if (builder.choice) {
-      setChoice(builder.choice)
-    } else {
-      finish()
-    }
-  }
-
-  const finish = async () => {
-    setLoading(true)
-    await builder.finish(ui)
-    const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
-    builder.clear()
-    history.push(`/character/${id}`)
-  }
-
-  if (ui.status && ui.content) {
-    return <Page className='new game'>{ui.content}</Page>
-  }
-
-  if (loading) {
-    return <Loader className='new page' />
-  }
-
-  if (!builder) {
-    return <Page className='choose game'>
-      <OptionsChoice title='choose game' options={supportedRulebooks} onChoice={initializeBuilder} />
-    </Page>
-  }
-
-  if (!choice) {
-    return <Page className={`choose playbook rules ${builder.rulebook.rulebooks.join(' ')}`}>
-      <OptionsChoice title='choose playbook' options={builder.playbookOptions()} onChoice={start} />
-    </Page>
-  }
-
-  return <Page className={builder.rulebook.rulebooks.join(' ')}>
-    <Choice choice={choice} builder={builder} onChoice={update} />
+  return <Page name='new' loading={loading}>
+    <Step value={state.value} update={forceUpdate} setValue={setValue} ref={stepRef} setLoading={setLoading} />
+    <PrgoressMenu steps={state.steps.length + 1} step={state.index}
+      next={next} back={back} canBack={stepRef.current?.canBack} canNext={stepRef.current?.canNext} />
   </Page>
 }
-
-function Page ({ children, className='' }) { return <div className={`new page ${className}`}>{children}</div> }
-

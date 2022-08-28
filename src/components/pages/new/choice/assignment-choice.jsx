@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { Uncalculated } from '../../../presentation/character'
+import { Selection } from '../../../presentation/character/selection'
 
-export default function AssignmentChoice ({ builder, choice, onChoice, control }) {
+export default function AssignmentChoice ({ builder, choice, control }) {
   const [value, setValue] = control
   const [selection, setSelection] = useState({})
 
@@ -8,7 +10,7 @@ export default function AssignmentChoice ({ builder, choice, onChoice, control }
   const target = choice.target
 
   const assign = newSelection => {
-    setValue({ ...value, [newSelection.target]: newSelection.source })
+    setValue({ ...(value || {}), [newSelection.target]: newSelection.source })
     setSelection({})
   }
 
@@ -33,20 +35,19 @@ export default function AssignmentChoice ({ builder, choice, onChoice, control }
     else                                            setSelection(newSelection)
   }
 
-  const handle = item => {
-    if (Object.keys(value).includes(item) || Object.values(value).includes(item)) {
-      unassign(item)
+  const selected = option => selection.source === option || selection.target === option
+  const used = option => Object.keys(value || {}).includes(option) || Object.values(value || {}).includes(option)
+
+  const handle = option => {
+    if (used(option)) {
+      unassign(option)
     } else {
-      select(item)
+      select(option)
     }
   }
 
-  return <div className='selection'>
-    <div className='source'>
-    </div>
-    <div className='target'>
-    </div>
+  return <div className='assignment'>
+    <Selection.Uncalculated className='source' options={source} selected={selected} classes={option => used(option) ? 'used' : ''} select={handle} />
+    <Selection.Uncalculated className='target' options={target} selected={selected} classes={option => used(option) ? 'used' : ''} select={handle} />
   </div>
 }
-
-AssignmentChoice.initialValue = {}

@@ -8,7 +8,7 @@ export default function Input ({ value='', type, onChange=()=>{}, layout=Layout.
   const adapter = generateAdapter(type, ROOT_SCOPE, layout)
   const { change, errors } = useErrors(adapter, onChange, ROOT_SCOPE)
 
-  return <JsonForms schema={adapter.schema}           uischema={adapter.uiScheme}
+  return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
                     renderers={materialRenderers}     cells={materialCells} ajv={ajv}
                     data={adapter.value(value)}       onChange={change}
                     validationMode='ValidateAndHide'  additionalErrors={errors}
@@ -34,7 +34,7 @@ const arrayInputAdapter = (type, scope, layout) => {
   const itemsAdapater = generateAdapter(type.replace(/^array /, ''), scope, Layout.flip(layout))
   return {
     schema: { type: 'array', items: itemsAdapater.schema },
-    uiScheme: { type: 'Control', scope },
+    uiSchema: { type: 'Control', scope },
     value: val => val || [],
     defaultData: [],
     onChange: callback => ({ data, errors }) => callback(data, errors),
@@ -47,7 +47,7 @@ const objectInputAdapter = (type, scope, layout) => {
   const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
   return {
     schema: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.schema]), required: Object.keys(adapters) },
-    uiScheme: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiScheme)  },
+    uiSchema: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiSchema)  },
     value: val => val || defaultData,
     defaultData,
     onChange: callback => ({ data, errors }) => callback(data, errors),
@@ -58,7 +58,7 @@ const objectInputAdapter = (type, scope, layout) => {
 const basicInputAdapter = (type, scope, layout) => {
   if (scope === ROOT_SCOPE) {
     const adapter = objectInputAdapter({ value: type }, scope, layout)
-    adapter.uiScheme.elements[0].label = false
+    adapter.uiSchema.elements[0].label = false
     adapter.value = value => (value ? ({ value }) : adapter.defaultData)
     adapter.onChange = callback => ({ data, errors }) => callback(data.value, errors)
     return adapter
@@ -67,7 +67,7 @@ const basicInputAdapter = (type, scope, layout) => {
   if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
   return {
     schema: { type: adapter.name, ...(adapter.options || {}) },
-    uiScheme: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope },
+    uiSchema: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope },
     value: val => val || adapter.defaultData,
     defaultData: adapter.defaultData,
     onChange: callback => ({ data, errors }) => callback(data, errors),

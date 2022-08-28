@@ -13,57 +13,78 @@ export function WithCharacters ({ children }) {
   const { user } = useAuth()
   const rules = useRules()
   const adapters = useAdapters()
-  const [characterJsons, setCharacterJsons] = useState(false)
   const [characters, setCharacters] = useState(false)
 
-  const load = useCallback(async () => { setCharacterJsons(await user.callFunction('getCharacters')) }, [user])
-  useEffect(() => { load() }, [user, load])
-
-  const parseCharacter = useCallback(async rawCharacter => {
-    const character = await (await rules.get(rawCharacter.rulebooks)).characters.load(rawCharacter)
-    Object.assign(character, {
-      id: rawCharacter._id,
-      adapter: mergeAdapters(character.rulebooks.map(rulebook => rulebook.split(' ')).map(([game, rulebook]) => adapters[game][rulebook])),
-      save: async () => await user.callFunction('updateCharacter', {
-        id: character.id.toString(),
-        character: Object.assign(character.toJson(), { settings: character.settings })
-      }),
-      delete: async () => {
-        await user.callFunction('deleteCharacter', { id: character.id.toString() })
+  useEffect(() => {
+    const load = async () => {
+      const api = new CharactersAPI({ user, rules, adapters })
+      const newCharacters = await api.load()
+      newCharacters.create = async raw => {
+        const id = await api.create(raw, { user, rules, adapters })
         await load()
-      },
-      setSettings: settings => {
-        character.settings = settings
-        character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
-      },
-    })
+        return id
+      }
+      await setCharacters(newCharacters)
+    }
+
+    load ()
+  }, [user, rules, adapters])
+
+  if (!characters)
+    return <Loader className='home page' />
+
+  return <CharactersContext.Provider value={characters}>{children}</CharactersContext.Provider>
+}
+
+class CharactersAPI {
+  constructor ({ user, rules, adapters }) {
+    Object.assign(this, { user, rules, adapters })
+  }
+
+  async load () {
+    const chars = []
+    const raws = (await this.user.callFunction('getCharacters'))
+    for (let raw of raws) chars.push(await this.parse(raw))
+    return chars
+  }
+
+  async parse (raw) {
+    const character = await (await this.rules.get(raw.rulebooks)).characters.load(raw)
+    character.id = raw._id
+
+    character.adapter = mergeAdapters(character.rulebooks.map(rulebook => rulebook.split(' ')).map(([game, rulebook]) => this.adapters[game][rulebook]))
     character.plans = [
       { name: 'manual',     description: 'Just like a character sheet', settings: Object.fromEntries(character.adapter.settings.map(setting => [setting.name, setting.manual]))    },
       { name: 'automatic',  description: 'Does everything for you',     settings: Object.fromEntries(character.adapter.settings.map(setting => [setting.name, setting.automatic])) }
     ]
-    character.setSettings(rawCharacter.settings)
+
+    character.save = async () => this.save(character)
+    character.delete = async () => this.delete(character)
+    character.setSettings = async settings => this.setSettings(character, settings)
+
+    character.setSettings(raw.settings)
     return character
-  }, [user, rules, adapters, load])
+  }
 
-  const parseCharacters = useCallback(async rawCharacters => {
-    const chars = []
-    for (const rawCharacter of rawCharacters) {
-      chars.push(await parseCharacter(rawCharacter))
-    }
-    chars.create = async character => {
-      const id = (await user.callFunction('createCharacter', { character })).insertedId
-      await load()
-      return id
-    }
-    return chars
-  }, [user, load, parseCharacter])
+  async create (character, { user }) {
+    return (await user.callFunction('createCharacter', { character })).insertedId
+  }
 
-  useEffect(() => { (async () => {
-    if (!characterJsons)  return
-    setCharacters(await parseCharacters(characterJsons))
-  })() }, [user, rules, characterJsons, parseCharacters])
+  async save (character) {
+    await this.user.callFunction('updateCharacter', {
+      id: character.id.toString(),
+      character: Object.assign(character.toJson(), { settings: character.settings })
+    })
+  }
 
-  if (!characters) return <Loader className='home page' />
+  async delete (character) {
+    await this.user.callFunction('deleteCharacter', { id: character.id.toString() })
+    return true
+  }
 
-  return <CharactersContext.Provider value={characters}>{children}</CharactersContext.Provider>
+  async setSettings (character, settings) {
+    character.settings = settings
+    character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
+  }
 }
+

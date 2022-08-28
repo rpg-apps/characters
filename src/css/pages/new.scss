@@ -1,221 +1,64 @@
-@use 'sass:math';
-
-@import "../utils.scss";
-
-$title-height: 3rem;
-$game-card-height: 8.8rem;
-$playbook-card-height: 5rem;
-
-$selection-color: $primary-color;
-$done-color: darken($primary-color, 10%);
-
 .new.page {
-  @extend %page-size;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
-  > [class=title] {
-    color: $primary-color;
-    text-align: center;
-    font: 2rem 'Cinzel';
-    line-height: $title-height;
-    height: $title-height;
-  }
+  .step {
+    width: 100%;
+    height: calc(100% - 3rem);
+    padding: 1rem;
 
-  > .options {
-    @extend %scrolly;
-    height: calc(#{$page-height} - #{$title-height});
-  }
+    &.game .option { height: 8rem; }
+    &.playbook .option { height: 5rem; }
 
-  &.choose.game .field {
-    @extend %round;
-    height: $game-card-height;
-    margin: $large-gap;
-  }
+    .choice {
+      > .recommendations.selection { height: calc(100vh - 12rem); }
 
-  &.choose.playbook .field {
-    @extend %round, %inverted, %show-value;
-    height: $playbook-card-height;
-    margin: $large-gap;
-  }
-
-  .choice {
-    @extend %page-size;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $large-gap;
-    padding: $large-gap;
-
-    > [class=title] {
-      color: $primary-color;
-      text-align: center;
-      font: 2rem 'Cinzel';
-      line-height: $title-height;
-      height: $title-height;
-    }
-
-    > .input {
-      width: $full !important;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-
-      > .input:only-child { height: 100%; }
-    }
-
-    textarea {
-      @extend %round;
-      border: none;
-      padding: $small-gap;
-      width: $full !important;
-      height: $full;
-    }
-
-    input {
-      @extend %round;
-      border: none;
-      padding: $small-gap;
-
-      &[type='text'] {
-        width: calc(#{$full} - 2*#{$small-gap});
-      }
-    }
-  }
-
-  .field.choice {
-    > .options {
-      @extend %scrolly;
-      width: $full;
-      height: calc(#{$page-height} - #{$title-height});
-      display: flex;
-      flex-direction: column;
-      gap: $small-gap;
-
-      .options-collection {
+      .recommendations .selections {
+        height: calc(100vh - 12rem);
         display: flex;
-        gap: $small-gap;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
 
-        > * { flex: 1; }
-      }
-
-      .field {
-        @extend %round;
-        @extend %inverted;
-        @extend %show-value;
-        padding: $small-gap;
-        background: inherit;
-      }
-
-      > .field, .options-collection > .field {
-        background: white;
-        &.selected {
-          background: $selection-color;
+        > .recommendations.collection  {
+          width: calc(50% - 3rem);
         }
       }
     }
-  }
-
-  .type.choice .recommendations {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: $full;
-    height: 0;
-    gap: $small-gap;
-
-    [class=title] {
-      width: $full;
-      font: 1rem 'Cinzel';
-      color: $primary-color;
-      height: 1rem;
-      margin: $small-gap 0;
-    }
-
-    .options {
-      @extend %scrolly;
-      flex: 1;
-      display: flex;
-      gap: $large-gap;
-      flex-direction: column;
-      width: $full;
-    }
-
-    .recommendations-collection {
-      display: flex;
-      gap: $small-gap;
-
-      > * { flex: 1; }
-    }
-
-    .field {
-      @extend %round;
-      @extend %inverted;
-      @extend %show-value;
-      padding: $small-gap;
-
-      &.selected {
-        background: $selection-color;
-      }
-    }
-  }
-
-  .button {
-    margin: 0 $large-gap;
-  }
-
-  .assignment.choice .selection {
-    display: flex;
-    justify-content: space-evenly;
-    flex: 1;
-    width: calc(#{$full} + #{2*$large-gap});
-    height: 0;
-    gap: $small-gap;
-    padding: 0 $large-gap;
-
-    > * {
-      height: $full;
-      width: math.div($full, 2);
-      display: flex;
-      flex-direction: column;
-      gap: $small-gap;
-
-
-      > .field {
-        @extend %centering, %square, %show-value;
-        background: white;
-
-        &.selected { background: $selection-color; }
-        &.done { background: $done-color; }
-      }
-    }
-
-    .target .field { @extend %show-name; }
-  }
-
-  > .ui {
-    height: $full;
-    display: flex;
-    flex-direction: column;
-    padding: $large-gap;
 
     > .options {
-      flex: 1;
+      height: calc(100% - 2rem);
+      overflow-y: auto;
+      margin: 0 -1rem;
+      padding: 1rem;
+    }
 
-      &.maxed-out .option:not(.selected) {
-        opacity: 0.5;
-        pointer-events: none;
+    .assignment {
+      width: 100%;
+      height: calc(100% - 3rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 1rem;
+
+      .options {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
       }
 
-      .option {
-        @extend %centering, %inverted, %show-value, %round;
-        padding: $large-gap;
-        margin: $large-gap;
-
-        &.selected { background: $selection-color; }
+      .option  {
+        width: calc(100% - 3rem);
       }
     }
+  }
+
+  .procedure-ui {
+    padding: 1rem;
+
   }
 }

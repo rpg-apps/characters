@@ -1,27 +1,22 @@
-import { Link } from 'react-router-dom'
-import { FaBookDead } from 'react-icons/fa'
+import { useState, useEffect } from 'react'
 
 import '../../../css/pages/home.scss'
 
-import { useCharacters } from '../../contexts/characters-context'
+import Page from '../../presentation/page'
+
+import Header from './header'
+import CharactersList from './characters-list'
 import Footer from './footer'
-import Character from '../../presentation/character'
 
 export default function Home (props) {
-  const characters = useCharacters().filter(character => character.alive)
+  const [init, setInit] = useState(true)
+  const [graveyard, setGraveyard] = useState(false)
 
-  const content = characters.length ?
-    characters.map((character, index) => <Character character={character} ui='character-card' Component={Link} key={index} to={`/character/${character.id}`}/>)
-    :
-    <div className='empty characters'>
-      <div className='primary'>No one is here</div>
-      <div>Maybe create a character instead of staring at an empty page?</div>
-    </div>
+  useEffect(() => { setTimeout(() => setInit(false), 0) }, [])
 
-  return <div className='home page'>
-    <div className='characters'>
-      {content}
-    </div>
-    <Footer graveyardLink={<Link className='link' to='/graveyard'><FaBookDead /> Graveyard</Link>} />
-  </div>
+  return <Page name={`home ${init ? 'init' : ''}`}>
+    <Header graveyardControl={[graveyard, setGraveyard]} />
+    <CharactersList graveyard={graveyard} />
+    <Footer />
+  </Page>
 }

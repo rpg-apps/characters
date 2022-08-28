@@ -1,17 +1,10 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { FaPlus, FaSignOutAlt } from 'react-icons/fa'
-
-import { useAuth } from '../../contexts/auth-context'
+import { useHistory } from 'react-router-dom'
+import AddIcon from '@mui/icons-material/Add'
+import Button from '@mui/material/Button'
 
 export default function Footer ({ graveyardLink }) {
-  const { logOut } = useAuth()
-
-  return <div className='footer'>
-    <Link className='primary button' to='/new'><FaPlus /> Create</Link>
-    <div className='links'>
-      {graveyardLink}
-      <div className='link' onClick={logOut}><FaSignOutAlt /> logout</div>
-    </div>
-  </div>
+  const history = useHistory()
+  return <footer>
+    <Button onClick={() => history.push('/new')} variant='contained' startIcon={<AddIcon />}>Create</Button>
+  </footer>
 }
