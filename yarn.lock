@@ -1900,10 +1900,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rpg-apps/rpg-js@0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@rpg-apps/rpg-js/-/rpg-js-0.1.9.tgz#19081b1b7685196497ee7a9cf782d947506afbf1"
-  integrity sha512-nLdRnOuaEJBvJkNBMNP0zPYGqRL6crJS070keqC1kM60ONJT9u/JOx9mvofvXzQwCdp/1eQY6OqXd4/K684nig==
+"@rpg-apps/rpg-js@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@rpg-apps/rpg-js/-/rpg-js-0.2.0.tgz#6f5daa8252605f336153224b77e8449e0b9388ca"
+  integrity sha512-0pEAZJYvF+oicmc2Sv+oVNMBxql6Hg+UaxnmLDxsx+F6kZZCpyA5db+gvvQ644QCE/T54bEgADt19Mxb2nHJQg==
   dependencies:
     axios "^0.21.4"
     bluebird "^3.7.2"

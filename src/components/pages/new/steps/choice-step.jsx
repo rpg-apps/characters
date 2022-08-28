@@ -18,23 +18,27 @@ export default forwardRef(function GameStep ({ value: builder, update, setLoadin
   const choice = builder.choice
   const ChoiceComponent = choiceComponents[choice.constructor.name]
 
-  useEffect(update, [value])
+  useEffect(update, [value, ui.content])
 
   useImperativeHandle(ref, () => ({
     canBack: true,
-    canNext: Boolean(value),
-    next: () => {
+    canNext: Boolean(ui.status) ? ui.canFinish : Boolean(value),
+    next: async () => {
       builder.choose(value)
       setValue(undefined)
       return builder
     },
     back: () => { },
     finish: (builder.hasNexChoice() ? undefined : (async () => {
-      await builder.finish(ui)
-      setLoading(true)
-      const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
-      builder.clear()
-      history.push(`/character/${id}`)
+      if (ui.status) {
+        await ui.finish(true)
+      } else {
+        await builder.finish(ui)
+        setLoading(true)
+        const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
+        builder.clear()
+        history.push(`/character/${id}`)
+      }
     }))
   }))
 

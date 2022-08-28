@@ -13,7 +13,7 @@
     &.game .option { height: 8rem; }
     &.playbook .option { height: 5rem; }
 
-    &.choice {
+    .choice {
       > .recommendations.selection { height: calc(100vh - 12rem); }
 
       .recommendations .selections {
@@ -26,27 +26,39 @@
           width: calc(50% - 3rem);
         }
       }
+    }
 
-      .assignment {
-        width: 100%;
-        height: calc(100% - 3rem);
+    > .options {
+      height: calc(100% - 2rem);
+      overflow-y: auto;
+      margin: 0 -1rem;
+      padding: 1rem;
+    }
+
+    .assignment {
+      width: 100%;
+      height: calc(100% - 3rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 1rem;
+
+      .options {
+        height: 100%;
         display: flex;
-        justify-content: space-between;
-        align-items: stretch;
-        gap: 1rem;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+      }
 
-        .options {
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-          align-items: center;
-        }
-
-        .option  {
-          width: calc(100% - 3rem);
-        }
+      .option  {
+        width: calc(100% - 3rem);
       }
     }
+  }
+
+  .procedure-ui {
+    padding: 1rem;
+
   }
 }
