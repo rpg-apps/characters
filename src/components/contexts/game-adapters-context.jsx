@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useContext, createContext } fr
 import { Global } from '@emotion/react'
 import merge from 'deepmerge'
 import uniq from 'uniq'
+import mapObject from 'map-obj'
 
 import { useAuth } from './auth-context'
 
@@ -25,14 +26,13 @@ export const mergeAdapters = adapters => {
   }), { components: {}, css: {}, assets: [], settings: [] })
 }
 
-const adapterCSS = (game, rulebook, cssObject) => Object.entries(cssObject)
-  .map(([selector, attributes]) => `.character.${game}.${rulebook}${selector}{${Object.entries(attributes).map(([key, val]) => `${key}:${val};`).join('')}}`)
-  .join('')
+const adapterCSS = (game, rulebook, cssObject, fonts) => mapObject(cssObject, (selector, rules) => [`.character.${game}.${rulebook}${selector}`, rules])
 
 export function WithAdapters ({ children }) {
   const { user } = useAuth()
   const [adapters, setAdapters] = useState(null)
   const [styles, setStyles] = useState({})
+  const [fonts, setFonts] = useState([])
 
   const load = useCallback(async () => {
     const adaptersArray = uniq(localAdapters.concat(await user.callFunction('getAdapters')).filter(adapter => Boolean(adapter.game)), (adapter1, adapter2) => (adapter1.game === adapter2.game && adapter1.rulebook === adapter2.rulebook) ? 0 : 1)
@@ -42,7 +42,8 @@ export function WithAdapters ({ children }) {
       return all
     }, { }))
 
-    setStyles(adaptersArray.map(adapter => adapterCSS(adapter.game, adapter.rulebook, adapter.css)).reduce((styles, gameStyle) => ({ ...styles, ...gameStyle }), { }))
+    setStyles(adaptersArray.map(adapter => adapterCSS(adapter.game, adapter.rulebook, adapter.css, adapter.fonts)).reduce((styles, gameStyle) => ({ ...styles, ...gameStyle }), { }))
+    setFonts(adaptersArray.reduce((allFonts, adapter) => allFonts.concat(adapter.fonts), []))
   }, [user])
 
   useEffect(() => { load() }, [user, load])
@@ -50,6 +51,7 @@ export function WithAdapters ({ children }) {
   if (!adapters) return <Loader className='home page' />
 
   return <GameAdaptersContext.Provider value={adapters}>
+    {fonts ? fonts.map(font => <Global styles={`@import url('${font}');`} />) : ''}
     {styles ? <Global styles={styles} /> : ''}
     {children}
   </GameAdaptersContext.Provider>

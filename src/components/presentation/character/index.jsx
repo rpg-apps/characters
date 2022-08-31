@@ -7,8 +7,8 @@ import Loader from '../loader'
 
 const Schema = new ReactJsonSchema()
 
-export function Character ({ character, ui, Component='div', className, ...props }) {
-  return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')}`}>
+export function Character ({ character, ui, Component='div', className='', ...props }) {
+  return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
     <Calculated character={character} schemaName={ui} />
   </Component>
 }

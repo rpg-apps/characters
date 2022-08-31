@@ -19,8 +19,9 @@
   }
 
   .characters {
-    flex-grow: 1;
+    height: calc(100vh - 6rem);
     padding: 1rem;
+    overflow-y: auto;
 
     .character {
       display: block;
@@ -33,7 +34,7 @@
     }
   }
 
-  footer {
+  .footer {
     display: flex;
     justify-content: center;
     align-items: center;
