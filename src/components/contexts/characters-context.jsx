@@ -62,7 +62,7 @@ class CharactersAPI {
     character.delete = async () => this.delete(character)
     character.setSettings = async settings => this.setSettings(character, settings)
 
-    character.setSettings(raw.settings)
+    character.setSettings(raw.settings || {})
     return character
   }
 
@@ -83,8 +83,9 @@ class CharactersAPI {
   }
 
   async setSettings (character, settings) {
+    character.universalSettinsg = Object.fromEntries(character.adapter.settings.filter(setting => setting.universal).map(setting => ([setting.name, settings[setting.name] || setting.value])))
     character.settings = settings
-    character.calculatedSettings = (character.plans.find(plan => plan.name === settings)?.settings || settings)
+    character.calculatedSettings = { ...(character.plans.find(plan => plan.name === settings)?.settings || settings), ...character.universalSettinsg }
   }
 }
 

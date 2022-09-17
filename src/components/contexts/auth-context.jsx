@@ -13,7 +13,7 @@ const GOOGLE_CLIENT_ID = '978183971965-qa08agsv6eid4opprucba6hv4mbq5ovn.apps.goo
 // TODO reset password (issue #29: https://github.com/rpg-apps/characters/issues/29)
 export function WithAuth ({ appId, children }) {
   const [app, setApp] = useState(new Realm.App(appId))
-  const [currentUser, setCurrentUser] = useState(app.currentUser);
+  const [currentUser, setCurrentUser] = useState(app.currentUser)
   const [view, setView] = useState()
   const [resetingPassword, setResettingPassword] = useState(false)
   const history = useHistory()

@@ -3,9 +3,13 @@ import ReactJsonSchema from 'react-json-schema'
 import { pascalCase } from 'change-case'
 import { isPlainObject } from 'is-plain-object'
 
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+
 import Loader from '../loader'
 
 const Schema = new ReactJsonSchema()
+Schema.setComponentMap({ Button, Paper })
 
 export function Character ({ character, ui, Component='div', className='', ...props }) {
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
@@ -44,7 +48,7 @@ const recursivly = async (schema, callback) => {
   await callback(schema)
 
   if (schema.children) {
-    for (let subschema of schema.children) {
+    for (const subschema of schema.children) {
       await recursivly(subschema, callback)    }
   }
 
@@ -52,8 +56,21 @@ const recursivly = async (schema, callback) => {
 }
 
 const calcaulte = async (schema, character) => {
-  return await recursivly(schema, async subschema => {
-    if (subschema.value) subschema.text = await character.get(subschema.value, { })
+  const context = Object.fromEntries(Object.entries(character.calculatedSettings).map(([key, value]) => ([`settings:${key}`, value])))
+  return await recursivly(Object.assign({}, schema), async subschema => {
+    const smartCalc = async internalSchema => {
+      const keys = Object.keys(internalSchema).filter(key => key !== 'children')
+      for (const key of keys) {
+        const value = internalSchema[key]
+        if (key.startsWith('calc-')) {
+          internalSchema[key.replace('calc-', '')] = await character.get(value, { context })
+          delete internalSchema[key]
+        } else if (isPlainObject(value)) {
+          await smartCalc(value)
+        }
+      }
+    }
+    await smartCalc(subschema)
   })
 }
 
