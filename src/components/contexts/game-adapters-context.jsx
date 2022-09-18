@@ -50,10 +50,8 @@ export function WithAdapters ({ children }) {
 
   if (!adapters) return <Loader className='home page' />
 
-  console.log(styles)
-
   return <GameAdaptersContext.Provider value={adapters}>
-    {fonts ? fonts.map(font => <Global styles={`@import url('${font}');`} />) : ''}
+    {fonts ? fonts.map((font, key) => <Global key={key} styles={`@import url('${font}');`} />) : ''}
     {styles ? <Global styles={styles} /> : ''}
     {children}
   </GameAdaptersContext.Provider>
