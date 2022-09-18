@@ -3,13 +3,51 @@ import ReactJsonSchema from 'react-json-schema'
 import { pascalCase } from 'change-case'
 import { isPlainObject } from 'is-plain-object'
 
-import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Grid from '@mui/material/Unstable_Grid2'
+import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
+import ButtonGroup from '@mui/material/ButtonGroup'
+import Button from '@mui/material/Button'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import ToggleButton from '@mui/material/ToggleButton'
+import Switch from '@mui/material/Switch'
+import Checkbox from '@mui/material/Checkbox'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import Rating from '@mui/material/Rating'
+import Slider from '@mui/material/Slider'
+import Avatar from '@mui/material/Avatar'
+import Badge from '@mui/material/Badge'
+import Chip from '@mui/material/Chip'
+import Divider from '@mui/material/Divider'
+import CircularProgress from '@mui/material/CircularProgress'
+import LinearProgress from '@mui/material/LinearProgress'
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import Tooltip from '@mui/material/Tooltip'
+import Snackbar from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import BottomNavigation from '@mui/material/BottomNavigation'
+import BottomNavigationAction from '@mui/material/BottomNavigationAction'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 
+import *  as Icons from '@mui/icons-material'
+
+import Input from '../input'
 import Loader from '../loader'
 
 const Schema = new ReactJsonSchema()
-Schema.setComponentMap({ Button, Paper })
+Schema.setComponentMap({
+  Box, Stack, Grid, Typography, Paper,
+  ButtonGroup, Button, ToggleButtonGroup, ToggleButton, Switch, Checkbox, RadioGroup, Radio, Rating, Slider, Input,
+  Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails, Loader,
+  Tooltip, Snackbar, Alert,
+  BottomNavigation, BottomNavigationAction, Tabs, Tab,
+  ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value])) })
 
 export function Character ({ character, ui, Component='div', className='', ...props }) {
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
@@ -74,7 +112,7 @@ const calcaulte = async (schema, character) => {
   })
 }
 
-const preprocess = async (schema, defaultComponent = 'div') => {
+const preprocess = async (schema, defaultComponent = 'Box') => {
   return await recursivly(schema, subschema => {
     subschema.component = subschema.component || defaultComponent
     if (Array.isArray(subschema.text)) {

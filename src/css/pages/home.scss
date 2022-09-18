@@ -19,17 +19,12 @@
   }
 
   .characters {
-    height: calc(100vh - 6rem);
-    padding: 1rem;
-    overflow-y: auto;
-
     .character {
-      display: block;
+      background: white;
+      text-decoration: none;
       box-sizing: border-box;
       width: 100%;
       height: 5rem;
-      padding: 1rem;
-      background: white;
       margin-bottom: 1rem;
     }
   }
