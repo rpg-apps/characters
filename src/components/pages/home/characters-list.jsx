@@ -1,4 +1,5 @@
 import { Link, useHistory } from 'react-router-dom'
+import Stack from '@mui/material/Stack'
 
 import { useCharacters } from '../../contexts/characters-context'
 import { Character } from '../../presentation/character'
@@ -18,9 +19,9 @@ export default function CharactersList ({ graveyard }) {
 
   const filteredCharacters = characters.filter(character => character.alive === !graveyard)
 
-  return <div className='characters'>
+  return <Stack className='characters' sx={{ height: 'calc(100vh - 6rem)', padding: '1rem', overflowY: 'auto' }}>
     {filteredCharacters.length === 0 ? <Empty graveyard={graveyard} /> : <List graveyard={graveyard} characters={filteredCharacters} revive={revive} />}
-  </div>
+  </Stack>
 }
 
 function Empty ({ graveyard }) {
