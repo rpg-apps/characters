@@ -94,21 +94,32 @@ const recursivly = async (schema, callback) => {
 }
 
 const calcaulte = async (schema, character) => {
-  const context = Object.fromEntries(Object.entries(character.calculatedSettings).map(([key, value]) => ([`settings:${key}`, value])))
   return await recursivly(Object.assign({}, schema), async subschema => {
-    const smartCalc = async internalSchema => {
-      const keys = Object.keys(internalSchema).filter(key => key !== 'children')
-      for (const key of keys) {
-        const value = internalSchema[key]
-        if (key.startsWith('calc-')) {
-          internalSchema[key.replace('calc-', '')] = await character.get(value, { context })
-          delete internalSchema[key]
+    const smartCalc = async (internalSchema, internalContext) => {
+      const calculableFields = Object.keys(internalSchema).filter(key => !['children', 'collection', 'render'].includes(key))
+      for (const field of calculableFields) {
+        const value = internalSchema[field]
+        if (field.startsWith('calc-')) {
+          internalSchema[field.replace('calc-', '')] = await character.get(value, { context: internalContext })
+          delete internalSchema[field]
         } else if (isPlainObject(value)) {
           await smartCalc(value)
         }
       }
+
+      if (internalSchema.hasOwnProperty('collection') && internalSchema.hasOwnProperty('render') && !internalSchema.hasOwnProperty('children')) {
+        const collection = await character.get(internalSchema['collection'], { context: internalContext })
+        internalSchema.children = []
+        for (const item of collection) {
+          internalSchema.children.push(await smartCalc({ ...internalSchema.render }, { ...internalContext, item }))
+        }
+      }
+
+      return internalSchema
     }
-    await smartCalc(subschema)
+
+    const context = Object.fromEntries(Object.entries(character.calculatedSettings).map(([key, value]) => ([`settings:${key}`, value])))
+    await smartCalc(subschema, context)
   })
 }
 
