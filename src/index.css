@@ -1,7 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Rubik&display=swap');
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
+  height: 5px;
 }
 
 /* Track */

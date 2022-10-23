@@ -39,12 +39,13 @@ import *  as Icons from '@mui/icons-material'
 
 import Input from '../input'
 import Loader from '../loader'
+import Popup from '../popup'
 
 const Schema = new ReactJsonSchema()
 Schema.setComponentMap({
   Box, Stack, Grid, Typography, Paper,
   ButtonGroup, Button, ToggleButtonGroup, ToggleButton, Switch, Checkbox, RadioGroup, Radio, Rating, Slider, Input,
-  Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails, Loader,
+  Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails, Loader, Popup,
   Tooltip, Snackbar, Alert,
   BottomNavigation, BottomNavigationAction, Tabs, Tab,
   ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value])) })
@@ -87,7 +88,8 @@ const recursivly = async (schema, callback) => {
 
   if (schema.children) {
     for (const subschema of schema.children) {
-      await recursivly(subschema, callback)    }
+      await recursivly(subschema, callback)
+    }
   }
 
   return schema
@@ -113,6 +115,16 @@ const calcaulte = async (schema, character) => {
         for (const item of collection) {
           internalSchema.children.push(await smartCalc({ ...internalSchema.render }, { ...internalContext, item }))
         }
+      }
+
+      if (internalSchema.hasOwnProperty('popup')) {
+        const { content, ...props } = internalSchema.popup
+        Object.assign(internalSchema, {
+          component: 'Popup',
+          children: [content, Object.fromEntries(Object.entries(internalSchema).filter(([key]) => key !== 'popup'))]
+        })
+        Object.keys(internalSchema).filter(key => !(['component', 'children'].includes(key))).forEach(key => { delete internalSchema[key] })
+        Object.assign(internalSchema, props)
       }
 
       return internalSchema
