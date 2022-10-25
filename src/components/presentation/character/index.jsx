@@ -42,6 +42,7 @@ import Input from '../input'
 import Loader from '../loader'
 import Popup from '../popup'
 import Edit from './edit'
+import Status from './status'
 
 const Schema = new ReactJsonSchema()
 Schema.setComponentMap({
@@ -50,7 +51,7 @@ Schema.setComponentMap({
   Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails,
   Tooltip, Snackbar, Alert,
   BottomNavigation, BottomNavigationAction, Tabs, Tab,
-  Loader, Popup, Input, Edit,
+  Loader, Popup, Input, Edit, Status,
   ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value]))
 })
 
@@ -134,6 +135,10 @@ const calcaulte = async (schema, character, reprocess) => {
 
       if (internalSchema.component === 'Edit') {
         Object.assign(internalSchema, { character, context: internalContext, reprocess })
+      }
+
+      if (internalSchema.component === 'Status') {
+        Object.assign(internalSchema, { character })
       }
 
       return internalSchema

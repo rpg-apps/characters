@@ -13,8 +13,9 @@ export default function Edit ({ field, character, context, reprocess }) {
 
   const onChange = async (data, errors) => {
     if (value !== data && value !== NOT_READY) {
-      character.set(field, data)
       setValue(data)
+      reprocess()
+      await character.set(field, data)
       reprocess()
     }
   } 
