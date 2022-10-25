@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext, createContext } from 'react'
+import React, { useState, useEffect, useContext, createContext } from 'react'
 import Loader from '../presentation/loader'
 
 import { useAuth } from './auth-context'
@@ -39,6 +39,7 @@ export function WithCharacters ({ children }) {
 class CharactersAPI {
   constructor ({ user, rules, adapters }) {
     Object.assign(this, { user, rules, adapters })
+    this.STATUS = { ONLINE: 'online', OFFLINE: 'offline', SYNCING: 'syncing' }
   }
 
   async load () {
@@ -61,6 +62,15 @@ class CharactersAPI {
     character.save = async () => this.save(character)
     character.delete = async () => this.delete(character)
     character.setSettings = async settings => this.setSettings(character, settings)
+
+    character.STATUS = this.STATUS
+    character.status = this.STATUS.ONLINE
+
+    character.on('change:start', () => { character.status = this.STATUS.SYNCING })
+    character.on('change:over', async () => {
+      await character.save()
+      character.status = this.STATUS.ONLINE
+    })
 
     character.setSettings(raw.settings || {})
     return character

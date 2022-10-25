@@ -1,16 +1,23 @@
+import { useState, useEffect } from 'react'
 import { JsonForms } from '@jsonforms/react'
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import mapObject from 'map-obj'
 
 import { ajv, useErrors } from './validation'
+import NumberInput from './renderers/number-input'
 
-export default function Input ({ value='', type, onChange=()=>{}, layout=Layout.VERTICAL }) {
-  const adapter = generateAdapter(type, ROOT_SCOPE, layout)
-  const { change, errors } = useErrors(adapter, onChange, ROOT_SCOPE)
+const renderers = [...materialRenderers, NumberInput]
+
+export default function Input ({ value='', type='text', name=undefined, onChange=()=>{}, layout=Layout.VERTICAL }) {
+  const adapter = generateAdapter(type, ROOT_SCOPE, layout, name)
+  const [data, setData] = useState()
+  const { change, errors } = useErrors(adapter, onChange, setData, ROOT_SCOPE)
+
+  useEffect(() => setData(adapter.value(value)), [value])
 
   return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
-                    renderers={materialRenderers}     cells={materialCells} ajv={ajv}
-                    data={adapter.value(value)}       onChange={change}
+                    renderers={renderers}             cells={materialCells} ajv={ajv}
+                    data={data}                       onChange={change}
                     validationMode='ValidateAndHide'  additionalErrors={errors}
   />
 }
@@ -19,15 +26,15 @@ Input.Controlled = function ControlledInput ({ type, control, layout }) {
   return <Input type={type} value={control[0]} onChange={control[1]} layout={layout} />
 }
 
-function generateAdapter (type, scope, layout) {
+function generateAdapter (type, scope, layout, name) {
   if (type.constructor === String) {
     if (type.startsWith('array ')) {
-      return arrayInputAdapter(type, scope, layout)
+      return arrayInputAdapter(type, scope, layout, name)
     } else {
-      return basicInputAdapter(type, scope, layout)
+      return basicInputAdapter(type, scope, layout, name)
     }
   }
-  return objectInputAdapter(type, scope, layout)
+  return objectInputAdapter(type, scope, layout, name)
 }
 
 const arrayInputAdapter = (type, scope, layout) => {
@@ -55,12 +62,12 @@ const objectInputAdapter = (type, scope, layout) => {
   }
 }
 
-const basicInputAdapter = (type, scope, layout) => {
+const basicInputAdapter = (type, scope, layout, name = 'value') => {
   if (scope === ROOT_SCOPE) {
-    const adapter = objectInputAdapter({ value: type }, scope, layout)
+    const adapter = objectInputAdapter({ [name]: type }, scope, layout)
     adapter.uiSchema.elements[0].label = false
-    adapter.value = value => (value ? ({ value }) : adapter.defaultData)
-    adapter.onChange = callback => ({ data, errors }) => callback(data.value, errors)
+    adapter.value = value => (value ? ({ [name]: value }) : adapter.defaultData)
+    adapter.onChange = callback => ({ data, errors }) => callback(data[name], errors)
     return adapter
   }
   const adapter = BASIC_TYPES[type]

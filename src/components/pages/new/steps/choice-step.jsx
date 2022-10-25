@@ -18,7 +18,7 @@ export default forwardRef(function GameStep ({ value: builder, update, setLoadin
   const choice = builder.choice
   const ChoiceComponent = choiceComponents[choice.constructor.name]
 
-  useEffect(update, [value, ui.content])
+  useEffect(update, [value, ui.content, update])
 
   useImperativeHandle(ref, () => ({
     canBack: true,

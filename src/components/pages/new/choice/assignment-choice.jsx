@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Uncalculated } from '../../../presentation/character'
 import { Selection } from '../../../presentation/character/selection'
 
 export default function AssignmentChoice ({ builder, choice, control }) {

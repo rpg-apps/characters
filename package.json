@@ -19,6 +19,7 @@
     "ajv": "^8.11.0",
     "ajv-formats": "^2.1.1",
     "change-case": "^4.1.2",
+    "clone": "^2.1.2",
     "customize-cra": "^1.0.0",
     "deepmerge": "^4.2.2",
     "is-plain-object": "^5.0.0",

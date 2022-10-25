@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Popover from '@mui/material/Popover'
 
 export default function Popup ({ children, ...props }) {

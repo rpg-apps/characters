@@ -19,7 +19,7 @@ export default function New () {
   const forceUpdate = useForceUpdate()
   const setState = newState => update(Object.assign({}, state, newState))
 
-  useEffect(forceUpdate, [stepRef, state])
+  useEffect(forceUpdate, [stepRef, state, forceUpdate])
 
   const Step = state.steps[state.index]
 

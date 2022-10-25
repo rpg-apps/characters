@@ -102,6 +102,5 @@ export function useProdcedureUI (character) {
   }
 
   const ui = Object.assign({ output, input, choose, edit, finish }, state)
-
   return ui
 }

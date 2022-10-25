@@ -1,4 +1,3 @@
-import { Uncalculated } from '../../../presentation/character'
 import { Selection } from '../../../presentation/character/selection'
 
 export default function FieldChoice ({ choice, builder, control }) {

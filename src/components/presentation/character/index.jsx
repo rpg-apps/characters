@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import ReactJsonSchema from 'react-json-schema'
 import { pascalCase } from 'change-case'
 import { isPlainObject } from 'is-plain-object'
+import clone from 'clone'
 
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -40,17 +41,20 @@ import *  as Icons from '@mui/icons-material'
 import Input from '../input'
 import Loader from '../loader'
 import Popup from '../popup'
+import Edit from './edit'
 
 const Schema = new ReactJsonSchema()
 Schema.setComponentMap({
   Box, Stack, Grid, Typography, Paper,
-  ButtonGroup, Button, ToggleButtonGroup, ToggleButton, Switch, Checkbox, RadioGroup, Radio, Rating, Slider, Input,
-  Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails, Loader, Popup,
+  ButtonGroup, Button, ToggleButtonGroup, ToggleButton, Switch, Checkbox, RadioGroup, Radio, Rating, Slider,
+  Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails,
   Tooltip, Snackbar, Alert,
   BottomNavigation, BottomNavigationAction, Tabs, Tab,
-  ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value])) })
+  Loader, Popup, Input, Edit,
+  ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value]))
+})
 
-export function Character ({ character, ui, Component='div', className='', ...props }) {
+export function Character ({ character, ui,  procedureUI, Component='div', className='', ...props }) {
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
     <Calculated character={character} schemaName={ui} />
   </Component>
@@ -58,23 +62,24 @@ export function Character ({ character, ui, Component='div', className='', ...pr
 
 export function Uncalculated ({ value }) {
   return <Processed schema={{ text: value }} action={async schema => {
-      await preprocess(schema)
-      return Schema.parseSchema(schema)
+      return Schema.parseSchema(await preprocess(schema))
   }} />
 }
 
 export function Calculated ({ character, schemaName }) {
-  return <Processed schema={character.adapter.components[pascalCase(schemaName)]} action={async schema => {
-    await calcaulte(schema, character)
-    await preprocess(schema)
-    return Schema.parseSchema(schema)
+  return <Processed schema={character.adapter.components[pascalCase(schemaName)]} action={async (schema, reprocess) => {
+    return Schema.parseSchema(await preprocess(await calcaulte(schema, character, reprocess)))
   }} />
 }
 
 function Processed ({ schema, action }) {
   const [processedComponent, setProcessedComponent] = useState(null)
 
-  useEffect(() => { (async () => { setProcessedComponent(await action(schema)) }) () }, [schema, preprocess])
+  const reprocess = async () => {
+    setProcessedComponent(await action(schema, reprocess))
+  }
+
+  useEffect(() => { reprocess() }, [schema, action])
 
   if (!processedComponent) {
     return <Loader />
@@ -95,8 +100,8 @@ const recursivly = async (schema, callback) => {
   return schema
 }
 
-const calcaulte = async (schema, character) => {
-  return await recursivly(Object.assign({}, schema), async subschema => {
+const calcaulte = async (schema, character, reprocess) => {
+  return await recursivly(clone(schema), async subschema => {
     const smartCalc = async (internalSchema, internalContext) => {
       const calculableFields = Object.keys(internalSchema).filter(key => !['children', 'collection', 'render'].includes(key))
       for (const field of calculableFields) {
@@ -125,6 +130,10 @@ const calcaulte = async (schema, character) => {
         })
         Object.keys(internalSchema).filter(key => !(['component', 'children'].includes(key))).forEach(key => { delete internalSchema[key] })
         Object.assign(internalSchema, props)
+      }
+
+      if (internalSchema.component === 'Edit') {
+        Object.assign(internalSchema, { character, context: internalContext, reprocess })
       }
 
       return internalSchema
