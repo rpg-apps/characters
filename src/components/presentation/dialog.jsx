@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Stack from '@mui/material/Stack'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -22,7 +23,7 @@ export default function ControlledDialog ({ children, ...props }) {
   const { title, actions, ...dialogProps } = props
 
   return <>
-    <div onClick={open}>{anchor}</div>
+    <Stack onClick={open}>{anchor}</Stack>
     <Dialog open={showing} onClose={close} {...dialogProps} >
       {title ? <DialogTitle>{title}</DialogTitle> : ''}
       <DialogContent dividers>{content}</DialogContent>

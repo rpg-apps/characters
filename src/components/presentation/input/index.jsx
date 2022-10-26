@@ -67,7 +67,7 @@ const objectInputAdapter = (type, scope, layout) => {
 const basicInputAdapter = (type, scope, layout, name = 'value') => {
   if (scope === ROOT_SCOPE) {
     const adapter = objectInputAdapter({ [name]: type }, scope, layout)
-    adapter.uiSchema.elements[0].label = false
+    adapter.uiSchema.elements[0].label = name
     adapter.value = value => (value ? ({ [name]: value }) : adapter.defaultData)
     adapter.onChange = callback => ({ data, errors }) => callback(data[name], errors)
     return adapter
@@ -76,7 +76,7 @@ const basicInputAdapter = (type, scope, layout, name = 'value') => {
   if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
   return {
     schema: { type: adapter.name, ...(adapter.options || {}) },
-    uiSchema: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope },
+    uiSchema: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope, label: name },
     value: val => val || adapter.defaultData,
     defaultData: adapter.defaultData,
     onChange: callback => ({ data, errors }) => callback(data, errors),
@@ -85,7 +85,7 @@ const basicInputAdapter = (type, scope, layout, name = 'value') => {
 }
 
 const BASIC_TYPES = {
-  'boolean':      { name: 'boolean',  defaultData: false },
+  'boolean':      { name: 'boolean',  defaultData: false, ui: { toggle: true } },
   'number':       { name: 'number',   defaultData: 0 },
   'text':         { name: 'string',   defaultData: '' },
   'long text':    { name: 'string',   defaultData: '',  ui: { multi: true } },

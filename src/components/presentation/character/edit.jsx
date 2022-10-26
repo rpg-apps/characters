@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Input from '../input'
 
-export default function Edit ({ field, character, context, reprocess, requireSave }) {
+export default function Edit ({ field, type, character, context, reprocess, requireSave }) {
   const [value, setValue] = useState(NOT_READY)
 
   useEffect(() => {
@@ -34,10 +34,12 @@ export default function Edit ({ field, character, context, reprocess, requireSav
     }
   }
 
-  const type = character.getValuableType(field)
-  const inputType = type.fieldTypes || type.name
+  if (!type) {
+    type = character.getValuableType(field)
+    type = type.fieldTypes || type.name
+  }
 
-  return <Input name={field} value={value} type={inputType} onChange={onChange} />
+  return <Input name={field} value={value} type={type} onChange={onChange} />
 }
 
 const NOT_READY = 'NOT_READY'
