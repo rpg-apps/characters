@@ -41,6 +41,7 @@ import *  as Icons from '@mui/icons-material'
 import Input from '../input'
 import Loader from '../loader'
 import Popup from '../popup'
+import Dialog from '../dialog'
 import Edit from './edit'
 import Status from './status'
 
@@ -51,13 +52,13 @@ Schema.setComponentMap({
   Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails,
   Tooltip, Snackbar, Alert,
   BottomNavigation, BottomNavigationAction, Tabs, Tab,
-  Loader, Popup, Input, Edit, Status,
+  Loader, Popup, Dialog, Input, Edit, Status,
   ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value]))
 })
 
 export function Character ({ character, ui,  procedureUI, Component='div', className='', ...props }) {
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
-    <Calculated character={character} schemaName={ui} />
+    <Calculated character={character} schemaName={ui} procedureUI={procedureUI} />
   </Component>
 }
 
@@ -67,9 +68,9 @@ export function Uncalculated ({ value }) {
   }} />
 }
 
-export function Calculated ({ character, schemaName }) {
+export function Calculated ({ character, schemaName, procedureUI }) {
   return <Processed schema={character.adapter.components[pascalCase(schemaName)]} action={async (schema, reprocess) => {
-    return Schema.parseSchema(await preprocess(await calcaulte(schema, character, reprocess)))
+    return Schema.parseSchema(await preprocess(await calcaulte(schema, character, reprocess, procedureUI)))
   }} />
 }
 
@@ -101,7 +102,7 @@ const recursivly = async (schema, callback) => {
   return schema
 }
 
-const calcaulte = async (schema, character, reprocess) => {
+const calcaulte = async (schema, character, reprocess, procedureUI) => {
   return await recursivly(clone(schema), async subschema => {
     const smartCalc = async (internalSchema, internalContext) => {
       const calculableFields = Object.keys(internalSchema).filter(key => !['children', 'collection', 'render'].includes(key))
@@ -123,22 +124,22 @@ const calcaulte = async (schema, character, reprocess) => {
         }
       }
 
-      if (internalSchema.hasOwnProperty('popup')) {
-        const { content, ...props } = internalSchema.popup
+      INTERNAL_UI_FIELDS.filter(internalUIField => internalSchema.hasOwnProperty(internalUIField)).forEach(internalUIField => {
+        const { content, ...props } = internalSchema[internalUIField]
+        if (props.actions) {
+          props.actions.filter(action => action.onClick).forEach(action => { action.onClick = handler(action.onClick, character, reprocess, procedureUI, internalContext) })
+        }
+        const anchor = Object.fromEntries(Object.entries(internalSchema).filter(([key]) => key !== internalUIField))
         Object.assign(internalSchema, {
-          component: 'Popup',
-          children: [content, Object.fromEntries(Object.entries(internalSchema).filter(([key]) => key !== 'popup'))]
+          component: pascalCase(internalUIField),
+          children: Array.isArray(content) ? [anchor, ...content] : [anchor, content]
         })
         Object.keys(internalSchema).filter(key => !(['component', 'children'].includes(key))).forEach(key => { delete internalSchema[key] })
         Object.assign(internalSchema, props)
-      }
+      })
 
-      if (internalSchema.component === 'Edit') {
+      if (SPECIAL_COMPONENTS.includes(internalSchema.component)) {
         Object.assign(internalSchema, { character, context: internalContext, reprocess })
-      }
-
-      if (internalSchema.component === 'Status') {
-        Object.assign(internalSchema, { character })
       }
 
       return internalSchema
@@ -147,6 +148,26 @@ const calcaulte = async (schema, character, reprocess) => {
     const context = Object.fromEntries(Object.entries(character.calculatedSettings).map(([key, value]) => ([`settings:${key}`, value])))
     await smartCalc(subschema, context)
   })
+}
+
+const INTERNAL_UI_FIELDS = ['dialog', 'popup']
+const SPECIAL_COMPONENTS = ['Edit', 'Status']
+
+const handler = (action, character, reprocess, ui, context) => async () => {
+  if (action === 'cancel') {
+    return
+  }
+  if (action === 'save') {
+    for (let func of character.saveFunctions) {
+      await func.callback()
+    }
+    reprocess()
+    await character.save()
+    reprocess()
+    character.saveFunctions = []
+    return
+  }
+  await character.exec(action, ui, context)
 }
 
 const preprocess = async (schema, defaultComponent = 'Box') => {

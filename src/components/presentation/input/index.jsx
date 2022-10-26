@@ -13,7 +13,9 @@ export default function Input ({ value='', type='text', name=undefined, onChange
   const [data, setData] = useState()
   const { change, errors } = useErrors(adapter, onChange, setData, ROOT_SCOPE)
 
-  useEffect(() => setData(adapter.value(value)), [value])
+  useEffect(() => {
+    setData(adapter.value(value))
+  }, [value])
 
   return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
                     renderers={renderers}             cells={materialCells} ajv={ajv}

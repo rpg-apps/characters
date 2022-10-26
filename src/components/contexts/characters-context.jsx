@@ -65,12 +65,7 @@ class CharactersAPI {
 
     character.STATUS = this.STATUS
     character.status = this.STATUS.ONLINE
-
-    character.on('change:start', () => { character.status = this.STATUS.SYNCING })
-    character.on('change:over', async () => {
-      await character.save()
-      character.status = this.STATUS.ONLINE
-    })
+    character.requests = 0
 
     character.setSettings(raw.settings || {})
     return character
@@ -81,10 +76,14 @@ class CharactersAPI {
   }
 
   async save (character) {
+    character.requests += 1
+    character.status = this.STATUS.SYNCING
     await this.user.callFunction('updateCharacter', {
       id: character.id.toString(),
       character: Object.assign(character.toJson(), { settings: character.settings })
     })
+    character.requests -= 1
+    character.status = (character.requests === 0) ? this.STATUS.ONLINE : this.STATUS.SYNCING
   }
 
   async delete (character) {

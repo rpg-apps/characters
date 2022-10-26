@@ -14,10 +14,12 @@ export default function Popup ({ children, ...props }) {
     delete props.arrow
   }
 
+  const [anchor, ...content] = children
+
   return <>
-    <div className='popup-container' onClick={open}>{children[1]}</div>
+    <div onClick={open}>{anchor}</div>
     <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={close} {...props} >
-      {children[0]}
+      {content}
     </Popover>
   </>
 }
