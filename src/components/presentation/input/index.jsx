@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { JsonForms } from '@jsonforms/react'
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
+import Typography from '@mui/material/Typography'
 import mapObject from 'map-obj'
 
 import { ajv, useErrors } from './validation'
@@ -24,8 +25,8 @@ export default function Input ({ value='', type='text', name=undefined, onChange
   />
 }
 
-Input.Controlled = function ControlledInput ({ type, control, layout }) {
-  return <Input type={type} value={control[0]} onChange={control[1]} layout={layout} />
+Input.Controlled = function ControlledInput ({ name, type, control, layout }) {
+  return <Input type={type} value={control[0]} name={name} onChange={control[1]} layout={layout} />
 }
 
 function generateAdapter (type, scope, layout, name) {

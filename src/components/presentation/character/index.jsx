@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Unstable_Grid2'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
+import IconButton from '@mui/material/IconButton'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Button from '@mui/material/Button'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
@@ -44,19 +45,23 @@ import Popup from '../popup'
 import Dialog from '../dialog'
 import Edit from './edit'
 import Status from './status'
+import Notes from './notes'
+import Settings from './settings'
 
 const Schema = new ReactJsonSchema()
 Schema.setComponentMap({
   Box, Stack, Grid, Typography, Paper,
-  ButtonGroup, Button, ToggleButtonGroup, ToggleButton, Switch, Checkbox, RadioGroup, Radio, Rating, Slider,
+  ButtonGroup, Button, IconButton, ToggleButtonGroup, ToggleButton, Switch, Checkbox, RadioGroup, Radio, Rating, Slider,
   Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails,
   Tooltip, Snackbar, Alert,
   BottomNavigation, BottomNavigationAction, Tabs, Tab,
-  Loader, Popup, Dialog, Input, Edit, Status,
+  Loader, Popup, Dialog, Status, EditField: Edit.Field, EditNotes: Edit.Notes, EditSettings: Edit.Settings,
   ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value]))
 })
 
 export function Character ({ character, ui,  procedureUI, Component='div', className='', ...props }) {
+  console.log(character)
+
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
     <Calculated character={character} schemaName={ui} procedureUI={procedureUI} />
   </Component>
@@ -124,6 +129,11 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
         }
       }
 
+      if (internalSchema.hasOwnProperty('open') && BUILTIN_DIALOGS.hasOwnProperty(internalSchema.open)) {
+        internalSchema.dialog = BUILTIN_DIALOGS[internalSchema.open]
+        delete internalSchema.open
+      }
+
       INTERNAL_UI_FIELDS.filter(internalUIField => internalSchema.hasOwnProperty(internalUIField)).forEach(internalUIField => {
         const { content, ...props } = internalSchema[internalUIField]
         if (props.actions) {
@@ -151,13 +161,20 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
 }
 
 const INTERNAL_UI_FIELDS = ['dialog', 'popup']
-const SPECIAL_COMPONENTS = ['Edit', 'Status']
+const SPECIAL_COMPONENTS = ['EditField', 'EditNotes', 'EditSettings', 'Status']
 
 const handler = (action, character, reprocess, ui, context) => async () => {
-  if (action === 'cancel') {
-    return
+  if (HANDLERS.hasOwnProperty(action)) {
+    await HANDLERS[action](character, reprocess)
+  } else {
+    console.log(action)
+    await character.execute(action, ui, context)
   }
-  if (action === 'save') {
+}
+
+const HANDLERS = {
+  cancel: () => {},
+  save: async (character, reprocess) => {
     for (let func of character.saveFunctions) {
       await func.callback()
     }
@@ -165,9 +182,32 @@ const handler = (action, character, reprocess, ui, context) => async () => {
     await character.save()
     reprocess()
     character.saveFunctions = []
-    return
   }
-  await character.exec(action, ui, context)
+}
+
+const BUILTIN_DIALOGS = {
+  notes: {
+    sx: { marginTop: '-20vh', '.MuiPaper-root': { width: '80vw' } },
+    title: 'Character notes',
+    content: [
+      { component: 'EditNotes', requireSave: true }
+    ],
+    actions: [
+      { text: 'Cancel', onClick: 'cancel', variant: 'outlined' },
+      { text: 'Save', onClick: 'save', variant: 'outlined' }
+    ]
+  },
+  settings: {
+    sx: { marginTop: '-20vh', '.MuiPaper-root': { width: '80vw' } },
+    title: 'Character settings',
+    content: [
+      { component: 'EditSettings', requireSave: true }
+    ],
+    actions: [
+      { text: 'Cancel', onClick: 'cancel', variant: 'outlined' },
+      { text: 'Save', onClick: 'save', variant: 'outlined' }
+    ]
+  }
 }
 
 const preprocess = async (schema, defaultComponent = 'Box') => {
