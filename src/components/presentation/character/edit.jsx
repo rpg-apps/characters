@@ -1,20 +1,20 @@
 import { useState, useCallback, useEffect } from 'react'
 import Input from '../input'
 
-export default function Edit ({ id, type, get, set, character, reprocess, requireSave }) {
+export default function Edit ({ id, type, get, set, character, reprocess, requireSave, ...options }) {
   const [value, setValue] = useState(NOT_READY)
 
   useEffect(() => {
-    (async () => {
       if (requireSave) {
         character.saveFunctions = (character.saveFunctions || []).filter(saveFunction => saveFunction.id !== id)
         character.saveFunctions.push({ id, callback: () => save(value) })
       }
-      if (value === NOT_READY) {
-        const originalValue = await get()
-        setValue(originalValue)
-      }
-    })()
+      (async () => {
+        if (value === NOT_READY) {
+          const originalValue = await get()
+          setValue(originalValue)
+        }
+      })()
   }, [id, setValue, character, value, get])
 
   const save = async (data) => {
@@ -23,7 +23,7 @@ export default function Edit ({ id, type, get, set, character, reprocess, requir
   }
 
   const onChange = async (data, errors) => {
-    if (value !== data && value !== NOT_READY) {
+    if (value !== data && value !== NOT_READY && data !== NOT_READY) {
       setValue(data)
       if (!requireSave) {
         await save(data)
@@ -34,9 +34,7 @@ export default function Edit ({ id, type, get, set, character, reprocess, requir
     }
   }
 
-  if (value === NOT_READY)  return ''
-
-  return <Input name={id} value={value} type={type} onChange={onChange} />
+  return <Input name={id} value={value} type={type} onChange={onChange} {...options} />
 }
 
 Edit.Field = function EditField ({ field, type, character, context, ...editProps }) {

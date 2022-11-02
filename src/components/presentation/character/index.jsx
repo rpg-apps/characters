@@ -45,8 +45,6 @@ import Popup from '../popup'
 import Dialog from '../dialog'
 import Edit from './edit'
 import Status from './status'
-import Notes from './notes'
-import Settings from './settings'
 
 const Schema = new ReactJsonSchema()
 Schema.setComponentMap({
@@ -89,7 +87,10 @@ function Processed ({ schema, action }) {
   useEffect(() => { reprocess() }, [schema, action])
 
   if (!processedComponent) {
-    return <Loader />
+    return <Loader sx={{
+      width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '1rem',
+      '.logo': { width: '8rem', aspectRatio: '1' }
+    }} />
   }
 
   return processedComponent
@@ -137,7 +138,7 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
       INTERNAL_UI_FIELDS.filter(internalUIField => internalSchema.hasOwnProperty(internalUIField)).forEach(internalUIField => {
         const { content, ...props } = internalSchema[internalUIField]
         if (props.actions) {
-          props.actions.filter(action => action.onClick).forEach(action => { action.onClick = handler(action.onClick, character, reprocess, procedureUI, internalContext) })
+          props.actions.filter(action => action.hasOwnProperty(ON_CLICK)).forEach(action => { action.onClick = handler(action[ON_CLICK], character, reprocess, procedureUI, internalContext) })
         }
         const anchor = Object.fromEntries(Object.entries(internalSchema).filter(([key]) => key !== internalUIField))
         Object.assign(internalSchema, {
@@ -162,6 +163,8 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
 
 const INTERNAL_UI_FIELDS = ['dialog', 'popup']
 const SPECIAL_COMPONENTS = ['EditField', 'EditNotes', 'EditSettings', 'Status']
+
+const ON_CLICK = 'on click'
 
 const handler = (action, character, reprocess, ui, context) => async () => {
   if (HANDLERS.hasOwnProperty(action)) {
@@ -193,8 +196,8 @@ const BUILTIN_DIALOGS = {
       { component: 'EditNotes', requireSave: true }
     ],
     actions: [
-      { text: 'Cancel', onClick: 'cancel', variant: 'outlined' },
-      { text: 'Save', onClick: 'save', variant: 'outlined' }
+      { text: 'Cancel', 'on click': 'cancel', variant: 'outlined' },
+      { text: 'Save', 'on click': 'save', variant: 'outlined' }
     ]
   },
   settings: {
@@ -204,8 +207,8 @@ const BUILTIN_DIALOGS = {
       { component: 'EditSettings', requireSave: true }
     ],
     actions: [
-      { text: 'Cancel', onClick: 'cancel', variant: 'outlined' },
-      { text: 'Save', onClick: 'save', variant: 'outlined' }
+      { text: 'Cancel', 'on click': 'cancel', variant: 'outlined' },
+      { text: 'Save', 'on click': 'save', variant: 'outlined' }
     ]
   }
 }

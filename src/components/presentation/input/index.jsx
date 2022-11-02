@@ -3,25 +3,32 @@ import { JsonForms } from '@jsonforms/react'
 import { materialCells, materialRenderers } from '@jsonforms/material-renderers'
 import Typography from '@mui/material/Typography'
 import mapObject from 'map-obj'
+import equal from 'fast-deep-equal/react'
 
 import { ajv, useErrors } from './validation'
 import NumberInput from './renderers/number-input'
 
 const renderers = [...materialRenderers, NumberInput]
 
-export default function Input ({ value='', type='text', name=undefined, onChange=()=>{}, layout=Layout.VERTICAL }) {
-  const adapter = generateAdapter(type, ROOT_SCOPE, layout, name)
-  const [data, setData] = useState()
-  const { change, errors } = useErrors(adapter, onChange, setData, ROOT_SCOPE)
+export default function Input ({ value='', type='text', name=undefined, onChange=()=>{}, layout=Layout.VERTICAL, ...options }) {
+  const adapter = generateAdapter(type, ROOT_SCOPE, layout, name, onChange, options)
+  const [formState, setFormState] = useState({ errors: [], data: undefined })
+  const getErrors = useErrors(adapter, ROOT_SCOPE)
+
+  const change = ({ data, errors }) => {
+    if (equal(data, formState.data) || equal(data, formState.previousData))  return
+    setFormState({ errors: getErrors({ data, errors }), data, previousData: formState.data })
+    return adapter.onChange({ data, errors })
+  }
 
   useEffect(() => {
-    setData(adapter.value(value))
+    setFormState({ ...formState, data: adapter.value(value), previousData: formState.data })
   }, [value])
 
   return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
                     renderers={renderers}             cells={materialCells} ajv={ajv}
-                    data={data}                       onChange={change}
-                    validationMode='ValidateAndHide'  additionalErrors={errors}
+                    data={formState.data}             onChange={change}
+                    validationMode='ValidateAndHide'  additionalErrors={formState.errors}
   />
 }
 
@@ -29,58 +36,58 @@ Input.Controlled = function ControlledInput ({ name, type, control, layout }) {
   return <Input type={type} value={control[0]} name={name} onChange={control[1]} layout={layout} />
 }
 
-function generateAdapter (type, scope, layout, name) {
+function generateAdapter (type, scope, layout, name, onChange, options) {
   if (type.constructor === String) {
     if (type.startsWith('array ')) {
-      return arrayInputAdapter(type, scope, layout, name)
+      return arrayInputAdapter(type, scope, layout, name, onChange, options)
     } else {
-      return basicInputAdapter(type, scope, layout, name)
+      return basicInputAdapter(type, scope, layout, name, onChange, options)
     }
   }
-  return objectInputAdapter(type, scope, layout, name)
+  return objectInputAdapter(type, scope, layout, name, onChange, options)
 }
 
-const arrayInputAdapter = (type, scope, layout) => {
-  const itemsAdapater = generateAdapter(type.replace(/^array /, ''), scope, Layout.flip(layout))
+const arrayInputAdapter = (type, scope, layout, name, onChange, options) => {
+  const itemsAdapater = generateAdapter(type.replace(/^array /, ''), scope, Layout.flip(layout), name, onChange, options)
   return {
     schema: { type: 'array', items: itemsAdapater.schema },
     uiSchema: { type: 'Control', scope },
     value: val => val || [],
     defaultData: [],
-    onChange: callback => ({ data, errors }) => callback(data, errors),
+    onChange: ({ data, errors }) => onChange(data, errors),
     validate: (data, scope) => data.map(item => itemsAdapater.validate(item, scope, data)).reduce((arr, subarr) => arr.concat(subarr), [])
   }
 }
 
-const objectInputAdapter = (type, scope, layout) => {
-  const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout))])
+const objectInputAdapter = (type, scope, layout, name, onChange, options) => {
+  const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout), name, onChange, options)])
   const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
   return {
     schema: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.schema]), required: Object.keys(adapters) },
     uiSchema: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiSchema)  },
     value: val => val || defaultData,
     defaultData,
-    onChange: callback => ({ data, errors }) => callback(data, errors),
+    onChange: ({ data, errors }) => onChange(data, errors),
     validate: (data, scope) => Object.entries(adapters).map(([field, adapter]) => adapter.validate(data[field], `${scope}/properties/${field}`, data)).reduce((arr, subarr) => arr.concat(subarr), [])
   }
 }
 
-const basicInputAdapter = (type, scope, layout, name = 'value') => {
+const basicInputAdapter = (type, scope, layout, name = 'value', onChange, options) => {
   if (scope === ROOT_SCOPE) {
-    const adapter = objectInputAdapter({ [name]: type }, scope, layout)
+    const adapter = objectInputAdapter({ [name]: type }, scope, layout, undefined, onChange, options)
     adapter.uiSchema.elements[0].label = name
     adapter.value = value => (value ? ({ [name]: value }) : adapter.defaultData)
-    adapter.onChange = callback => ({ data, errors }) => callback(data[name], errors)
+    adapter.onChange = ({ data, errors }) => onChange(data[name], errors)
     return adapter
   }
   const adapter = BASIC_TYPES[type]
   if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
   return {
-    schema: { type: adapter.name, ...(adapter.options || {}) },
+    schema: { type: adapter.name, ...(adapter.options || {}), ...options },
     uiSchema: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope, label: name },
     value: val => val || adapter.defaultData,
     defaultData: adapter.defaultData,
-    onChange: callback => ({ data, errors }) => callback(data, errors),
+    onChange: ({ data, errors }) => onChange(data, errors),
     validate: adapter.validate || (() => [])
   }
 }

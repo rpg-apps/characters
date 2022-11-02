@@ -33,7 +33,7 @@ const arrowSX = arrow => {
   const borderWidth = new Array(4).fill(1).map((borderSide, borderSideIndex) => borderSideIndex === sideIndex ? '0' : '0.5rem').join(' ')
   const borderColor = new Array(4).fill(1).map((borderSide, borderSideIndex) => borderSideIndex === (sideIndex + 2) % 4 ? '#2f2f2f' : 'transparent').join(' ')
 
-  const position = { [side]: '-1rem' }
+  const position = { [side]: 'calc(1px - 1rem)' }
   if (alignment === 'center') {
     Object.assign(position, { [['top', 'bottom'].includes('side') ? 'left' : 'top']: 'calc(50% - 0.5rem)' })
   } else {

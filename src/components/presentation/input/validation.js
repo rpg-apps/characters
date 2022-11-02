@@ -2,16 +2,8 @@ import { useState } from 'react'
 import AJV from 'ajv'
 import addFormats from 'ajv-formats'
 
-export const useErrors = (adapter, onChange, setData, rootScope) => {
-  const [shownErrors, setShownErrors] = useState([])
-  const change = ({ data, errors }) => {
-    errors = errors.filter(error => error.data !== '').concat(adapter.validate(data, rootScope, data))
-    setShownErrors(errors)
-    setData(data)
-    return adapter.onChange(onChange)({ data, errors })
-  }
-
-  return { change, errors: shownErrors }
+export const useErrors = (adapter, rootScope) => {
+  return ({ data, errors }) => errors.filter(error => error.data !== '').concat(adapter.validate(data, rootScope, data))
 }
 
 export const ajv = new AJV({
