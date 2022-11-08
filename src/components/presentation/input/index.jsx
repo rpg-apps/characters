@@ -7,8 +7,9 @@ import equal from 'fast-deep-equal/react'
 
 import { ajv, useErrors } from './validation'
 import NumberInput from './renderers/number-input'
+import ColorInput from './renderers/color-input'
 
-const renderers = [...materialRenderers, NumberInput]
+const renderers = [...materialRenderers, NumberInput, ColorInput]
 
 export default function Input ({ value='', type='text', name=undefined, onChange=()=>{}, layout=Layout.VERTICAL, ...options }) {
   const adapter = generateAdapter(type, ROOT_SCOPE, layout, name, onChange, options)
@@ -60,7 +61,7 @@ const arrayInputAdapter = (type, scope, layout, name, onChange, options) => {
 }
 
 const objectInputAdapter = (type, scope, layout, name, onChange, options) => {
-  const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout), name, onChange, options)])
+  const adapters = mapObject(type, (field, subtype) => [field, generateAdapter(subtype, `${scope}/properties/${field}`, Layout.flip(layout), field, onChange, options)])
   const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
   return {
     schema: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.schema]), required: Object.keys(adapters) },
@@ -99,7 +100,8 @@ const BASIC_TYPES = {
   'long text':    { name: 'string',   defaultData: '',  ui: { multi: true } },
   'email':        { name: 'string',   defaultData: '', options: { format: 'email' } },
   'password':     { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { lengthRange: [6,128] } },
-  'confirmation': { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { confirmation: true } }
+  'confirmation': { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { confirmation: true } },
+  'color':        { name: 'string',   defaultData: '#000000', ui: { format: 'color' } }
 }
 
 const ROOT_SCOPE = '#'

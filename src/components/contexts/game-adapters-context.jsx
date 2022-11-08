@@ -22,7 +22,7 @@ export const mergeAdapters = adapters => {
   return adapters.reduce((result, adapter) => ({
     components:     merge(result.components, adapter.components),
     assets:         result.assets.concat(adapter.assets),
-    settings:       result.settings.concat(adapter.settings)
+    settings:       merge(result.settings, adapter.settings)
   }), { components: {}, css: {}, assets: [], settings: [] })
 }
 

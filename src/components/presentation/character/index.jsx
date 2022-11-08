@@ -44,6 +44,7 @@ import Loader from '../loader'
 import Popup from '../popup'
 import Dialog from '../dialog'
 import Edit from './edit'
+import Condition from './condition'
 import Status from './status'
 
 const Schema = new ReactJsonSchema()
@@ -53,7 +54,9 @@ Schema.setComponentMap({
   Avatar, Badge, Chip, Divider, CircularProgress, LinearProgress, Accordion, AccordionSummary, AccordionDetails,
   Tooltip, Snackbar, Alert,
   BottomNavigation, BottomNavigationAction, Tabs, Tab,
-  Loader, Popup, Dialog, Status, EditField: Edit.Field, EditNotes: Edit.Notes, EditSettings: Edit.Settings,
+  Loader, Popup, Dialog, Status,
+  EditField: Edit.Field, EditNotes: Edit.Notes, EditSettings: Edit.Settings,
+  Condition, Empty: Condition.Empty,
   ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value]))
 })
 
@@ -138,7 +141,10 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
       INTERNAL_UI_FIELDS.filter(internalUIField => internalSchema.hasOwnProperty(internalUIField)).forEach(internalUIField => {
         const { content, ...props } = internalSchema[internalUIField]
         if (props.actions) {
-          props.actions.filter(action => action.hasOwnProperty(ON_CLICK)).forEach(action => { action.onClick = handler(action[ON_CLICK], character, reprocess, procedureUI, internalContext) })
+          props.actions.filter(action => action.hasOwnProperty(ON_CLICK)).forEach(action => {
+            action.onClick = handler(action[ON_CLICK], character, reprocess, procedureUI, internalContext)
+            delete action[ON_CLICK]
+          })
         }
         const anchor = Object.fromEntries(Object.entries(internalSchema).filter(([key]) => key !== internalUIField))
         Object.assign(internalSchema, {
@@ -156,13 +162,13 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
       return internalSchema
     }
 
-    const context = Object.fromEntries(Object.entries(character.calculatedSettings).map(([key, value]) => ([`settings:${key}`, value])))
+    const context = Object.fromEntries(Object.entries(character.settings.calculated).map(([key, value]) => ([`settings:${key}`, value])))
     await smartCalc(subschema, context)
   })
 }
 
 const INTERNAL_UI_FIELDS = ['dialog', 'popup']
-const SPECIAL_COMPONENTS = ['EditField', 'EditNotes', 'EditSettings', 'Status']
+const SPECIAL_COMPONENTS = ['EditField', 'EditNotes', 'EditSettings', 'Status', 'Condition']
 
 const ON_CLICK = 'on click'
 

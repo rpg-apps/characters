@@ -17,7 +17,7 @@ The application itself has a classic ReactJS structure, using a `src/components`
 Inside the `src/components` folder there are three subfolders, unlike usually done in react. Two of them are the classic `pages` and `presentation`, containing page-specific and generic components respectively. The last folder, `contexts` includes wrapping context components and that are used for data manipulation in the application. `hooks` includes generic hooks to use in the application, that do not have anything to do with specific application data.
 
 Another folder in the `src` folder inlucdes the adapters for each of the games with which the application can work. The application uses [rpg-js](https://github.com/rpg-apps/rpg-js/) parser for the [rpg-yaml](https://github.com/rpg-apps/rpg-yaml) language, and the [rpg-yaml](https://github.com/rpg-apps/rpg-yaml/tree/master/games) database of games.
-Each game's rulebook in the database has an adapter in the `games` folder (currently only Dungeon World is supported). The adapter is build out of two files, a SCSS file and a JS file. The SCSS file includes how to display the different fields of the character in each of the pages, and the JS file includes the characters settings and event handlers for interactivity.
+Each game's rulebook in the database has an adapter in the `games` folder (currently only Dungeon World is supported). The adapter is build from a JSON file representing the JSON schemas used in the app and other settings.
 
 ### Contribution
 The software is ran using [yarn](https://yarnpkg.com/).

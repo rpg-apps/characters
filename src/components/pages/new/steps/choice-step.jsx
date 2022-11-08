@@ -35,7 +35,7 @@ export default forwardRef(function GameStep ({ value: builder, update, setLoadin
       } else {
         await builder.finish(ui)
         setLoading(true)
-        const id = await characters.create(Object.assign(builder.character.toJson(), { settings: 'manual' }))
+        const id = await characters.create(builder.character)
         builder.clear()
         history.push(`/character/${id}`)
       }

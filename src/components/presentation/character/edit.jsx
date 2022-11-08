@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
+import mapObject from 'map-obj'
+
 import Input from '../input'
 
 export default function Edit ({ id, type, get, set, character, reprocess, requireSave, ...options }) {
@@ -57,7 +59,11 @@ Edit.Notes = function EditNotes ({ character, ...editProps }) {
 }
 
 Edit.Settings = function EditSettings ({ character, ...editProps }) {
-  return ''
+  const get = useCallback(() => mapObject(character.adapter.settings, key => [key, character.settings.get(key)], [character]))
+  const set = useCallback(settings => character.settings.setMultiple(settings), [character])
+
+  const type = mapObject(character.adapter.settings, (key, value) => [key, value.type])
+  return <Edit id='settings' type={type} get={get} set={set} character={character} {...editProps} />
 }
 
 const NOT_READY = 'NOT_READY'
