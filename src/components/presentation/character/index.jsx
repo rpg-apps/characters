@@ -121,7 +121,7 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
           internalSchema[field.replace('calc-', '')] = await character.get(value, { context: internalContext })
           delete internalSchema[field]
         } else if (isPlainObject(value)) {
-          await smartCalc(value)
+          await smartCalc(value, internalContext)
         }
       }
 

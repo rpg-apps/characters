@@ -63,7 +63,7 @@ class CharacterSettings {
   async init (character) {
     for (let key in this.adapter.settings) {
       const setting = this.adapter.settings[key]
-      if (setting.universal) {
+      if (setting.universal && !this.rawSettings.hasOwnProperty(key)) {
         this.rawSettings[key] = setting.defaultValue || await character.get(setting.initializationFormula)
       }
     }
