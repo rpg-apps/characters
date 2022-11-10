@@ -1,5 +1,13 @@
+
 import { useState, useCallback, useEffect } from 'react'
-import mapObject from 'map-obj'
+import mapObject, { mapObjectSkip } from 'map-obj'
+import Stack from '@mui/material/Stack'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import TuneIcon from '@mui/icons-material/Tune'
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh'
+import EditIcon from '@mui/icons-material/Edit'
+import Typography from '@mui/material/Typography'
 
 import Input from '../input'
 
@@ -59,11 +67,39 @@ Edit.Notes = function EditNotes ({ character, ...editProps }) {
 }
 
 Edit.Settings = function EditSettings ({ character, ...editProps }) {
-  const get = useCallback(() => mapObject(character.adapter.settings, key => [key, character.settings.get(key)], [character]))
+  const get = useCallback(() => mapObject(character.adapter.settings, (key, setting) => (setting.universal || character.settings.plan === 'custom') ? [key, character.settings.get(key)] : mapObjectSkip, [character]))
   const set = useCallback(settings => character.settings.setMultiple(settings), [character])
 
-  const type = mapObject(character.adapter.settings, (key, value) => [key, value.type])
-  return <Edit id='settings' type={type} get={get} set={set} character={character} {...editProps} />
+  const type = mapObject(character.adapter.settings, (key, setting) => (setting.universal || character.settings.plan === 'custom') ? [key, setting.type] : mapObjectSkip)
+  return <Stack gap={2}>
+    <PlanSelection character={character} {...editProps} />
+    <Edit id='settings' type={type} get={get} set={set} character={character} {...editProps} />
+  </Stack>
+}
+
+function PlanSelection ({ character, reprocess, ...others }) {
+  const plans = [
+    { name: 'manual', icon: <EditIcon />, description: 'Just like a character sheet' },
+    { name: 'automatic', icon: <AutoFixHighIcon />, description: 'Let the computer do the heavy lifting' },
+    { name: 'custom', icon: <TuneIcon />, description: 'Decide on individual features' }
+  ]
+
+  const update = (event, plan) => {
+    character.settings.plan = plan || character.settings.plan
+    reprocess()
+  }
+
+  return <ToggleButtonGroup value={character.settings.plan} exclusive orientation='vertical' onChange={update}>
+    {plans.map(({ name, icon, description }) => <ToggleButton value={name} aria-label={name} fullWidth textAlign='left' key={name}>
+      <Stack direction='row' alignItems='center' justifyContent='flex-start' width={1} height={1} gap={1}>
+        {icon}
+        <Stack alignItems='flex-start' flexGrow={1}>
+          {name}
+          <Typography variant='caption' textAlign='left'>{description}</Typography>
+        </Stack>
+      </Stack>
+    </ToggleButton>)}
+  </ToggleButtonGroup>
 }
 
 const NOT_READY = 'NOT_READY'

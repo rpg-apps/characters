@@ -20,8 +20,8 @@ export function WithAuth ({ appId, children }) {
 
   const initGoogleLogin = useCallback(() => {
     /* global google */
-    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: loginWithGoogle })
-    google.accounts.id.renderButton(document.getElementById('google-login'), { theme: 'outline', size: 'large' })
+    // google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: loginWithGoogle })
+    // google.accounts.id.renderButton(document.getElementById('google-login'), { theme: 'outline', size: 'large' })
   }, [])
 
   const changeView = useCallback(newView => {

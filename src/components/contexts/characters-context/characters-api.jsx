@@ -85,7 +85,12 @@ class CharacterSettings {
     this.rawSettings[field] = value
   }
 
-  setPlan (plan) {
+  get plan () {
+    return this.rawSettings.plan
+  }
+
+  set plan (plan) {
+    console.log('setting plan to', plan)
     this.rawSettings.plan = plan
   }
 
