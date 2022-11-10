@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle, useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
 
 import { useCharacters } from '../../../contexts/characters-context'
-import { useProdcedureUI } from '../../../hooks/procedure-ui'
+import { useProcedureUI } from '../../../hooks/procedure-ui'
 
 import TypeChoice from '../choice/type-choice'
 import FieldChoice from '../choice/field-choice'
@@ -14,7 +14,7 @@ export default forwardRef(function GameStep ({ value: builder, update, setLoadin
   const [value, setValue] = useState()
   const history = useHistory()
   const characters = useCharacters()
-  const ui = useProdcedureUI(() => builder.character)
+  const ui = useProcedureUI(() => builder.character)
   const choice = builder.choice
   const ChoiceComponent = choiceComponents[choice.constructor.name]
 

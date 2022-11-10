@@ -26,6 +26,8 @@ export default function Input ({ value='', type='text', name=undefined, onChange
     setFormState({ ...formState, data: adapter.value(value), previousData: formState.data })
   }, [value])
 
+  console.log(adapter, formState, value)
+
   return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
                     renderers={renderers}             cells={materialCells} ajv={ajv}
                     data={formState.data}             onChange={change}
@@ -84,7 +86,7 @@ const basicInputAdapter = (type, scope, layout, name = 'value', onChange, option
   const adapter = BASIC_TYPES[type]
   if (!adapter) throw new Error(`Missing Input Adapater ${type}`)
   return {
-    schema: { type: adapter.name, ...(adapter.options || {}), ...options },
+    schema: { type: adapter.name, ...(adapter.options || {}), "default": adapter.defaultData, ...options },
     uiSchema: { type: 'Control', options: { ...(adapter.ui || {}), hideRequiredAsterisk: true }, scope, label: name },
     value: val => val || adapter.defaultData,
     defaultData: adapter.defaultData,
@@ -94,14 +96,15 @@ const basicInputAdapter = (type, scope, layout, name = 'value', onChange, option
 }
 
 const BASIC_TYPES = {
-  'boolean':      { name: 'boolean',  defaultData: false, ui: { toggle: true } },
-  'number':       { name: 'number',   defaultData: 0 },
-  'text':         { name: 'string',   defaultData: '' },
-  'long text':    { name: 'string',   defaultData: '',  ui: { multi: true } },
-  'email':        { name: 'string',   defaultData: '', options: { format: 'email' } },
-  'password':     { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { lengthRange: [6,128] } },
-  'confirmation': { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { confirmation: true } },
-  'color':        { name: 'string',   defaultData: '#000000', ui: { format: 'color' } }
+  'boolean':        { name: 'boolean',  defaultData: false, ui: { toggle: true } },
+  'number':         { name: 'number',   defaultData: 0 },
+  'ranged-number':  { name: 'number',   defaultData: 0, ui: { slider: true } },
+  'text':           { name: 'string',   defaultData: '' },
+  'long text':      { name: 'string',   defaultData: '',  ui: { multi: true } },
+  'email':          { name: 'string',   defaultData: '', options: { format: 'email' } },
+  'password':       { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { lengthRange: [6,128] } },
+  'confirmation':   { name: 'string',   defaultData: '',  ui: { format: 'password' }, options: { confirmation: true } },
+  'color':          { name: 'string',   defaultData: '#000000', ui: { format: 'color' } }
 }
 
 const ROOT_SCOPE = '#'

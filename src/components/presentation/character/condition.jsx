@@ -5,7 +5,6 @@ export default function Condition ({ character, context, condition, children }) 
 
   useEffect(() => {
     (async () => {
-      console.log(condition)
       setResult(await character.get(condition, { context }))
     }) ()
   }, [character, setResult])

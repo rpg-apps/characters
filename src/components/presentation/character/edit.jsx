@@ -90,7 +90,7 @@ function PlanSelection ({ character, reprocess, ...others }) {
   }
 
   return <ToggleButtonGroup value={character.settings.plan} exclusive orientation='vertical' onChange={update}>
-    {plans.map(({ name, icon, description }) => <ToggleButton value={name} aria-label={name} fullWidth textAlign='left' key={name}>
+    {plans.map(({ name, icon, description }) => <ToggleButton value={name} aria-label={name} fullWidth key={name}>
       <Stack direction='row' alignItems='center' justifyContent='flex-start' width={1} height={1} gap={1}>
         {icon}
         <Stack alignItems='flex-start' flexGrow={1}>

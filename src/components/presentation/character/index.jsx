@@ -65,6 +65,7 @@ export function Character ({ character, ui,  procedureUI, Component='div', class
 
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
     <Calculated character={character} schemaName={ui} procedureUI={procedureUI} />
+    <procedureUI.Dialogs />
   </Component>
 }
 
@@ -131,6 +132,11 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
         for (const item of collection) {
           internalSchema.children.push(await smartCalc({ ...internalSchema.render }, { ...internalContext, item }))
         }
+      }
+
+      if (internalSchema.hasOwnProperty(ON_CLICK)) {
+        internalSchema.onClick = handler(internalSchema[ON_CLICK], character, reprocess, procedureUI, internalContext)
+        delete internalSchema[ON_CLICK]
       }
 
       if (internalSchema.hasOwnProperty('open') && BUILTIN_DIALOGS.hasOwnProperty(internalSchema.open)) {

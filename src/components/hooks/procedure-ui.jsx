@@ -1,5 +1,9 @@
 import { useState } from 'react'
 import mapObject from 'map-obj'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 
 import Input from '../presentation/input'
 import Title from '../presentation/title'
@@ -12,7 +16,7 @@ const STATUS = {
   EDIT: 'edit'
 }
 
-export function useProdcedureUI (character) {
+export function useProcedureUI (character) {
   const [state, setState] = useState({ })
 
   const getCharacter = () => ((character instanceof Function) ? character() : character)
@@ -30,10 +34,8 @@ export function useProdcedureUI (character) {
   const output = async (title, content) => {
     setState({
       status: STATUS.OUTPUT,
-      content: <div className='procedure-ui'>
-      <Title title={title} />
-      <div className='content'>{content}</div>
-    </div>
+      title,
+      content
     })
   }
 
@@ -46,9 +48,8 @@ export function useProdcedureUI (character) {
         value,
         canFinish: Boolean(value),
         status: status || STATUS.INPUT,
-        content: <div className='procedure-ui'>
-          <Input type={type} value={value} onChange={update} />
-        </div>
+        title,
+        content: <Input type={type} value={value} onChange={update} />
       })
 
       update(initialValue)
@@ -77,7 +78,8 @@ export function useProdcedureUI (character) {
           value,
           canFinish: maxedOut,
           status: STATUS.CHOOSE,
-          content: <Selection.Uncalculated className='procedure-ui' title={title} options={options} selected={selected} disabled={disabled} select={option => update(value, option)} />
+          title,
+          content: <Selection.Uncalculated className='procedure-ui' options={options} selected={selected} disabled={disabled} select={option => update(value, option)} />
         })
       }
       update()
@@ -101,6 +103,13 @@ export function useProdcedureUI (character) {
     setState({ })
   }
 
-  const ui = Object.assign({ output, input, choose, edit, finish }, state)
+  const Dialogs = () => {
+    return <Dialog open={Boolean(state.status)} onClose={() => finish()}>
+      <DialogTitle>{state.title}</DialogTitle>
+      <DialogContent>{state.content}</DialogContent>
+    </Dialog>
+  }
+
+  const ui = Object.assign({ output, input, choose, edit, finish, Dialogs }, state)
   return ui
 }
