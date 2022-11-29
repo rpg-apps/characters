@@ -90,7 +90,6 @@ class CharacterSettings {
   }
 
   set plan (plan) {
-    console.log('setting plan to', plan)
     this.rawSettings.plan = plan
   }
 

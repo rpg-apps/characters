@@ -42,8 +42,8 @@
     "uniq": "^1.0.1"
   },
   "scripts": {
-    "start": "yarn adapters prepare && react-dotenv && react-app-rewired start",
-    "build": "yarn adapters prepare && react-dotenv && react-app-rewired build",
+    "start": "react-dotenv && yarn adapters prepare && react-dotenv && react-app-rewired start",
+    "build": "react-dotenv && yarn adapters prepare && react-dotenv && react-app-rewired build",
     "adapters": "node ./dev/adapters.js"
   },
   "eslintConfig": {

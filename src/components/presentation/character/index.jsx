@@ -57,6 +57,7 @@ Schema.setComponentMap({
   Loader, Popup, Dialog, Status,
   EditField: Edit.Field, EditNotes: Edit.Notes, EditSettings: Edit.Settings,
   Condition, Empty: Condition.Empty,
+  Calculated,
   ...Object.fromEntries(Object.entries(Icons).map(([key, value]) => [`${key}Icon`, value]))
 })
 
@@ -65,7 +66,7 @@ export function Character ({ character, ui,  procedureUI, Component='div', class
 
   return <Component {...props} className={`character ${className} ${ui} ${character.rulebooks.join(' ')} ${character.playbook.name}`}>
     <Calculated character={character} schemaName={ui} procedureUI={procedureUI} />
-    <procedureUI.Dialogs />
+    {procedureUI ? <procedureUI.Dialogs /> : ''}
   </Component>
 }
 
@@ -75,9 +76,9 @@ export function Uncalculated ({ value }) {
   }} />
 }
 
-export function Calculated ({ character, schemaName, procedureUI }) {
+export function Calculated ({ character, schemaName, procedureUI, ...props }) {
   return <Processed schema={character.adapter.components[pascalCase(schemaName)]} action={async (schema, reprocess) => {
-    return Schema.parseSchema(await preprocess(await calcaulte(schema, character, reprocess, procedureUI)))
+    return Schema.parseSchema(await preprocess(await calcaulte(schema, character, reprocess, procedureUI, props)))
   }} />
 }
 
@@ -112,12 +113,16 @@ const recursivly = async (schema, callback) => {
   return schema
 }
 
-const calcaulte = async (schema, character, reprocess, procedureUI) => {
+const calcaulte = async (schema, character, reprocess, procedureUI, props) => {
   return await recursivly(clone(schema), async subschema => {
     const smartCalc = async (internalSchema, internalContext) => {
       const calculableFields = Object.keys(internalSchema).filter(key => !['children', 'collection', 'render'].includes(key))
       for (const field of calculableFields) {
-        const value = internalSchema[field]
+        let value = internalSchema[field]
+        if (value.constructor === String && value.includes('props:')) {
+          value = value.replace(/props:(.+?)( |$)/g, (match, offset) => `${props[offset] || offset} `).trim()
+          internalSchema[field] = value
+        }
         if (field.startsWith('calc-')) {
           internalSchema[field.replace('calc-', '')] = await character.get(value, { context: internalContext })
           delete internalSchema[field]
@@ -165,6 +170,10 @@ const calcaulte = async (schema, character, reprocess, procedureUI) => {
         Object.assign(internalSchema, { character, context: internalContext, reprocess })
       }
 
+      if (character.adapter.components.hasOwnProperty(internalSchema.component)) {
+        Object.assign(internalSchema, { component: 'Calculated', character, procedureUI, schemaName: internalSchema.component })
+      }
+
       return internalSchema
     }
 
@@ -202,8 +211,9 @@ const HANDLERS = {
 
 const BUILTIN_DIALOGS = {
   notes: {
-    sx: { marginTop: '-20vh', '.MuiPaper-root': { width: '80vw' } },
     title: 'Character notes',
+    fullWidth: true,
+    maxWidth: 'lg',
     content: [
       { component: 'EditNotes', requireSave: true }
     ],
@@ -213,7 +223,7 @@ const BUILTIN_DIALOGS = {
     ]
   },
   settings: {
-    sx: { marginTop: '-20vh', '.MuiPaper-root': { width: '80vw' } },
+    scroll: 'paper',
     title: 'Character settings',
     content: [
       { component: 'EditSettings', requireSave: true }

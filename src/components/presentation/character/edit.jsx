@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 
 import Input from '../input'
 
-export default function Edit ({ id, type, get, set, character, reprocess, requireSave, ...options }) {
+export default function Edit ({ id, name, type, get, set, character, reprocess, requireSave, ...options }) {
   const [value, setValue] = useState(NOT_READY)
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function Edit ({ id, type, get, set, character, reprocess, requir
     }
   }
 
-  return <Input name={id} value={value} type={type} onChange={onChange} {...options} />
+  return <Input name={name !== undefined ? name : id} value={value} type={type} onChange={onChange} {...options} />
 }
 
 Edit.Field = function EditField ({ field, type, character, context, ...editProps }) {
@@ -67,13 +67,20 @@ Edit.Notes = function EditNotes ({ character, ...editProps }) {
 }
 
 Edit.Settings = function EditSettings ({ character, ...editProps }) {
-  const get = useCallback(() => mapObject(character.adapter.settings, (key, setting) => (setting.universal || character.settings.plan === 'custom') ? [key, character.settings.get(key)] : mapObjectSkip, [character]))
-  const set = useCallback(settings => character.settings.setMultiple(settings), [character])
+  const get = useCallback(() => mapObject(character.adapter.settings, (group, settings) => {
+    const mapped = mapObject(settings, (key, setting) => (setting.universal || character.settings.plan === 'custom') ? [key, character.settings.get(key)] : mapObjectSkip, [character])
+    return Object.values(mapped).length ? [group, mapped] : mapObjectSkip
+    return [group, mapped]
+  }))
+  const set = useCallback(settings => character.settings.setMultiple(Object.values(settings).reduce((all, group) => ({ ...all, ...group }), {})), [character])
 
-  const type = mapObject(character.adapter.settings, (key, setting) => (setting.universal || character.settings.plan === 'custom') ? [key, setting.type] : mapObjectSkip)
-  return <Stack gap={2}>
+  const type = mapObject(character.adapter.settings, (group, settings) => {
+    const mapped = mapObject(settings, (key, setting) => (setting.universal || character.settings.plan === 'custom') ? [key, setting.type] : mapObjectSkip)
+    return Object.values(mapped).length ? [group, mapped] : mapObjectSkip
+  })
+  return <Stack gap={2} sx={{ '.MuiPaper-root': { backgroundColor: 'unset', boxShadow: 'unset' } }}>
     <PlanSelection character={character} {...editProps} />
-    <Edit id='settings' type={type} get={get} set={set} character={character} {...editProps} />
+    <Edit id='settings' name={false} type={type} get={get} set={set} character={character} {...editProps} />
   </Stack>
 }
 

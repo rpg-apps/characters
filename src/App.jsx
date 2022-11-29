@@ -8,8 +8,7 @@ import Router from './components/pages'
 import Theme from './components/presentation/theme'
 import Favicon from './components/presentation/favicon'
 
-const DEVELOPMENT_REALM_APP_ID = 'rpg-apps-test-zyzfm'
-const APP_ID = env?.REALM_APP_ID || DEVELOPMENT_REALM_APP_ID
+const APP_ID = process.env.REACT_APP_REALM_APP_ID
 
 function App() {
   return <Theme>

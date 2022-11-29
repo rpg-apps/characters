@@ -26,8 +26,6 @@ export default function Input ({ value='', type='text', name=undefined, onChange
     setFormState({ ...formState, data: adapter.value(value), previousData: formState.data })
   }, [value])
 
-  console.log(adapter, formState, value)
-
   return <JsonForms schema={adapter.schema}           uischema={adapter.uiSchema}
                     renderers={renderers}             cells={materialCells} ajv={ajv}
                     data={formState.data}             onChange={change}
@@ -67,7 +65,7 @@ const objectInputAdapter = (type, scope, layout, name, onChange, options) => {
   const defaultData = mapObject(adapters, (field, adapter) => [field, adapter.defaultData])
   return {
     schema: { type: 'object', properties: mapObject(adapters, (field, adapter) => [field, adapter.schema]), required: Object.keys(adapters) },
-    uiSchema: { type: layout, elements: Object.values(adapters).map(adapter => adapter.uiSchema)  },
+    uiSchema: { ...(name ? { type: options.tabs ? (scope === ROOT_SCOPE ? 'Categorization' : 'Category') : 'Group', label: name } : { type: layout }), elements: Object.values(adapters).map(adapter => adapter.uiSchema) },
     value: val => val || defaultData,
     defaultData,
     onChange: ({ data, errors }) => onChange(data, errors),
